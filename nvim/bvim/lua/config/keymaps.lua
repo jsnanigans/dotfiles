@@ -83,13 +83,20 @@ function M.setup_telescope_keymaps()
 
   -- searching
   map_normal_mode('<leader>fa', function()
-    require('telescope.builtin').find_files {}
+    require('telescope.builtin').find_files {
+      find_command = {
+        'rg',
+        '--hidden',
+        '--files',
+      },
+    }
   end, 'Find Files (All)')
 
   map_normal_mode('<leader>fb', function()
     require('telescope.builtin').find_files {
       find_command = {
         'rg',
+        '--hidden',
         '--files',
         '--type=ts',
         '--type=js',
@@ -109,6 +116,7 @@ function M.setup_telescope_keymaps()
     require('telescope.builtin').find_files {
       find_command = {
         'rg',
+        '--hidden',
         '--files',
         '--type=ts',
         '--type=js',
@@ -126,6 +134,7 @@ function M.setup_telescope_keymaps()
     require('telescope.builtin').find_files {
       find_command = {
         'rg',
+        '--hidden',
         '--files',
         '--type=ts',
         '--type=js',
@@ -135,7 +144,7 @@ function M.setup_telescope_keymaps()
   end, 'Find Files (JS/TS)')
   map_normal_mode('<leader>fij', function()
     require('telescope.builtin').live_grep {
-      additional_args = { '--type=ts', '--type=js', '-g=!*.test.*' },
+      additional_args = { '--hidden', '--type=ts', '--type=js', '-g=!*.test.*' },
     }
   end, 'Find in Files (JS/TS)')
 
@@ -143,6 +152,7 @@ function M.setup_telescope_keymaps()
     require('telescope.builtin').find_files {
       find_command = {
         'rg',
+        '--hidden',
         '--files',
         '--type=ts',
         '--type=js',
@@ -154,7 +164,7 @@ function M.setup_telescope_keymaps()
   end, 'Find Files (JSX/TSX)')
   map_normal_mode('<leader>fix', function()
     require('telescope.builtin').live_grep {
-      additional_args = { '--type=ts', '--type=js', '-g=*.tsx', '-g=*.jsx', '-g=!*.test.*' },
+      additional_args = { '--hidden', '--type=ts', '--type=js', '-g=*.tsx', '-g=*.jsx', '-g=!*.test.*' },
     }
   end, 'Find in Files (JSX/TSX)')
 
