@@ -122,6 +122,7 @@ alias tx="env TERM=screen-256color tmux"
 alias y="yazi"
 # git
 alias gpn="gp --follow-tags --no-verify"
+alias lz="lazygit"
 
 # jli
 alias j="bun /Users/bdan/rad/jli/index.ts"
