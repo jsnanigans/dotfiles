@@ -119,7 +119,7 @@ alias er="pnpm run"
 alias d="er dev"
 alias t="er test"
 alias tx="env TERM=screen-256color tmux"
-
+alias y="yazi"
 # git
 alias gpn="gp --follow-tags --no-verify"
 
