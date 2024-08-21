@@ -27,8 +27,8 @@ return {
 
     local conf = vim.tbl_deep_extend('force', {
       defaults = {
-        file_ignore_patterns = { '.git/' },
-        theme = 'dropdown',
+        -- file_ignore_patterns = { '.git/' },
+        -- theme = 'dropdown',
         layout_config = {
           -- other layout configuration here
         },
@@ -65,19 +65,19 @@ return {
         },
       },
       extensions = {
-        ['ui-select'] = {
-          require('telescope.themes').get_dropdown {},
-        },
-        fzf = {
-          fuzzy = true, -- false will only do exact matching
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true, -- override the file sorter
-          case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
-        },
-        recent_files = {
-          -- This extension's options, see below.
-          only_cwd = true,
-        },
+      --   ['ui-select'] = {
+      --     require('telescope.themes').get_dropdown {},
+      --   },
+        -- fzf = {
+        --   fuzzy = true, -- false will only do exact matching
+        --   override_generic_sorter = true, -- override the generic sorter
+        --   override_file_sorter = true, -- override the file sorter
+        --   case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
+        -- },
+        -- recent_files = {
+        --   -- This extension's options, see below.
+        --   only_cwd = true,
+        -- },
         -- file_browser = {
         --   theme = 'ivy',
         --   -- disables netrw and use telescope-file-browser in its place

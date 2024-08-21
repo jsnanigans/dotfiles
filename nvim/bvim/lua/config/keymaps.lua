@@ -164,7 +164,7 @@ function M.setup_telescope_keymaps()
   end, 'Find Files (JSX/TSX)')
   map_normal_mode('<leader>fix', function()
     require('telescope.builtin').live_grep {
-      additional_args = { '--hidden', '--type=ts', '--type=js', '-g=*.tsx', '-g=*.jsx', '-g=!*.test.*' },
+      additional_args = { '--type=ts', '--type=js', '-g=*.tsx', '-g=*.jsx', '-g=!*.test.*' },
     }
   end, 'Find in Files (JSX/TSX)')
 

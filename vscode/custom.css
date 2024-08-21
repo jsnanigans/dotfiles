@@ -1,0 +1,7 @@
+.tabs-and-actions-container {
+  display: none !important;
+}
+
+* {
+  color: red !important;
+}

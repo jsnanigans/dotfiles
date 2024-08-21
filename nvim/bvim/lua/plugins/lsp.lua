@@ -17,6 +17,7 @@ return {
         'williamboman/mason-lspconfig.nvim',
         dependencies = { 'neovim/nvim-lspconfig' },
       },
+      { 'VonHeikemen/lsp-zero.nvim' },
       -- 'SmiteshP/nvim-navic',
     },
     config = function()
@@ -24,13 +25,21 @@ return {
 
       local servers = {
         'lua_ls',
-        -- 'vtsls',
-        'tsserver',
+        'vtsls',
+        -- 'tsserver',
         'eslint',
-        'biome',
+        -- 'biome',
         'typos_lsp',
-        'astro',
-        'jdtls',
+        -- 'astro',
+        -- 'jdtls'
+      }
+      local lsp_zero = require 'lsp-zero'
+      local lspconfig = require 'lspconfig'
+
+      lspconfig.kotlin_language_server.setup {
+        init_options = {
+          storagePath = '~/.cache/kotlin-language-server',
+        },
       }
 
       local function organize_imports()
@@ -42,12 +51,43 @@ return {
         vim.lsp.buf.execute_command(params)
       end
 
+      local function iremove_unused_imports()
+        local params = {
+          command = '_typescript.removeUnusedImports',
+          arguments = { vim.api.nvim_buf_get_name(0) },
+          title = '',
+        }
+        vim.lsp.buf.execute_command(params)
+      end
+
+      lsp_zero.on_attach(function(client, bufnr)
+        -- see :help lsp-zero-keybindings
+        -- to learn the available actions
+        lsp_zero.default_keymaps { buffer = bufnr }
+      end)
+
+
       require('mason').setup()
       require('mason-lspconfig').setup {
         ensure_installed = servers,
+        handlers = {
+          function(server_name, method, params)
+            lspconfig[server_name].setup({})
+            -- if server_name == 'vtsls' and method == 'textDocument/publishDiagnostics' then
+            --   local diagnostics = params.diagnostics
+            --   for i, diagnostic in ipairs(diagnostics) do
+            --     if diagnostic.source == 'ts' and diagnostic.code == 'unused-import' then
+            --       diagnostics[i] = nil
+            --     end
+            --   end
+            -- end
+          end,
+          jdtls = lsp_zero.noop,
+          kotlin_language_server = lsp_zero.noop,
+          -- sourcekit = lsp_zero.noop,
+        }
       }
 
-      local lspconfig = require 'lspconfig'
       -- local navic = require 'nvim-navic'
       lspconfig.sourcekit.setup {
         capabilities = {
@@ -80,6 +120,12 @@ return {
             description = 'Organize Imports',
           },
         },
+        -- vtsls = {
+        --   OrganizeImports = {
+        --     iremove_unused_imports,
+        --     description = 'Organize Imports',
+        --   },
+        -- },
       }
       local init_options = {
         typos_lsp = {

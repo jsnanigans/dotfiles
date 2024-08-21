@@ -12,3 +12,5 @@ require 'config.mini'
 
 -- setup up package manager, load plugins and configs
 require 'config.lazy'
+
+-- require 'config.jdtls'

@@ -135,12 +135,18 @@ alias nv="neovide ."
 
 alias pn="pnpm"
 
+alias ci="code-insiders"
+
+alias emulator="/Users/bdan/Library/Android/sdk/emulator/emulator"
+alias pixel="/Users/bdan/Library/Android/sdk/emulator/emulator -avd Pixel_6_Pro_API_33"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Add fastlane to path
 export PATH="$HOME/.fastlane/bin:$PATH"
 export PATH=/Users/bdan/.local/bin:$PATH
+export PATH="/usr/local/gradle/gradle-8.8/bin:$PATH"
 
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
@@ -167,3 +173,29 @@ esac
 
 export PATH="$PATH:/Users/bdan/Projects/depot_tools"
 export ANDROID_HOME="/Users/bdan/Library/Android/sdk"
+
+
+
+### JVENV ###
+export PATH="/Users/bdan/.jenv/shims:${PATH}"
+export JENV_SHELL=zsh
+export JENV_LOADED=1
+unset JAVA_HOME
+unset JDK_HOME
+source '/opt/homebrew/Cellar/jenv/0.5.7/libexec/libexec/../completions/jenv.zsh'
+jenv rehash 2>/dev/null
+jenv refresh-plugins
+jenv() {
+  type typeset &> /dev/null && typeset command
+  command="$1"
+  if [ "$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "$command" in
+  enable-plugin|rehash|shell|shell-options)
+    eval "`jenv \"sh-$command\" \"$@\"`";;
+  *)
+    command jenv "$command" "$@";;
+  esac
+}
