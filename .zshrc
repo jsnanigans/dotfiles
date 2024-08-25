@@ -77,7 +77,7 @@ ZSH_CUSTOM=$HOME/.bdan/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras)
+plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras zsh-npm-scripts-autocomplete)
 # zsh-autosuggestions zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
@@ -199,3 +199,23 @@ jenv() {
     command jenv "$command" "$@";;
   esac
 }
+#compdef gt
+###-begin-gt-completions-###
+#
+# yargs command completion script
+#
+# Installation: gt completion >> ~/.zshrc
+#    or gt completion >> ~/.zprofile on OSX.
+#
+_gt_yargs_completions()
+{
+  local reply
+  local si=$IFS
+  IFS=$'
+' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" gt --get-yargs-completions "${words[@]}"))
+  IFS=$si
+  _describe 'values' reply
+}
+compdef _gt_yargs_completions gt
+###-end-gt-completions-###
+
