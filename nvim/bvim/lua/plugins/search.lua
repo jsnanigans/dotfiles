@@ -6,19 +6,25 @@ return {
     },
     config = function()
       require('spectre').setup {
-        live_update = true,
-        line_sep_start = '┌-----------------------------------------',
-        result_padding = '¦  ',
-        line_sep = '└-----------------------------------------',
+        replace_engine = {
+          ['sed'] = {
+            cmd = 'sed',
+            args = {
+              '-i',
+              '',
+              '-E',
+            },
+          },
+        },
       }
       require('config.keymaps').setup_spectre_keymaps()
     end,
   },
-  {
-    'kevinhwang91/nvim-hlslens',
-    config = function()
-      require('hlslens').setup {}
-      require('config.keymaps').setup_hlslens_keymaps()
-    end,
-  },
+  -- {
+  --   'kevinhwang91/nvim-hlslens',
+  --   config = function()
+  --     require('hlslens').setup {}
+  --     require('config.keymaps').setup_hlslens_keymaps()
+  --   end,
+  -- },
 }
