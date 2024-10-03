@@ -117,6 +117,8 @@ alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias v="nvim"
 alias er="pnpm run"
 alias d="er dev"
+alias dapp="er dev --filter=user-app --ui=stream"
+alias dpmp="er dev --filter=patientmanagement --ui=stream"
 alias t="er test"
 alias tx="env TERM=screen-256color tmux"
 alias y="yazi"
@@ -218,4 +220,7 @@ _gt_yargs_completions()
 }
 compdef _gt_yargs_completions gt
 ###-end-gt-completions-###
+
+
+export PATH=$HOME/development/flutter/bin:$PATH
 

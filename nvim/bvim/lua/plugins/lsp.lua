@@ -66,13 +66,12 @@ return {
         lsp_zero.default_keymaps { buffer = bufnr }
       end)
 
-
       require('mason').setup()
       require('mason-lspconfig').setup {
         ensure_installed = servers,
         handlers = {
           function(server_name, method, params)
-            lspconfig[server_name].setup({})
+            lspconfig[server_name].setup {}
             -- if server_name == 'vtsls' and method == 'textDocument/publishDiagnostics' then
             --   local diagnostics = params.diagnostics
             --   for i, diagnostic in ipairs(diagnostics) do
@@ -85,7 +84,7 @@ return {
           jdtls = lsp_zero.noop,
           kotlin_language_server = lsp_zero.noop,
           -- sourcekit = lsp_zero.noop,
-        }
+        },
       }
 
       -- local navic = require 'nvim-navic'
@@ -171,5 +170,14 @@ return {
     opts = {
       -- options
     },
+  },
+  {
+    'akinsho/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
   },
 }
