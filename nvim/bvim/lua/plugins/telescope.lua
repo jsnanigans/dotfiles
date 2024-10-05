@@ -1,4 +1,11 @@
 return {
+    {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      enabled = vim.fn.executable 'make' == 1,
+      -- run = "make",
+      build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+    },
+  {
   'nvim-telescope/telescope.nvim',
   tag = '0.1.6',
   event = 'VeryLazy',
@@ -9,7 +16,6 @@ return {
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       enabled = vim.fn.executable 'make' == 1,
-      build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
     },
     {
       'nvim-telescope/telescope-live-grep-args.nvim',
@@ -122,4 +128,5 @@ return {
 
     require('config.keymaps').setup_telescope_keymaps()
   end,
+}
 }

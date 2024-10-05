@@ -77,7 +77,7 @@ ZSH_CUSTOM=$HOME/.bdan/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras zsh-npm-scripts-autocomplete)
+plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras)
 # zsh-autosuggestions zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
@@ -111,7 +111,7 @@ export PATH=/opt/homebrew/bin:$PATH
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-export NVIM_APPNAME=bvim
+export NVIM_APPNAME=nvchad
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias v="nvim"
@@ -121,7 +121,6 @@ alias dapp="er dev --filter=user-app --ui=stream"
 alias dpmp="er dev --filter=patientmanagement --ui=stream"
 alias t="er test"
 alias tx="env TERM=screen-256color tmux"
-alias y="yazi"
 # git
 alias gpn="gp --follow-tags --no-verify"
 alias lz="lazygit"
@@ -142,6 +141,17 @@ alias ci="code-insiders"
 alias emulator="/Users/bdan/Library/Android/sdk/emulator/emulator"
 alias pixel="/Users/bdan/Library/Android/sdk/emulator/emulator -avd Pixel_6_Pro_API_33"
 
+# yazi
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -153,7 +163,7 @@ export PATH="/usr/local/gradle/gradle-8.8/bin:$PATH"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
-eval "$(~/.rbenv/bin/rbenv init - zsh)"
+eval "$(rbenv init - zsh)"
 
 # bun completions
 [ -s "/Users/bdan/.bun/_bun" ] && source "/Users/bdan/.bun/_bun"
@@ -224,3 +234,8 @@ compdef _gt_yargs_completions gt
 
 export PATH=$HOME/development/flutter/bin:$PATH
 
+# n
+export N_PREFIX=$HOME/n
+export PATH=$N_PREFIX/bin:$PATH
+
+export ZELLIJ_CONFIG_DIR=$HOME/dotfiles/zellij
