@@ -1,8 +1,13 @@
+local jsFmt = { { 'prettierd', 'prettier' } }
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
     css = { "prettier" },
-    html = { "prettier" }
+    html = { "prettier" },
+    javascript = jsFmt,
+    typescript = jsFmt,
+    typescriptreact = jsFmt,
+    javascriptreact = jsFmt
   },
 
   -- format_on_save = {
