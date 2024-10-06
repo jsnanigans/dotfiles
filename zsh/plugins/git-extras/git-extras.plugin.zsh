@@ -30,7 +30,7 @@ function gwe {
 _gwe() {
   # Get a list of local branches (excluding the current one)
   local -a branches
-  branches=($(git worktree list | awk 'NR>1 {gsub(/.+\.git\//, ""); print $1}'))
+  branches=($(git worktree list | awk 'NR>1 {gsub(/.+9am-fe\//, ""); print $1}'))
 
   # Use _describe for simpler completion matching
   _describe 'branch' branches
@@ -42,4 +42,3 @@ compdef _gwe gwe
 alias gwed="gwe develop"
 alias gwem="gwe main"
 alias gwer="gwe release"
-alias gwep="gwe pre-release"
