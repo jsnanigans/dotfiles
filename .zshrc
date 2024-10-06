@@ -104,6 +104,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
 
+eval $(thefuck --alias)
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -142,6 +143,7 @@ alias ci="code-insiders"
 
 alias emulator="/Users/bdan/Library/Android/sdk/emulator/emulator"
 alias pixel="/Users/bdan/Library/Android/sdk/emulator/emulator -avd Pixel_6_Pro_API_33"
+alias f="fuck"
 
 # yazi
 
@@ -245,3 +247,6 @@ export ZELLIJ_CONFIG_DIR=$HOME/dotfiles/zellij
 # Initialize zsh completions (added by deno install script)
 autoload -Uz compinit
 compinit
+
+export BAT_CONFIG_PATH="$HOME/dotfiles/bat/bat.conf"
+
