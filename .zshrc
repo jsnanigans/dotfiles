@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/brendanmullins/.zsh/completions:"* ]]; then export FPATH="/Users/brendanmullins/.zsh/completions:$FPATH"; fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -239,3 +241,7 @@ export N_PREFIX=$HOME/n
 export PATH=$N_PREFIX/bin:$PATH
 
 export ZELLIJ_CONFIG_DIR=$HOME/dotfiles/zellij
+. "/Users/brendanmullins/.deno/env"
+# Initialize zsh completions (added by deno install script)
+autoload -Uz compinit
+compinit

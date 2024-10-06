@@ -28,4 +28,16 @@ function M.setup_spectre_keymaps()
   )
 end
 
+function M.setup_fzflua_keymaps()
+  map("n", "<leader>fa", require('fzf-lua').files, { desc = "Fzf Files" })
+  map("n", "<leader>fb", require('fzf-lua').buffers, { desc = "Fzf Buffers" })
+  map("n", "<leader>fc", require('fzf-lua').commands, { desc = "Fzf Commands" })
+  map("n", "<leader>ff", require('fzf-lua').grep, { desc = "Fzf Grep" })
+  map("n", "<leader>fw", require('fzf-lua').live_grep, { desc = "Fzf Live Grep" })
+  -- map("n", "<leader>fm", require('fzf-lua').marks, { desc = "Fzf Marks" })
+  map("n", "<leader>fp", require('fzf-lua').git_files, { desc = "Fzf Git Files" })
+  map("n", "<leader>fr", require('fzf-lua').grep_cword, { desc = "Fzf Grep Word" })
+  map("n", "<c-p>", require('fzf-lua').resume, { desc = "Fzf Resume" })
+end
+
 return M
