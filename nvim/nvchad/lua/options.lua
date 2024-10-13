@@ -8,3 +8,5 @@ local o = vim.o
 -- relative number line
 o.number = true
 o.relativenumber = true
+-- scroll off
+o.scrolloff = 5

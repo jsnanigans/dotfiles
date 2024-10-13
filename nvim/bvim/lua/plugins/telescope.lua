@@ -30,6 +30,8 @@ return {
     local telescope = require 'telescope'
     -- local actions = require 'telescope.actions'
     -- local fb_actions = require('telescope').extensions.file_browser.actions
+    local open_with_trouble = require("trouble.sources.telescope").open
+
 
     local conf = vim.tbl_deep_extend('force', {
       defaults = {
@@ -54,6 +56,14 @@ return {
         -- layout_config = { prompt_position = 'top' },
         -- sorting_strategy = 'ascending',
         -- winblend = 0,
+        mappings = {
+          i = {
+            ["<C-t>"] = open_with_trouble
+          },
+          n = {
+            ["<C-t>"] = open_with_trouble
+          }
+        },
       },
       pickers = {
         -- diagnostics = {
@@ -74,12 +84,12 @@ return {
       --   ['ui-select'] = {
       --     require('telescope.themes').get_dropdown {},
       --   },
-        -- fzf = {
-        --   fuzzy = true, -- false will only do exact matching
-        --   override_generic_sorter = true, -- override the generic sorter
-        --   override_file_sorter = true, -- override the file sorter
-        --   case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
-        -- },
+        fzf = {
+          fuzzy = true, -- false will only do exact matching
+          override_generic_sorter = true, -- override the generic sorter
+          override_file_sorter = true, -- override the file sorter
+          case_mode = 'smart_case', -- or "ignore_case" or "respect_case"
+        },
         -- recent_files = {
         --   -- This extension's options, see below.
         --   only_cwd = true,

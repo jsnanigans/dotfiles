@@ -79,7 +79,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras)
+plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras cic)
 # zsh-autosuggestions zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
@@ -114,7 +114,7 @@ eval $(thefuck --alias)
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-export NVIM_APPNAME=nvchad
+export NVIM_APPNAME=lzvim
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias v="nvim"
