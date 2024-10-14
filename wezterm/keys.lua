@@ -29,6 +29,8 @@ function M.setup(config)
 		{ mods = M.mod, key = "Enter", action = M.smart_split },
 		{ mods = M.mod, key = "|", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		{ mods = M.mod, key = "_", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ mods = M.mod, key = "z", action = act.TogglePaneZoomState },
+		-- Zoom
 		{ mods = M.mod, key = "(", action = act.DecreaseFontSize },
 		{ mods = M.mod, key = ")", action = act.IncreaseFontSize },
 		-- Move Tabs
