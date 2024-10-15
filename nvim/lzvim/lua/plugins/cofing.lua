@@ -13,11 +13,7 @@ return {
       filetypes = { ["*"] = true },
     },
   },
-  {
-    "smjonas/inc-rename.nvim",
-    cmd = "IncRename",
-    config = true,
-  },
+  { "smjonas/inc-rename.nvim", cmd = "IncRename", config = true },
   {
     "Wansmer/treesj",
     keys = {
@@ -29,6 +25,7 @@ return {
   -- { "marilari88/neotest-vitest" },
   {
     "nvim-neotest/neotest",
+    enbale = false,
     opts = {
       adapters = {
         -- ["neotest-plenary"] = { min_init = "./tests/init.lua" },

@@ -58,12 +58,16 @@ return {
 
   {
     "stevearc/conform.nvim",
-    optional = true,
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    -- This will provide type hinting with LuaLS
+    ---@module "conform"
+    ---@type conform.setupOpts
     opts = {
       formatters_by_ft = {
-        ["javascript"] = {  { "prettierd", "prettier" } },
+        ["javascript"] = { "prettierd", "prettier" },
         ["javascriptreact"] = { "prettierd", "prettier" },
-        ["typescript"] = { { "prettierd", "prettier" } },
+        ["typescript"] = { "prettierd", "prettier" },
         ["typescriptreact"] = { "prettierd", "prettier" },
       },
       -- formatters_by_ft = {
@@ -72,13 +76,13 @@ return {
       --   ["typescript"] = { "dprint", { "prettierd", "prettier" } },
       --   ["typescriptreact"] = { "dprint" },
       -- },
-      formatters = {
-        dprint = {
-          condition = function(_, ctx)
-            return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
-          end,
-        },
-      },
+      -- formatters = {
+      --   dprint = {
+      --     condition = function(_, ctx)
+      --       return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]
+      --     end,
+      --   },
+      -- },
     },
   },
   {
