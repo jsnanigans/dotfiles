@@ -2,6 +2,7 @@ return {
 	-- https://github.com/stevearc/aerial.nvim
   {
     'stevearc/aerial.nvim',
+    lazy = false,
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
     },
@@ -14,8 +15,6 @@ return {
           vim.keymap.set('n', '}', '<cmd>AerialNext<CR>', { buffer = bufnr })
         end,
       }
-      -- You probably also want to set a keymap to toggle aerial
-      vim.keymap.set('n', '<leader>ae', '<cmd>AerialToggle!<CR>')
     end,
   },
 }

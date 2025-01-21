@@ -121,7 +121,7 @@ alias v="nvim"
 alias er="pnpm run"
 alias d="er dev"
 alias dapp="er dev --filter=user-app --ui=stream"
-alias dpmp="er dev --filter=patientmanagement --ui=stream"
+alias dpmp="er dev --filter=pmp --ui=stream"
 alias t="er test"
 alias tx="env TERM=screen-256color tmux"
 # git
@@ -189,32 +189,13 @@ esac
 
 export PATH="$PATH:/Users/bdan/Projects/depot_tools"
 export ANDROID_HOME="/Users/bdan/Library/Android/sdk"
-
+export IOS_API_FILE_PATH="/Users/brendanmullins/app_cert/old/AuthKey_TT439J2PCV.p8"
+export IOS_API_KEY_ID="TT439J2PCV"
 
 
 ### JVENV ###
-export PATH="/Users/bdan/.jenv/shims:${PATH}"
-export JENV_SHELL=zsh
-export JENV_LOADED=1
-unset JAVA_HOME
-unset JDK_HOME
-source '/opt/homebrew/Cellar/jenv/0.5.7/libexec/libexec/../completions/jenv.zsh'
-jenv rehash 2>/dev/null
-jenv refresh-plugins
-jenv() {
-  type typeset &> /dev/null && typeset command
-  command="$1"
-  if [ "$#" -gt 0 ]; then
-    shift
-  fi
+eval "$(jenv init -)"
 
-  case "$command" in
-  enable-plugin|rehash|shell|shell-options)
-    eval "`jenv \"sh-$command\" \"$@\"`";;
-  *)
-    command jenv "$command" "$@";;
-  esac
-}
 #compdef gt
 ###-begin-gt-completions-###
 #
@@ -250,3 +231,6 @@ compinit
 
 export BAT_CONFIG_PATH="$HOME/dotfiles/bat/bat.conf"
 
+export CAPGO_API_KEY="a0250313-3bc6-4d14-8cdd-25f48524b19b"
+export ARCHIVE_BASE_URL="https://app-archive.dev.join9am.com"
+export ARCHIVE_S3_BUCKET="userfrontenddevus-archivedistributionbucket-jxy9ut4iujvi"

@@ -93,9 +93,7 @@ M.setup_folding_options = function()
 end
 
 -- settings for neovim 0.10.0+
-if require('utils.version').is_neovim_0_10_0() then
-  vim.opt.smoothscroll = true
-end
+vim.opt.smoothscroll = true
 
 -- settings for vscode neovim
 if not vim.g.vscode then

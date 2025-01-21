@@ -4,10 +4,10 @@ require("nvchad.configs.lspconfig").defaults()
 local lspconfig = require "lspconfig"
 
 -- EXAMPLE
-local servers = { "html", "cssls", "lua_ls", "vtsls", "eslint", "typos_lsp" }
+local servers = { "html", "cssls", "lua_ls", "vtsls", "eslint", "typos_lsp", "ruby_lsp" }
 local nvlspConf = require "nvchad.configs.lspconfig"
 
-local lspAttach = function (client, bufnr)
+local lspAttach = function(client, bufnr)
   nvlspConf.on_attach(client, bufnr)
   require("mappings").setup_lsp_keymaps(bufnr)
 end

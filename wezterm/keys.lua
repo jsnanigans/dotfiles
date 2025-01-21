@@ -20,8 +20,8 @@ function M.setup(config)
 	config.disable_default_key_bindings = true
 	config.keys = {
 		-- Scrollback
-		{ mods = M.mod, key = "k", action = act.ScrollByPage(-0.5) },
-		{ mods = M.mod, key = "j", action = act.ScrollByPage(0.5) },
+		-- { mods = M.mod, key = "k", action = act.ScrollByPage(-0.5) },
+		-- { mods = M.mod, key = "j", action = act.ScrollByPage(0.5) },
 		-- New Tab
 		{ mods = M.mod, key = "t", action = act.SpawnTab("CurrentPaneDomain") },
 		-- { mods = M.mod, key = "x", action = act.CloseCurrentPane() },
@@ -30,6 +30,11 @@ function M.setup(config)
 		{ mods = M.mod, key = "|", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		{ mods = M.mod, key = "_", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 		{ mods = M.mod, key = "z", action = act.TogglePaneZoomState },
+		-- navigate in splits
+		{ mods = M.mod, key = "j", action = act.ActivatePaneDirection("Down") },
+		{ mods = M.mod, key = "k", action = act.ActivatePaneDirection("Up") },
+		{ mods = M.mod, key = "h", action = act.ActivatePaneDirection("Left") },
+		{ mods = M.mod, key = "l", action = act.ActivatePaneDirection("Right") },
 		-- Zoom
 		{ mods = M.mod, key = "(", action = act.DecreaseFontSize },
 		{ mods = M.mod, key = ")", action = act.IncreaseFontSize },
@@ -37,8 +42,8 @@ function M.setup(config)
 		{ mods = M.mod, key = ">", action = act.MoveTabRelative(1) },
 		{ mods = M.mod, key = "<", action = act.MoveTabRelative(-1) },
 		-- Acivate Tabs
-		{ mods = M.mod, key = "l", action = act({ ActivateTabRelative = 1 }) },
-		{ mods = M.mod, key = "h", action = act({ ActivateTabRelative = -1 }) },
+		-- { mods = M.mod, key = "l", action = act({ ActivateTabRelative = 1 }) },
+		-- { mods = M.mod, key = "h", action = act({ ActivateTabRelative = -1 }) },
 		{ mods = M.mod, key = "R", action = wezterm.action.RotatePanes("Clockwise") },
 		-- show the pane selection mode, but have it swap the active and selected panes
 		{ mods = M.mod, key = "S", action = wezterm.action.PaneSelect({}) },
@@ -57,14 +62,14 @@ function M.setup(config)
 		{ mods = M.mod, key = "m", action = act.TogglePaneZoomState },
 		{ mods = M.mod, key = "p", action = act.ActivateCommandPalette },
 		{ mods = M.mod, key = "d", action = act.ShowDebugOverlay },
-		M.split_nav("resize", "CTRL", "LeftArrow", "Right"),
-		M.split_nav("resize", "CTRL", "RightArrow", "Left"),
-		M.split_nav("resize", "CTRL", "UpArrow", "Up"),
-		M.split_nav("resize", "CTRL", "DownArrow", "Down"),
-		M.split_nav("move", "CTRL", "h", "Left"),
-		M.split_nav("move", "CTRL", "j", "Down"),
-		M.split_nav("move", "CTRL", "k", "Up"),
-		M.split_nav("move", "CTRL", "l", "Right"),
+		-- M.split_nav("resize", "CTRL", "LeftArrow", "Right"),
+		-- M.split_nav("resize", "CTRL", "RightArrow", "Left"),
+		-- M.split_nav("resize", "CTRL", "UpArrow", "Up"),
+		-- M.split_nav("resize", "CTRL", "DownArrow", "Down"),
+		-- M.split_nav("move", "CTRL", "h", "Left"),
+		-- M.split_nav("move", "CTRL", "j", "Down"),
+		-- M.split_nav("move", "CTRL", "k", "Up"),
+		-- M.split_nav("move", "CTRL", "l", "Right"),
 	}
 end
 

@@ -10,31 +10,22 @@
                             "to": [{ "key_code": "tab" }]
                         },
                         {
-                            "from": { "key_code": "left_command" },
-                            "to": [{ "key_code": "left_control" }]
+                            "from": { "key_code": "tab" },
+                            "to": [{ "key_code": "escape" }]
                         },
                         {
                             "from": { "key_code": "left_control" },
                             "to": [{ "key_code": "left_command" }]
                         },
                         {
-                            "from": { "key_code": "tab" },
-                            "to": [{ "key_code": "escape" }]
+                            "from": { "key_code": "left_command" },
+                            "to": [{ "key_code": "left_control" }]
                         }
                     ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 6519,
-                        "vendor_id": 12951
-                    },
-                    "ignore": true
                 }
             ],
             "name": "Default profile",
-            "selected": true,
-            "virtual_hid_keyboard": { "keyboard_type_v2": "iso" }
+            "selected": true
         }
     ]
 }
