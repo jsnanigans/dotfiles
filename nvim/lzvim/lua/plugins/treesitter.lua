@@ -53,6 +53,8 @@ return {
                             ["is"] = "@statement.inner",
                             ["aa"] = "@comment.outer",
                             ["ia"] = "@comment.inner",
+                            ["iq"] = "@quote.inner",
+                            ["aq"] = "@quote.outer",
                         },
                     },
                     -- swap = {
@@ -88,6 +90,16 @@ return {
             })
         end,
     },
+    {
+      "chrisgrieser/nvim-various-textobjs",
+      event = "VeryLazy",
+      opts = { 
+        keymaps = {
+          useDefaults = true 
+        }
+      },
+    },
+    -- { 'echasnovski/mini.ai', version = '*', lazy = true },
     -- { "IndianBoy42/tree-sitter-just", event = "BufRead justfile", opts = {} },
     -- {
     --   "https://github.com/Samonitari/tree-sitter-caddy",
