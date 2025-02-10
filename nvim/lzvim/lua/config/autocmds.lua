@@ -55,6 +55,9 @@ vim.filetype.add({
 --   end,
 -- })
 
+-- path where nvim was opened from
+local opened_dir = vim.fn.expand("%:p:h")
+
 -- autocmd BufNewFile,BufRead Fastfile set filetype=ruby
 vim.api.nvim_create_autocmd("BufRead", {
     callback = function(ev)
@@ -63,8 +66,9 @@ vim.api.nvim_create_autocmd("BufRead", {
         end
 
 
+
         -- store the current file path in a global variable
-        local root_dir = require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git')(vim.fn.expand('%:p'))
+        local root_dir = require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git', opened_dir)(vim.fn.expand('%:p'))
         vim.g.current_p_root = root_dir
     end,
 })

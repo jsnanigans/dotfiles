@@ -13,6 +13,31 @@ local M = {}
 vim.keymap.set('n', '<leader>ae', '<cmd>AerialToggle!<CR>', { desc = 'Aerial' })
 vim.keymap.set('n', '<leader>`', '<cmd>b#<CR>', { desc = 'Prev Buffer' })
 
+local opts = { noremap = true, silent = true }
+
+-- prevent x to write to clipboard
+vim.keymap.set('n', 'x', '"_x', opts)
+
+-- center after moving
+vim.keymap.set('n', '<C-d>', '<D-d>zz', opts)
+vim.keymap.set('n', '<C-u>', '<D-u>zz', opts)
+
+-- Navigate between splits
+vim.keymap.set('n', '<C-k>', ':wincmd k<CR>', opts)
+vim.keymap.set('n', '<C-j>', ':wincmd j<CR>', opts)
+vim.keymap.set('n', '<C-h>', ':wincmd h<CR>', opts)
+vim.keymap.set('n', '<C-l>', ':wincmd l<CR>', opts)
+
+-- Stay in indent mode
+vim.keymap.set('v', '<', '<gv', opts)
+vim.keymap.set('v', '>', '>gv', opts)
+
+-- toggle wrap
+vim.keymap.set('n', '<leader>lw', '<cmd>set wrap!<CR>', opts)
+
+-- Keep last yanked when pasting
+vim.keymap.set('v', 'p', '"_dP', opts)
+
 -- change word with <c-c>
 -- vim.keymap.set({ "n", "x" }, "<C-c>", "<cmd>normal! ciw<cr>a")
 vim.keymap.set({ "n", "x" }, "-", "<cmd>Oil<cr>")
@@ -28,7 +53,7 @@ vim.keymap.set("n", "<leader>ql", function() require("persistence").load({ last 
 -- stop Persistence => session won't be saved on exit
 vim.keymap.set("n", "<leader>qd", function() require("persistence").stop() end, { desc = "Stop Persistence" })
 
-vim.keymap.set("n", "<leader><leader>", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find Buffer" })
+-- vim.keymap.set("n", "<leader><leader>", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find Buffer" })
 
 
 vim.keymap.set("n", "<leader>cr", ":IncRename ", { desc = "Rename" })
@@ -40,6 +65,9 @@ vim.keymap.set("n", "<leader>cf", function()
     require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
 end, { desc = "Code Format" })
 
+vim.keymap.set('n', '<leader>sp', '<esc><cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre",
+})
 
 -- function M.keymaps_copilot()
 --     local cp = require("copilot.suggestion")
@@ -145,5 +173,6 @@ function M.setup_trouble_keymaps()
     -- },
   }
 end
+
 
 return M
