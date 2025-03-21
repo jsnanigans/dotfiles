@@ -65,13 +65,16 @@ vim.api.nvim_create_autocmd("BufRead", {
             vim.bo[ev.buf].filetype = "ruby"
         end
 
-
-
         -- store the current file path in a global variable
-        local root_dir = require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git', opened_dir)(vim.fn.expand('%:p'))
-        vim.g.current_p_root = root_dir
+        -- local root_dir = require('lspconfig.util').root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git', opened_dir)(vim.fn.expand('%:p'))
+        -- vim.g.current_p_root = root_dir
     end,
 })
+
+-- vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"}, {
+--   pattern = "*CodeCompanionChat*",
+--   command = "set filetype=markdown"
+-- })
 
 -- vim.api.nvim_create_user_command("FormatDisable", function(args)
 --   if args.bang then

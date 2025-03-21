@@ -10,33 +10,33 @@ env.env()
 
 local M = {}
 
-vim.keymap.set('n', '<leader>ae', '<cmd>AerialToggle!<CR>', { desc = 'Aerial' })
-vim.keymap.set('n', '<leader>`', '<cmd>b#<CR>', { desc = 'Prev Buffer' })
+vim.keymap.set("n", "<leader>ae", "<cmd>AerialToggle!<CR>", { desc = "Aerial" })
+vim.keymap.set("n", "<leader>`", "<cmd>b#<CR>", { desc = "Prev Buffer" })
 
 local opts = { noremap = true, silent = true }
 
 -- prevent x to write to clipboard
-vim.keymap.set('n', 'x', '"_x', opts)
+vim.keymap.set("n", "x", '"_x', opts)
 
 -- center after moving
-vim.keymap.set('n', '<C-d>', '<D-d>zz', opts)
-vim.keymap.set('n', '<C-u>', '<D-u>zz', opts)
+vim.keymap.set("n", "<C-d>", "<D-d>zz", opts)
+vim.keymap.set("n", "<C-u>", "<D-u>zz", opts)
 
 -- Navigate between splits
-vim.keymap.set('n', '<C-k>', ':wincmd k<CR>', opts)
-vim.keymap.set('n', '<C-j>', ':wincmd j<CR>', opts)
-vim.keymap.set('n', '<C-h>', ':wincmd h<CR>', opts)
-vim.keymap.set('n', '<C-l>', ':wincmd l<CR>', opts)
+vim.keymap.set("n", "<C-k>", ":wincmd k<CR>", opts)
+vim.keymap.set("n", "<C-j>", ":wincmd j<CR>", opts)
+vim.keymap.set("n", "<C-h>", ":wincmd h<CR>", opts)
+vim.keymap.set("n", "<C-l>", ":wincmd l<CR>", opts)
 
 -- Stay in indent mode
-vim.keymap.set('v', '<', '<gv', opts)
-vim.keymap.set('v', '>', '>gv', opts)
+vim.keymap.set("v", "<", "<gv", opts)
+vim.keymap.set("v", ">", ">gv", opts)
 
 -- toggle wrap
-vim.keymap.set('n', '<leader>lw', '<cmd>set wrap!<CR>', opts)
+vim.keymap.set("n", "<leader>lw", "<cmd>set wrap!<CR>", opts)
 
 -- Keep last yanked when pasting
-vim.keymap.set('v', 'p', '"_dP', opts)
+vim.keymap.set("v", "p", '"_dP', opts)
 
 -- change word with <c-c>
 -- vim.keymap.set({ "n", "x" }, "<C-c>", "<cmd>normal! ciw<cr>a")
@@ -44,29 +44,35 @@ vim.keymap.set({ "n", "x" }, "-", "<cmd>Oil<cr>")
 -- vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- load the session for the current directory
-vim.keymap.set("n", "<leader>qs", function() require("persistence").load() end, { desc = "Load session" })
+vim.keymap.set("n", "<leader>qs", function()
+  require("persistence").load()
+end, { desc = "Load session" })
 -- select a session to load
-vim.keymap.set("n", "<leader>qS", function() require("persistence").select() end, { desc = "Select session" })
+vim.keymap.set("n", "<leader>qS", function()
+  require("persistence").select()
+end, { desc = "Select session" })
 -- load the last session
-vim.keymap.set("n", "<leader>ql", function() require("persistence").load({ last = true }) end,
-    { desc = "Load last session" })
+vim.keymap.set("n", "<leader>ql", function()
+  require("persistence").load({ last = true })
+end, { desc = "Load last session" })
 -- stop Persistence => session won't be saved on exit
-vim.keymap.set("n", "<leader>qd", function() require("persistence").stop() end, { desc = "Stop Persistence" })
+vim.keymap.set("n", "<leader>qd", function()
+  require("persistence").stop()
+end, { desc = "Stop Persistence" })
 
 -- vim.keymap.set("n", "<leader><leader>", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find Buffer" })
 
-
 vim.keymap.set("n", "<leader>cr", ":IncRename ", { desc = "Rename" })
 vim.keymap.set("n", "<leader>cR", function()
-    return ":IncRename " .. vim.fn.expand("<cword>")
+  return ":IncRename " .. vim.fn.expand("<cword>")
 end, { expr = true, desc = "Rename current word" })
 
 vim.keymap.set("n", "<leader>cf", function()
-    require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
+  require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
 end, { desc = "Code Format" })
 
-vim.keymap.set('n', '<leader>sp', '<esc><cmd>lua require("spectre").toggle()<CR>', {
-    desc = "Toggle Spectre",
+vim.keymap.set("n", "<leader>sp", '<esc><cmd>lua require("spectre").toggle()<CR>', {
+  desc = "Toggle Spectre",
 })
 
 -- function M.keymaps_copilot()
@@ -75,22 +81,27 @@ vim.keymap.set('n', '<leader>sp', '<esc><cmd>lua require("spectre").toggle()<CR>
 -- end
 
 function M.setup_spectre_keymaps()
-  vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
-    desc = 'Toggle Spectre',
+  vim.keymap.set("n", "<leader>S", '<cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre",
   })
-  vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
-    desc = 'Search current word',
+  vim.keymap.set("n", "<leader>sw", '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+    desc = "Search current word",
   })
-  vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
-    desc = 'Search current word',
+  vim.keymap.set("v", "<leader>sw", '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+    desc = "Search current word",
   })
-  vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
-    desc = 'Search on current file',
+  vim.keymap.set("n", "<leader>sp", '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+    desc = "Search on current file",
   })
 end
 
 function M.setup_vtsls_keymaps()
-  local vtsls = require("lspconfig").vtsls
+  -- local vtsls = require("lspconfig").vtsls
+
+  vim.keymap.set("n", "<leader>co", function()
+    require("util.lsp").action["source.organizeImports"]()
+  end, { desc = "Organize Imports" })
+
   -- local opts = { noremap = true, silent = true }
   -- vim.keymap.set('n', '<leader>co', vtsls.sortImports, { desc = 'Sort Imports' })
   -- vim.keymap.set("n", "<leader>ca", vtsls.code_action, {
@@ -104,9 +115,8 @@ function M.setup_vtsls_keymaps()
   -- vim.keymap.set("n", "<leader>cd", vtsls.show_document_diagnostics, opts)
 end
 
-
 vim.keymap.set("n", "<leader>ca", function()
-    vim.lsp.buf.code_action()
+  vim.lsp.buf.code_action()
 end, { desc = "Code Action" })
 
 vim.keymap.set("n", "<leader>fm", function()
@@ -117,34 +127,34 @@ end, { desc = "Remove Unused and Sort Imports" })
 function M.setup_trouble_keymaps()
   return {
     {
-      '<leader>xX',
-      '<cmd>Trouble diagnostics toggle<cr>',
-      desc = 'Diagnostics (Trouble)',
+      "<leader>xX",
+      "<cmd>Trouble diagnostics toggle<cr>",
+      desc = "Diagnostics (Trouble)",
     },
     {
-      '<leader>xx',
-      '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
-      desc = 'Buffer Diagnostics (Trouble)',
+      "<leader>xx",
+      "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+      desc = "Buffer Diagnostics (Trouble)",
     },
     {
-      '<leader>cs',
-      '<cmd>Trouble symbols toggle focus=false<cr>',
-      desc = 'Symbols (Trouble)',
+      "<leader>cs",
+      "<cmd>Trouble symbols toggle focus=false<cr>",
+      desc = "Symbols (Trouble)",
     },
     {
-      '<leader>cl',
-      '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
-      desc = 'LSP Definitions / references / ... (Trouble)',
+      "<leader>cl",
+      "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+      desc = "LSP Definitions / references / ... (Trouble)",
     },
     {
-      '<leader>xL',
-      '<cmd>Trouble loclist toggle<cr>',
-      desc = 'Location List (Trouble)',
+      "<leader>xL",
+      "<cmd>Trouble loclist toggle<cr>",
+      desc = "Location List (Trouble)",
     },
     {
-      '<leader>xQ',
-      '<cmd>Trouble qflist toggle<cr>',
-      desc = 'Quickfix List (Trouble)',
+      "<leader>xQ",
+      "<cmd>Trouble qflist toggle<cr>",
+      desc = "Quickfix List (Trouble)",
     },
     -- {
     --   'gd',
@@ -173,6 +183,5 @@ function M.setup_trouble_keymaps()
     -- },
   }
 end
-
 
 return M

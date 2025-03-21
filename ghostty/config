@@ -1,4 +1,4 @@
-theme = tokyonight_night
+theme = Monokai Pro
 font-feature= -liga
 
 shell-integration = zsh

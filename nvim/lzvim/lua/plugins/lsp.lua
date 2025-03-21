@@ -18,24 +18,33 @@ return {
     lazy = false,
     config = function()
       local lspconfig = require("lspconfig")
-      lspconfig.vtsls.setup({})
+      lspconfig.vtsls.setup {}
       lspconfig.eslint.setup({})
       lspconfig.lua_ls.setup({})
       lspconfig.stylua3p_ls.setup({})
       lspconfig.typos_lsp.setup({})
       lspconfig.bashls.setup({})
       lspconfig.jsonls.setup({})
+      -- lspconfig.ts_ls.setup({})
 
-      require("config.keymaps").setup_vtsls_keymaps()
+      require('config.keymaps').setup_vtsls_keymaps()
     end,
     opts = {
       servers = {
         tsserver = {
           enabled = false,
         },
-        ts_ls = {
-          enabled = false,
-        },
+        -- ts_ls = {
+        --   enabled = false,
+        --   filetypes = {
+        --     "javascript",
+        --     "javascriptreact",
+        --     "javascript.jsx",
+        --     "typescript",
+        --     "typescriptreact",
+        --     "typescript.tsx",
+        --   },
+        -- },
         typos_lsp = {
           enabled = false,
         },
@@ -74,8 +83,8 @@ return {
                 variableTypes = { enabled = false },
               },
             },
-          },
-        },
+          }
+        }
       },
       setup = {
         --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
