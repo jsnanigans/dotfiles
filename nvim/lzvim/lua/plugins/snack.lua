@@ -5,24 +5,28 @@ return {
     lazy = false,
     ---@type snacks.Config
     opts = {
-      bigfile = { enabled = true },
-      dashboard = { enabled = true },
-      indent = { enabled = true },
-      input = { enabled = true },
-      notifier = {
-        enabled = true,
-        timeout = 3000,
-      },
-      picker = { enabled = true },
-      quickfile = { enabled = true },
-      scroll = { enabled = true },
-      statuscolumn = { enabled = true },
-      words = { enabled = true },
-      styles = {
-        notification = {
-          -- wo = { wrap = true } -- Wrap notifications
-        },
-      },
+      ---@class snacks.picker.Config
+      picker = {},
+      -- evaluating
+      -- bigfile = { enabled = true },
+      -- dashboard = { enabled = true },
+      -- indent = { enabled = true },
+      -- input = { enabled = true },
+      -- notifier = {
+      --   enabled = true,
+      --   timeout = 3000,
+      -- },
+      -- picker = { enabled = true },
+      -- quickfile = { enabled = true },
+      -- scroll = { enabled = true },
+      -- statuscolumn = { enabled = true },
+      -- words = { enabled = true },
+      -- styles = {
+      --   notification = {
+      --     -- wo = { rap = true } -- Wrap notifications
+      --   },
+      -- },
+      -- approved
     },
     keys = {
       -- picker
@@ -121,6 +125,22 @@ return {
           Snacks.picker.lsp_definitions()
         end,
         desc = "Goto Definition",
+      },
+      {
+        "<leader>ss",
+        function()
+          Snacks.picker.lsp_symbols()
+        end,
+        desc = "LSP Symbols",
+        has = "documentSymbol",
+      },
+      {
+        "<leader>sS",
+        function()
+          Snacks.picker.lsp_workspace_symbols()
+        end,
+        desc = "LSP Workspace Symbols",
+        has = "workspace/symbols",
       },
       {
         "gD",
