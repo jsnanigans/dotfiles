@@ -184,4 +184,14 @@ function M.setup_trouble_keymaps()
   }
 end
 
+vim.keymap.set("n", "<leader>aat", function()
+  require("avante").toggle()
+end, { desc = "Avante Toggle" })
+vim.keymap.set("n", "<leader>aae", function()
+  require("avante").edit()
+end, { desc = "Avante Edit" })
+vim.keymap.set("n", "<leader>aas", function()
+  require("avante").get_suggestions():suggest()
+end, { desc = "Avante Suggest" })
+
 return M
