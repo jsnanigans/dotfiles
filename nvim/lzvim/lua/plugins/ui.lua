@@ -72,8 +72,7 @@ return {
     -- lualine
     {
         "nvim-lualine/lualine.nvim",
-        enabled = false,
-        lazy = false,
+        event = "VeryLazy",
         opts = function(_, opts)
             ---@type table<string, {updated:number, total:number, enabled: boolean, status:string[]}>
             local mutagen = {}
