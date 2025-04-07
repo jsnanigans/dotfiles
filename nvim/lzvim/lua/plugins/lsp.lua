@@ -21,7 +21,9 @@ return {
       lspconfig.vtsls.setup {}
       lspconfig.eslint.setup({})
       lspconfig.lua_ls.setup({})
-      lspconfig.stylua3p_ls.setup({})
+      -- lspconfig.stylua.setup({})
+      lspconfig.basedpyright.setup({})
+      lspconfig.ruff.setup({})
       lspconfig.typos_lsp.setup({})
       lspconfig.bashls.setup({})
       lspconfig.jsonls.setup({})
