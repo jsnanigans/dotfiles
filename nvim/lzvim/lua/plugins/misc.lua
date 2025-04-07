@@ -99,17 +99,17 @@ return {
     --   "CopilotC-Nvim/CopilotChat.nvim",
     --   opts = { show_help = false },
     -- },
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        enabled = false,
-        opts = {
-            filesystem = {
-                filtered_items = {
-                    hide_dotfiles = false,
-                },
-            },
-        },
-    },
+    -- {
+    --     "nvim-neo-tree/neo-tree.nvim",
+    --     enabled = false,
+    --     opts = {
+    --         filesystem = {
+    --             filtered_items = {
+    --                 hide_dotfiles = false,
+    --             },
+    --         },
+    --     },
+    -- },
     -- { "fei6409/log-highlight.nvim", event = "BufRead *.log",                           opts = {} },
     -- {
     --   "t-troebst/perfanno.nvim",
