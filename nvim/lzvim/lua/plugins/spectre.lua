@@ -4,20 +4,23 @@ return {
     dependencies = {
       { 'nvim-lua/plenary.nvim' },
     },
-    config = function()
-      require('spectre').setup {
+    opts = {
         replace_engine = {
-          ['sed'] = {
-            cmd = 'sed',
-            args = {
-              '-i',
-              '',
-              '-E',
+            ['sed'] = {
+                cmd = 'sed',
+                args = {
+                    '-i',
+                    '',
+                    '-E',
+                },
             },
-          },
         },
-      }
-      require('config.keymaps').setup_spectre_keymaps()
-    end,
+    },
+    keys = {
+      { "<leader>S", '<cmd>lua require("spectre").toggle()<CR>', desc = "Toggle Spectre" },
+      { "<leader>sw", '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', desc = "Search current word" },
+      { "<leader>sw", '<esc><cmd>lua require("spectre").open_visual()<CR>', mode = "v", desc = "Search visual selection" },
+      { "<leader>sp", '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', desc = "Search on current file" },
+    },
   }
 }

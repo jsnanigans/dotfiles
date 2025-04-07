@@ -26,5 +26,14 @@ return {
       --   },
       -- },
     },
+    keys = {
+      {
+        "<leader>cf",
+        function()
+          require("conform").format({ bufnr = vim.api.nvim_get_current_buf() })
+        end,
+        desc = "Format Code",
+      },
+    },
   },
 }

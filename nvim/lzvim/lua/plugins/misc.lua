@@ -143,6 +143,9 @@ return {
         config = function()
             require("oil").setup()
         end,
+        keys = {
+          { "-", "<cmd>Oil<CR>", desc = "Open parent directory" },
+        },
     },
     {
         "smjonas/inc-rename.nvim",
@@ -150,6 +153,17 @@ return {
         config = function()
             require("inc_rename").setup()
         end,
+        keys = {
+            { "<leader>cr", ":IncRename ", desc = "Rename" },
+            {
+                "<leader>cR",
+                function()
+                    return ":IncRename " .. vim.fn.expand("<cword>")
+                end,
+                expr = true,
+                desc = "Rename current word",
+            },
+        },
     },
     {"RRethy/vim-illuminate", lazy = false},
 }

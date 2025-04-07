@@ -29,8 +29,21 @@ return {
       lspconfig.jsonls.setup({})
       -- lspconfig.ts_ls.setup({})
 
-      require('config.keymaps').setup_vtsls_keymaps()
+      -- require('config.keymaps').setup_vtsls_keymaps() -- Removed this call
     end,
+    keys = {
+      { "<leader>co", function() vim.lsp.buf.code_action({ apply = true, context = { only = { "source.organizeImports" } } }) end, desc = "Organize Imports" },
+      { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action" },
+      -- The rename keymaps were already present in inc-rename, so we don't add them here again.
+      -- { "<leader>cr", vim.lsp.buf.rename, desc = "Rename" },
+      -- The format keymap is handled by conform.nvim
+      -- { "<leader>cf", vim.lsp.buf.format, desc = "Format Code" },
+      { "<leader>fm", function()
+        -- Requires specific setup for typescript.nvim or similar for these commands
+        vim.lsp.buf.execute_command({ command = "typescript.removeUnusedImports", arguments = {} })
+        vim.lsp.buf.execute_command({ command = "typescript.sortImports", arguments = {} })
+        end, desc = "Fix & Sort Imports (TS)" },
+    },
     opts = {
       servers = {
         tsserver = {
