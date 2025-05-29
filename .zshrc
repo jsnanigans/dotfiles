@@ -79,7 +79,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras cic)
+plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras cic mb-api)
 # zsh-autosuggestions zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
@@ -222,22 +222,18 @@ export PATH=$HOME/development/flutter/bin:$PATH
 # n
 export N_PREFIX=$HOME/n
 export PATH=$N_PREFIX/bin:$PATH
+export DOTFILES=$HOME/dotfiles
 
-export ZELLIJ_CONFIG_DIR=$HOME/dotfiles/zellij
-. "/Users/brendanmullins/.deno/env"
-# Initialize zsh completions (added by deno install script)
-autoload -Uz compinit
-compinit
+export BAT_CONFIG_PATH="$DOTFILES/bat/bat.conf"
 
-export BAT_CONFIG_PATH="$HOME/dotfiles/bat/bat.conf"
+export PYTHON_BIN_PATH="/Users/brendanmullins/Library/Python/3.13/bin"
+export PATH="$PYTHON_BIN_PATH:$PATH"
 
-export CAPGO_API_KEY="a0250313-3bc6-4d14-8cdd-25f48524b19b"
-export ARCHIVE_BASE_URL="https://app-archive.dev.join9am.com"
-export ARCHIVE_S3_BUCKET="userfrontenddevus-archivedistributionbucket-jxy9ut4iujvi"
-export GEMINI_API_KEY="AIzaSyCXhp4N1rZt55hheWyfQLM8Df5sok6FR3Y"
-export OPENAI_API_KEY=""
-export AZURE_OPENAI_API_KEY=""
-export ANTHROPIC_API_KEY=""
-export BEDROCK_KEYS=""
+# load .env.sh
+if [ -f "$DOTFILES/.env.sh" ]; then
+  source "$DOTFILES/.env.sh"
+fi
 
-. "$HOME/.local/bin/env"
+# Created by `pipx` on 2025-05-26 07:13:19
+export PATH="$PATH:/Users/brendanmullins/.local/bin"
+export PATH="$PATH:/Users/brendanmullins/.local/bin"

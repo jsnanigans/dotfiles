@@ -4,9 +4,9 @@ font-feature= -liga
 shell-integration = zsh
 font-family = JetBrains Mono
 mouse-hide-while-typing = true
-scrollback-limit = 1000000
+scrollback-limit = 10000000
 
-keybind = ctrl+n=new_window
+#keybind = ctrl+n=new_window
 
 #keybind = ctrl+h=goto_split:left
 #keybind = ctrl+j=goto_split:bottom
@@ -21,8 +21,9 @@ keybind = ctrl+a>z=toggle_split_zoom
 
 keybind = ctrl+a>n=next_tab
 keybind = ctrl+a>p=previous_tab
+keybind = ctrl+a>r=reload_config
 
 #keybind = super+r=reload_config
 
 window-save-state = always
-shell-integration = zsh
+keybind = shift+enter=text:\n

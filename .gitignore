@@ -1,3 +1,4 @@
 node_modules
 env.lua
 raycast/extensions/*
+.env.sh

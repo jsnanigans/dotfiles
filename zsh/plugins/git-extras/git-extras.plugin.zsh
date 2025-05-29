@@ -42,3 +42,4 @@ compdef _gwe gwe
 alias gwed="gwe develop"
 alias gwem="gwe main"
 alias gwer="gwe release"
+alias gweq="gwe quick"

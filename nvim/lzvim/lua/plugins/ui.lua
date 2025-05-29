@@ -69,111 +69,222 @@ return {
     --   end,
     -- },
 
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- add any options here
+        },
+        dependencies = {
+            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+            "MunifTanjim/nui.nvim",
+            -- OPTIONAL:
+            --   `nvim-notify` is only needed, if you want to use the notification view.
+            --   If not available, we use `mini` as the fallback
+            "rcarriga/nvim-notify",
+        }
+    },
+
     -- lualine
     {
         "nvim-lualine/lualine.nvim",
+        enabled = true,
         event = "VeryLazy",
+        dependencies = { "nvim-tree/nvim-web-devicons", "nvim-lua/plenary.nvim" },
         opts = function(_, opts)
-            ---@type table<string, {updated:number, total:number, enabled: boolean, status:string[]}>
-            local mutagen = {}
+            local mutagen_state = {}
+            local mutagen_jobs = {}
 
-            local function mutagen_status()
-                local cwd = vim.uv.cwd() or "."
-                mutagen[cwd] = mutagen[cwd]
-                    or {
-                        updated = 0,
-                        total = 0,
-                        enabled = vim.fs.find("mutagen.yml", { path = cwd, upward = true })[1] ~= nil,
-                        status = {},
-                    }
-                local now = vim.uv.now() -- timestamp in milliseconds
-                local refresh = mutagen[cwd].updated + 10000 < now
-                if #mutagen[cwd].status > 0 then
-                    refresh = mutagen[cwd].updated + 1000 < now
+            local function require_plenary_job()
+                local Job, _ = pcall(require, "plenary.job")
+                if not Job then
+                    vim.notify(
+                        "plenary.nvim is required for async mutagen status. Please install it.",
+                        vim.log.levels.ERROR,
+                        { title = "Lualine Mutagen" }
+                    )
+                    return nil
                 end
-                if mutagen[cwd].enabled and refresh then
-                    ---@type {name:string, status:string, idle:boolean}[]
-                    local sessions = {}
-                    local lines = vim.fn.systemlist("mutagen project list")
-                    local status = {}
-                    local name = nil
-                    for _, line in ipairs(lines) do
-                        local n = line:match("^Name: (.*)")
-                        if n then
-                            name = n
-                        end
-                        local s = line:match("^Status: (.*)")
-                        if s then
-                            table.insert(sessions, {
-                                name = name,
-                                status = s,
-                                idle = s == "Watching for changes",
-                            })
-                        end
-                    end
-                    for _, session in ipairs(sessions) do
-                        if not session.idle then
-                            table.insert(status, session.name .. ": " .. session.status)
-                        end
-                    end
-                    mutagen[cwd].updated = now
-                    mutagen[cwd].total = #sessions
-                    mutagen[cwd].status = status
-                    if #sessions == 0 then
-                        vim.notify("Mutagen is not running", vim.log.levels.ERROR, { title = "Mutagen" })
-                    end
-                end
-                return mutagen[cwd]
+                return Job
             end
 
-            -- local error_color = LazyVim.ui.fg("DiagnosticError")
-            -- local ok_color = LazyVim.ui.fg("DiagnosticInfo")
-            -- table.insert(opts.sections.lualine_x, {
-            --     cond = function()
-            --         return mutagen_status().enabled
-            --     end,
-            --     color = function()
-            --         return (mutagen_status().total == 0 or mutagen_status().status[1]) and error_color or ok_color
-            --     end,
-            --     function()
-            --         local s = mutagen_status()
-            --         local msg = s.total
-            --         if #s.status > 0 then
-            --             msg = msg .. " | " .. table.concat(s.status, " | ")
-            --         end
-            --         return (s.total == 0 and "󰋘 " or "󰋙 ") .. msg
-            --     end,
-            -- })
+            local function get_mutagen_status()
+                local cwd = vim.uv.cwd() or "."
+                mutagen_state[cwd] = mutagen_state[cwd] or {
+                    updated = 0,
+                    total = 0,
+                    enabled = vim.fs.find("mutagen.yml", { path = cwd, upward = true })[1] ~= nil,
+                    status = {},
+                    checking = false,
+                }
 
-            -- local keys = {}
-            --
-            -- vim.on_key(function(_, key)
-            --   if not key then
-            --     return
-            --   end
-            --   if #key > 0 then
-            --     table.insert(keys, vim.fn.keytrans(key))
-            --     -- require("lualine").refresh()
-            --     -- vim.cmd.redraw()
-            --   end
-            -- end)
-            --
-            -- table.insert(opts.sections.lualine_x, {
-            --   function()
-            --     if #keys > 10 then
-            --       keys = vim.list_slice(keys, #keys - 10)
-            --     end
-            --     return table.concat(keys)
-            --   end,
-            -- })
-            --
-            -- local count = 0
-            -- table.insert(opts.sections.lualine_x, {
-            --   function()
-            --     count = count + 1
-            --     return tostring(count)
-            --   end,
-            -- })
+                local cache = mutagen_state[cwd]
+                if not cache.enabled then
+                    return cache
+                end
+
+                local now = vim.uv.now()
+                local refresh_interval = #cache.status > 0 and 5000 or 15000
+                local should_refresh = cache.updated + refresh_interval < now
+
+                if mutagen_jobs[cwd] and mutagen_jobs[cwd].job:is_running() then
+                    cache.checking = true
+                    return cache
+                end
+
+                if should_refresh then
+                    local Job = require_plenary_job()
+                    if not Job then
+                        return cache
+                    end
+
+                    mutagen_jobs[cwd] = nil
+                    cache.checking = true
+
+                    local job = Job:new({
+                        command = "mutagen",
+                        args = { "project", "list" },
+                        cwd = cwd,
+                        on_exit = vim.schedule_wrap(function(j, return_val)
+                            mutagen_jobs[cwd] = nil
+                            mutagen_state[cwd].checking = false
+
+                            if return_val ~= 0 then
+                                vim.notify(
+                                    "Mutagen command failed (code: " .. return_val .. ")",
+                                    vim.log.levels.WARN,
+                                    { title = "Mutagen Status" }
+                                )
+                                return
+                            end
+
+                            local sessions = {}
+                            local status_details = {}
+                            local name = nil
+                            for _, line in ipairs(j:result() or {}) do
+                                local n = line:match("^Name: (.*)")
+                                if n then name = n end
+                                local s = line:match("^Status: (.*)")
+                                if s then
+                                    table.insert(sessions, {
+                                        name = name or "unknown",
+                                        status = s,
+                                        idle = s == "Watching for changes",
+                                    })
+                                end
+                            end
+
+                            for _, session in ipairs(sessions) do
+                                if not session.idle then
+                                    table.insert(status_details, session.name .. ": " .. session.status)
+                                end
+                            end
+
+                            mutagen_state[cwd].updated = vim.uv.now()
+                            mutagen_state[cwd].total = #sessions
+                            mutagen_state[cwd].status = status_details
+
+                            if #sessions == 0 and mutagen_state[cwd].enabled then
+                                vim.notify(
+                                    "Mutagen running but no active project sessions.",
+                                    vim.log.levels.INFO,
+                                    { title = "Mutagen Status" }
+                                )
+                            end
+                            require("lualine").refresh({ place = { "lualine_x", "lualine_y", "lualine_z" } })
+                        end),
+                        on_stderr = vim.schedule_wrap(function(_, data)
+                            if data and #data > 0 then
+                                vim.notify("Mutagen stderr: " .. data, vim.log.levels.WARN, { title = "Mutagen Status" })
+                            end
+                            if mutagen_state[cwd] then mutagen_state[cwd].checking = false end
+                            if mutagen_jobs[cwd] then mutagen_jobs[cwd] = nil end
+                        end),
+                    })
+                    job:start()
+                    mutagen_jobs[cwd] = { job = job, started = vim.uv.now() }
+                    return cache
+                end
+
+                cache.checking = false
+                return cache
+            end
+
+            local mutagen_lualine_component = {
+                function()
+                    local s = get_mutagen_status()
+                    if not s or not s.enabled then return "" end
+
+                    local icon = s.checking and "󰔟 "
+                        or (#s.status > 0 and "󰨦 "
+                            or (s.total > 0 and "󰕣 "
+                                or "󰅙 "))
+
+                    local text = tostring(s.total)
+                    if #s.status > 0 then
+                        text = text .. " (" .. table.concat(s.status, ", ") .. ")"
+                    end
+                    return icon .. text
+                end,
+                color = function()
+                    local s = mutagen_state[vim.uv.cwd() or "."]
+                    if not s or not s.enabled then return nil end
+                    if s.checking then return { fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("WarningMsg")), "fg#") } end
+                    if #s.status > 0 then return { fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("ErrorMsg")),
+                            "fg#") } end
+                    if s.total == 0 then return { fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("Comment")), "fg#") } end
+                    return { fg = vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID("String")), "fg#") }
+                end,
+                cond = function()
+                    local s = mutagen_state[vim.uv.cwd() or "."]
+                    return s and s.enabled
+                end,
+            }
+
+            opts.options = {
+                icons_enabled = true,
+                theme = "auto",
+                component_separators = '|',
+                section_separators = { left = '', right = '' },
+                disabled_filetypes = {
+                    statusline = {},
+                    winbar = {},
+                },
+                ignore_focus = {},
+                always_divide_middle = true,
+                globalstatus = true,
+                refresh = {
+                    statusline = 1000,
+                    tabline = 1000,
+                    winbar = 1000,
+                }
+            }
+
+            opts.sections = {
+                lualine_a = { 'mode' },
+                lualine_b = { 'branch', 'diff', 'diagnostics' },
+                lualine_c = { { 'filename', path = 1 } },
+
+                lualine_x = { mutagen_lualine_component, 'encoding', 'fileformat', 'filetype' },
+                lualine_y = { 'progress' },
+                lualine_z = { 'location' }
+            }
+
+            opts.inactive_sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = { { 'filename', path = 1 } },
+                lualine_x = { 'location' },
+                lualine_y = {},
+                lualine_z = {}
+            }
+
+            opts.tabline = {}
+            opts.winbar = {}
+            opts.inactive_winbar = {}
+            opts.extensions = { 'nvim-tree', 'trouble' }
+
+            return opts
         end,
     },
     -- { "folke/which-key.nvim", enabled = true, config = function() end },
