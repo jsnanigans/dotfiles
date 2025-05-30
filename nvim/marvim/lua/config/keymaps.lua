@@ -1,186 +1,181 @@
--- Keymaps optimized for power users
+-- Keymaps optimized for speed, developer experience, and logical organization
 local keymap = vim.keymap.set
 
 -- Set leader key
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Better escape
-keymap("i", "jk", "<ESC>", { desc = "Exit insert mode" })
+-- ===== CORE SPEED OPTIMIZATIONS =====
 
--- Clear search highlights
+-- Lightning-fast escape (most frequent action)
+keymap("i", "jk", "<ESC>", { desc = "Exit insert mode" })
+keymap("i", "kj", "<ESC>", { desc = "Exit insert mode (alternative)" })
+
+-- Ultra-fast save (critical action)
+keymap({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+keymap("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
+
+-- Clear search highlights - make it easier to reach
+keymap("n", "<Esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
--- Better window navigation
+-- ===== ENHANCED WINDOW NAVIGATION =====
+
+-- Better window navigation (most used movements)
 keymap("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
 keymap("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
 keymap("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
 keymap("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 
--- Resize windows
-keymap("n", "<C-Up>", ":resize -2<CR>", { desc = "Decrease window height" })
-keymap("n", "<C-Down>", ":resize +2<CR>", { desc = "Increase window height" })
-keymap("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
-keymap("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+-- Terminal mode navigation (consistent with normal mode)
+keymap("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
+keymap("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
+keymap("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
+keymap("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+keymap("t", "<Esc><Esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
 
--- Buffer navigation
+-- ===== SMART WINDOW RESIZING =====
+
+-- Intuitive resize with arrow keys
+keymap("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
+keymap("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
+keymap("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
+keymap("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
+
+-- ===== OPTIMIZED BUFFER NAVIGATION =====
+
+-- Fast buffer switching (very common action)
 keymap("n", "<S-l>", ":bnext<CR>", { desc = "Next buffer" })
 keymap("n", "<S-h>", ":bprevious<CR>", { desc = "Previous buffer" })
-keymap("n", "<leader>bd", ":bdelete<CR>", { desc = "Delete buffer" })
+keymap("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
+keymap("n", "<leader>ba", "<cmd>%bd|e#<CR>", { desc = "Delete all buffers except current" })
 
--- Split windows
-keymap("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
-keymap("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
-keymap("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
-keymap("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
+-- Buffer toggle functionality - switch between current and previous buffer
+local previous_buffer = nil
 
--- Tab navigation
-keymap("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
-keymap("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
-keymap("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" })
-keymap("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" })
-keymap("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
+-- Track the previously used buffer
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    local current_buf = vim.api.nvim_get_current_buf()
+    -- Only track normal buffers (not special ones like terminal, help, etc.)
+    if vim.bo[current_buf].buflisted and vim.bo[current_buf].buftype == "" then
+      if previous_buffer and previous_buffer ~= current_buf then
+        -- Store the last buffer only if it's different from current
+        vim.g.marvim_last_buffer = previous_buffer
+      end
+      previous_buffer = current_buf
+    end
+  end,
+})
 
--- Stay in indent mode
+-- Toggle between current and previous buffer
+keymap("n", "<C-o>", function()
+  local last_buffer = vim.g.marvim_last_buffer
+  if last_buffer and vim.api.nvim_buf_is_valid(last_buffer) and vim.bo[last_buffer].buflisted then
+    vim.api.nvim_set_current_buf(last_buffer)
+  else
+    -- Fallback to alternate buffer if no previous buffer tracked
+    local alt_buf = vim.fn.bufnr("#")
+    if alt_buf ~= -1 and vim.api.nvim_buf_is_valid(alt_buf) and vim.bo[alt_buf].buflisted then
+      vim.api.nvim_set_current_buf(alt_buf)
+    else
+      vim.notify("No previous buffer available", vim.log.levels.INFO)
+    end
+  end
+end, { desc = "Toggle to previous buffer" })
+
+-- ===== ENHANCED TEXT MANIPULATION =====
+
+-- Better up/down movement (handle word wrap)
+keymap({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+keymap({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
+-- Enhanced line movement with Alt keys
+keymap("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
+keymap("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
+keymap("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move line down" })
+keymap("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move line up" })
+keymap("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
+keymap("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
+
+-- Smart indenting (stay in visual mode)
 keymap("v", "<", "<gv", { desc = "Decrease indent" })
 keymap("v", ">", ">gv", { desc = "Increase indent" })
 
--- Move text up and down
-keymap("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-keymap("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
--- Better paste
+-- Better paste (don't yank replaced text)
 keymap("v", "p", '"_dP', { desc = "Paste without yanking" })
 
--- Keep cursor centered during navigation
+-- ===== ENHANCED SEARCH NAVIGATION =====
+
+-- Centered navigation for better focus
 keymap("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center" })
 keymap("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center" })
-keymap("n", "n", "nzzzv", { desc = "Next search result and center" })
-keymap("n", "N", "Nzzzv", { desc = "Previous search result and center" })
+keymap("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next search result" })
+keymap("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev search result" })
 
--- Quick save and quit
-keymap("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
-keymap("n", "<leader>qq", "<cmd>q<CR>", { desc = "Quit" })
-keymap("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Force quit all" })
+-- ===== WINDOW MANAGEMENT (Optimized) =====
 
--- Quick access to config
-keymap("n", "<leader>ce", "<cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
-keymap("n", "<leader>cr", "<cmd>source ~/.config/nvim/init.lua<CR>", { desc = "Reload config" })
+-- Quick window operations
+keymap("n", "<leader>ww", "<C-W>p", { desc = "Other window" })
+keymap("n", "<leader>wd", "<C-W>c", { desc = "Delete window" })
+keymap("n", "<leader>w-", "<C-W>s", { desc = "Split window below" })
+keymap("n", "<leader>w|", "<C-W>v", { desc = "Split window right" })
+keymap("n", "<leader>we", "<C-w>=", { desc = "Make splits equal size" })
 
--- Terminal
+-- Quick splits (even faster access)
+keymap("n", "<leader>-", "<C-W>s", { desc = "Split window below" })
+keymap("n", "<leader>|", "<C-W>v", { desc = "Split window right" })
+
+-- ===== TAB MANAGEMENT (Conflict-Free) =====
+
+-- Move tab operations to <leader><tab> prefix to avoid TypeScript conflicts
+keymap("n", "<leader><tab>n", "<cmd>tabnew<CR>", { desc = "New tab" })
+keymap("n", "<leader><tab>x", "<cmd>tabclose<CR>", { desc = "Close tab" })
+keymap("n", "<leader><tab>]", "<cmd>tabnext<CR>", { desc = "Next tab" })
+keymap("n", "<leader><tab>[", "<cmd>tabprevious<CR>", { desc = "Previous tab" })
+keymap("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
+keymap("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
+keymap("n", "<leader><tab>o", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" })
+
+-- ===== TYPESCRIPT OPERATIONS (Fixed Conflicts) =====
+
+-- Move TypeScript to <leader>ts prefix for clarity and conflict avoidance
+keymap("n", "<leader>tso", "<cmd>TypescriptOrganizeImports<cr>", { desc = "TS: Organize Imports" })
+keymap("n", "<leader>tsr", "<cmd>TypescriptRenameFile<cr>", { desc = "TS: Rename File" })
+keymap("n", "<leader>tsa", "<cmd>TypescriptAddMissingImports<cr>", { desc = "TS: Add Missing Imports" })
+keymap("n", "<leader>tsR", "<cmd>TypescriptRemoveUnused<cr>", { desc = "TS: Remove Unused" })
+keymap("n", "<leader>tsf", "<cmd>TypescriptFixAll<cr>", { desc = "TS: Fix All" })
+keymap("n", "<leader>tsg", "<cmd>TypescriptGoToSourceDefinition<cr>", { desc = "TS: Go to Source Definition" })
+
+-- ===== TERMINAL OPTIMIZATIONS =====
+
+-- Quick terminal access
 keymap("n", "<leader>tt", "<cmd>terminal<CR>", { desc = "Open terminal" })
-keymap("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+keymap("n", "<leader>th", "<cmd>split | terminal<CR>", { desc = "Terminal horizontal split" })
+keymap("n", "<leader>tv", "<cmd>vsplit | terminal<CR>", { desc = "Terminal vertical split" })
 
--- Diagnostic keymaps
-keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-keymap("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+-- ===== LSP OPERATIONS (Optimized & Conflict-Free) =====
 
--- Keymaps for enhanced functionality
+-- Core LSP actions (most frequent)
+keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
+keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
+keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+keymap("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature Documentation" })
 
--- Better up/down (deal with word wrap)
-vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- LSP actions (with leader)
+keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
+keymap("n", "<leader>rs", "<cmd>LspRestart<cr>", { desc = "LSP Restart" })
 
--- Move to window using the <ctrl> hjkl keys
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window", remap = true })
+-- LSP info and diagnostics (resolved conflicts)
+keymap("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
+keymap("n", "<leader>ll", "<cmd>LspLog<cr>", { desc = "LSP Log" })
+keymap("n", "<leader>lR", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
 
--- Resize window using <ctrl> arrow keys
-vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
-vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
-vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
-vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
-
--- Move Lines
-vim.keymap.set("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move down" })
-vim.keymap.set("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move up" })
-vim.keymap.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move down" })
-vim.keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move up" })
-vim.keymap.set("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move down" })
-vim.keymap.set("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move up" })
-
--- Clear search with <esc>
-vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
-
--- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-vim.keymap.set("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next search result" })
-vim.keymap.set("x", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
-vim.keymap.set("o", "n", "'Nn'[v:searchforward]", { expr = true, desc = "Next search result" })
-vim.keymap.set("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev search result" })
-vim.keymap.set("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
-vim.keymap.set("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
-
--- Add undo break-points
-vim.keymap.set("i", ",", ",<c-g>u")
-vim.keymap.set("i", ".", ".<c-g>u")
-vim.keymap.set("i", ";", ";<c-g>u")
-
--- Save file
-vim.keymap.set({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
-
--- Better indenting
-vim.keymap.set("v", "<", "<gv")
-vim.keymap.set("v", ">", ">gv")
-
--- NOTE: Lazy is mapped to <leader>L in init.lua (removed <leader>l to avoid conflict with LSP)
-
--- New file
-vim.keymap.set("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
-
--- Diagnostic location list (moved here to avoid <leader>q conflict)
-vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Open diagnostic location list" })
-
-vim.keymap.set("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
-vim.keymap.set("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
-
-vim.keymap.set("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
-vim.keymap.set("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
-
--- Terminal Mappings
-vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
-vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
-vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
-vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
-vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
-vim.keymap.set("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
-vim.keymap.set("t", "<c-_>", "<cmd>close<cr>", { desc = "which_key_ignore" })
-
--- Windows
-vim.keymap.set("n", "<leader>ww", "<C-W>p", { desc = "Other window", remap = true })
-vim.keymap.set("n", "<leader>wd", "<C-W>c", { desc = "Delete window", remap = true })
-vim.keymap.set("n", "<leader>w-", "<C-W>s", { desc = "Split window below", remap = true })
-vim.keymap.set("n", "<leader>w|", "<C-W>v", { desc = "Split window right", remap = true })
-vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split window below", remap = true })
-vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split window right", remap = true })
-
--- Tabs
-vim.keymap.set("n", "<leader><tab>l", "<cmd>tablast<cr>", { desc = "Last Tab" })
-vim.keymap.set("n", "<leader><tab>f", "<cmd>tabfirst<cr>", { desc = "First Tab" })
-vim.keymap.set("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
-vim.keymap.set("n", "<leader><tab>]", "<cmd>tabnext<cr>", { desc = "Next Tab" })
-vim.keymap.set("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
-vim.keymap.set("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
-
--- TypeScript specific keymaps 
--- NOTE: Some <leader>t* mappings conflict with tab operations above
--- Consider using <leader>ts prefix for TypeScript commands to avoid conflicts
-vim.keymap.set("n", "<leader>to", "<cmd>TypescriptOrganizeImports<cr>", { desc = "Organize Imports" })
-vim.keymap.set("n", "<leader>tr", "<cmd>TypescriptRenameFile<cr>", { desc = "Rename File" })
-vim.keymap.set("n", "<leader>ta", "<cmd>TypescriptAddMissingImports<cr>", { desc = "Add Missing Imports" })
-vim.keymap.set("n", "<leader>tR", "<cmd>TypescriptRemoveUnused<cr>", { desc = "Remove Unused" })
-vim.keymap.set("n", "<leader>tf", "<cmd>TypescriptFixAll<cr>", { desc = "Fix All" })
-vim.keymap.set("n", "<leader>tg", "<cmd>TypescriptGoToSourceDefinition<cr>", { desc = "Go to Source Definition" })
-
--- LSP debugging and troubleshooting
-vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
-vim.keymap.set("n", "<leader>ll", "<cmd>LspLog<cr>", { desc = "LSP Log" })
-vim.keymap.set("n", "<leader>lR", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
-
--- Quick LSP diagnostics command
-vim.keymap.set("n", "<leader>ld", function()
+-- LSP diagnostics function (no conflict with telescope)
+keymap("n", "<leader>lx", function()
   local clients = vim.lsp.get_clients()
   if #clients == 0 then
     vim.notify("No LSP clients attached", vim.log.levels.WARN)
@@ -192,17 +187,52 @@ vim.keymap.set("n", "<leader>ld", function()
     print("- " .. client.name .. " (id: " .. client.id .. ")")
   end
   
-  -- Show current file type and buffer info
   print("\nBuffer info:")
   print("- Filetype: " .. vim.bo.filetype)
   print("- Buffer: " .. vim.api.nvim_buf_get_name(0))
-  
-  -- Show if TypeScript server is running
-  local ts_client = vim.lsp.get_clients({ name = "ts_ls" })[1]
-  if ts_client then
-    print("- TypeScript LSP: Running")
-    print("- Root dir: " .. (ts_client.config.root_dir or "unknown"))
-  else
-    print("- TypeScript LSP: Not running")
-  end
-end, { desc = "LSP Diagnostics" }) 
+end, { desc = "LSP Debug Info" })
+
+-- ===== DIAGNOSTIC NAVIGATION (Optimized) =====
+
+-- Quick diagnostic navigation
+keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+keymap("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+keymap("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
+
+-- ===== QUICKFIX & LOCATION LIST =====
+
+keymap("n", "[q", vim.cmd.cprev, { desc = "Previous quickfix" })
+keymap("n", "]q", vim.cmd.cnext, { desc = "Next quickfix" })
+keymap("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
+keymap("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
+
+-- ===== QUICK ACCESS & UTILITIES =====
+
+-- Configuration access
+keymap("n", "<leader>ce", "<cmd>e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
+keymap("n", "<leader>cr", "<cmd>source ~/.config/nvim/init.lua<CR>", { desc = "Reload config" })
+
+-- Quick quit operations
+keymap("n", "<leader>qq", "<cmd>q<CR>", { desc = "Quit" })
+keymap("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Force quit all" })
+
+-- New file
+keymap("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
+
+-- ===== UNDO BREAK-POINTS (Better undo granularity) =====
+
+keymap("i", ",", ",<c-g>u")
+keymap("i", ".", ".<c-g>u")
+keymap("i", ";", ";<c-g>u")
+
+-- NOTE: Plugin-specific keymaps are defined in their respective plugin files:
+-- - Telescope: lua/plugins/telescope.lua (find operations: <leader>f*)
+-- - Flash: lua/plugins/flash.lua (s, S for motion)
+-- - Leap: lua/plugins/leap.lua (gs, gS, gx, gl for motion)
+-- - Git: lua/plugins/git.lua (git operations: <leader>g*, <leader>h*)
+-- - Trouble: lua/plugins/utils.lua (diagnostics: <leader>x*)
+-- - FZF-lua: lua/plugins/fzf-lua.lua (alternative find: <leader>z*)
+
+-- Lazy plugin manager (avoid conflict with LSP)
+-- NOTE: Mapped to <leader>L in init.lua 

@@ -439,10 +439,9 @@ return {
     keymap("n", "<leader>lds", builtin.lsp_document_symbols, { desc = "Find document symbols" })
     keymap("n", "<leader>lws", builtin.lsp_dynamic_workspace_symbols, { desc = "Find workspace symbols" })
     keymap("n", "<leader>lr", builtin.lsp_references, { desc = "Find references" })
-    -- NOTE: <leader>li conflicts with "LSP Info" in keymaps.lua
-    keymap("n", "<leader>li", builtin.lsp_implementations, { desc = "Find implementations" })
-    -- NOTE: <leader>ld conflicts with "LSP Diagnostics" function in keymaps.lua  
-    keymap("n", "<leader>ld", builtin.lsp_definitions, { desc = "Find definitions" })
-    keymap("n", "<leader>lt", builtin.lsp_type_definitions, { desc = "Find type definitions" })
+    -- LSP telescope functions - using 'lf' prefix to avoid conflicts with main LSP commands
+    keymap("n", "<leader>lfi", builtin.lsp_implementations, { desc = "Find implementations" })
+    keymap("n", "<leader>lfd", builtin.lsp_definitions, { desc = "Find definitions" })
+    keymap("n", "<leader>lft", builtin.lsp_type_definitions, { desc = "Find type definitions" })
   end,
 } 

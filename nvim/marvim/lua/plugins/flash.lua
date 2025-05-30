@@ -1,137 +1,87 @@
 -- Flash.nvim - Enhanced navigation with search labels and character motions
+-- Optimized for speed and developer experience
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
   opts = {
-    -- Labels used for jump targets
-    labels = "asdfghjklqwertyuiopzxcvbnm",
+    -- Optimized labels for fastest finger access (home row + nearby keys)
+    labels = "asdghklqwertyuiopzxcvbnmjf",
     
-    -- Search configuration
+    -- Search configuration - optimized for speed
     search = {
-      -- Search mode can be "exact", "search", "fuzzy" or a function
-      mode = "exact",
-      -- Behave like `incsearch`
-      incremental = false,
-      -- When `true`, flash will be automatically triggered after the
-      -- search pattern is entered
-      trigger = "",
-      -- Maximum number of matches to show
+      mode = "exact", -- Exact mode is fastest
+      incremental = false, -- Disable incremental for speed
+      trigger = "", -- Manual trigger only
       max_length = false,
-      -- Search in all windows
-      multi_window = true,
-      -- Search forward and backward
+      multi_window = true, -- Search across windows
       forward = true,
       wrap = true,
-      -- search in normal and select mode only
-      mode_after = { "n", "t" },
+      mode_after = { "n", "t" }, -- Stay in normal/terminal mode
     },
     
-    -- Flash jump configuration
+    -- Jump configuration - optimized for efficiency
     jump = {
-      -- save location in the jumplist
-      jumplist = true,
-      -- jump position
-      pos = "start",
-      -- add pattern to search history
-      history = false,
-      -- add pattern to search register
-      register = false,
-      -- clear highlight after jump
-      nohlsearch = false,
-      -- automatically jump when there is only one match
-      autojump = false,
+      jumplist = true, -- Save to jumplist for <C-o>/<C-i>
+      pos = "start", -- Jump to start of match
+      history = false, -- Don't clutter search history
+      register = false, -- Don't clutter registers
+      nohlsearch = false, -- Keep highlights
+      autojump = false, -- Manual selection for precision
     },
     
-    -- Label configuration
+    -- Label configuration - optimized for visibility and speed
     label = {
-      -- allow uppercase labels
-      uppercase = true,
-      -- add any labels with the correct case here, that you want to exclude
-      exclude = "",
-      -- add a label for the first match in the current window.
-      -- you can always jump to the first match with `<CR>`
-      current = true,
-      -- show the label after the match
-      after = true,
-      -- show the label before the match
-      before = false,
-      -- position of the label extmark
-      style = "overlay",
-      -- flash tries to re-use labels that were already assigned to a position,
-      -- when typing more characters. By default only lower-case labels are re-used.
-      reuse = "lowercase",
-      -- for the current window, label targets closer to the cursor first
-      distance = true,
-      -- minimum pattern length to show labels
-      min_pattern_length = 0,
-      -- Enable this to use rainbow colors to highlight labels
-      -- Can be useful for colorblind users
+      uppercase = true, -- Allow uppercase for more options
+      exclude = "", -- Don't exclude any labels
+      current = true, -- Label current position
+      after = true, -- Show label after match
+      before = false, -- Don't show before (cleaner)
+      style = "overlay", -- Overlay style for clarity
+      reuse = "lowercase", -- Reuse lowercase labels
+      distance = true, -- Prioritize closer targets
+      min_pattern_length = 0, -- Show labels immediately
       rainbow = {
-        enabled = false,
-        -- number between 1 and 9
+        enabled = false, -- Disable rainbow for speed
         shade = 5,
       },
     },
     
-    -- Highlight configuration
+    -- Highlight configuration - optimized for visibility
     highlight = {
-      -- show a backdrop with hl-group FlashBackdrop
-      backdrop = true,
-      -- Highlight the search matches
-      matches = true,
-      -- extmark priority
-      priority = 5000,
+      backdrop = true, -- Show backdrop for focus
+      matches = true, -- Highlight matches
+      priority = 5000, -- High priority
       groups = {
         match = "FlashMatch",
-        current = "FlashCurrent",
+        current = "FlashCurrent", 
         backdrop = "FlashBackdrop",
         label = "FlashLabel",
       },
     },
     
-    -- action to perform when picking a label.
-    -- defaults to the jumping logic depending on the mode.
     action = nil,
-    
-    -- initial pattern to use when opening flash
     pattern = "",
-    
-    -- When `true`, flash will try to continue the last search
     continue = false,
     
-    -- Set config for ftFT motions
+    -- Enhanced modes for different use cases
     modes = {
-      -- Options used when flash is activated through
-      -- `f`, `F`, `t`, `T`, `;` and `,` motions
+      -- Character motions (f, t, F, T) - optimized for speed
       char = {
         enabled = true,
-        -- dynamic configuration for ftFT motions
         config = function(opts)
-          -- autohide flash when in operator-pending mode
           opts.autohide = opts.autohide or (vim.fn.mode(true):find("no") and vim.v.operator == "y")
-          
-          -- disable jump labels when not needed
           opts.jump_labels = opts.jump_labels and vim.v.count == 0
-          
-          -- Show jump labels only when searching for multiple characters
-          opts.multi_line = false
+          opts.multi_line = false -- Single line for f/t speed
         end,
-        -- hide after jump when not in operator-pending mode
         autohide = false,
-        -- show jump labels
-        jump_labels = false,
-        -- set to `false` to use the current line only
+        jump_labels = false, -- No labels for single chars
         multi_line = true,
-        -- When using jump labels, don't use these keys
-        label = { exclude = "hjkliardc" },
-        -- by default all keymaps are enabled, but you can disable some of them,
-        -- by removing them from the list.
+        label = { exclude = "hjkliardc" }, -- Exclude movement keys
         keys = { "f", "F", "t", "T", ";", "," },
         char_actions = function(motion)
           return {
-            [";"] = "next", -- set to `right` to always go right
-            [","] = "prev", -- set to `left` to always go left
-            -- clever-f style
+            [";"] = "next",
+            [","] = "prev", 
             [motion:lower()] = "next",
             [motion:upper()] = "prev",
           }
@@ -140,9 +90,10 @@ return {
         highlight = { backdrop = false },
         jump = { register = false },
       },
-      -- Options used for treesitter selections
+      
+      -- Treesitter selections - optimized for code navigation
       treesitter = {
-        labels = "abcdefghijklmnopqrstuvwxyz",
+        labels = "asdfghjklqwertyuiop", -- Home row priority
         jump = { pos = "range" },
         search = { incremental = false },
         label = { before = true, after = true, style = "inline" },
@@ -151,6 +102,7 @@ return {
           matches = false,
         },
       },
+      
       treesitter_search = {
         jump = { pos = "range" },
         search = { multi_window = true, wrap = true, incremental = false },
@@ -159,11 +111,66 @@ return {
       },
     },
   },
+  
+  -- Optimized keybindings for maximum speed and minimal conflicts
   keys = {
-    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    -- Primary motion keys - single key for maximum speed
+    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash Jump" },
     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    
+    -- Operator-pending mode for text objects
     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    
+    -- Command mode flash toggle
     { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    
+    -- Additional speed optimizations
+    { "<leader>s", mode = { "n" }, function() 
+      require("flash").jump({
+        search = { mode = "search", max_length = false },
+        label = { after = { 0, 0 } },
+        pattern = "^"
+      })
+    end, desc = "Flash to line start" },
+    
+    { "<leader>S", mode = { "n" }, function()
+      require("flash").jump({
+        search = { mode = "search", max_length = false },
+        label = { after = { 0, 0 } },
+        pattern = "."
+      })
+    end, desc = "Flash to any character" },
   },
+  
+  config = function(_, opts)
+    require("flash").setup(opts)
+    
+    -- Custom highlight groups for better visibility
+    vim.api.nvim_set_hl(0, "FlashMatch", { 
+      fg = "#ff9e64", 
+      bg = "#1a1b26",
+      bold = true, 
+      nocombine = true 
+    })
+    
+    vim.api.nvim_set_hl(0, "FlashLabel", { 
+      fg = "#1a1b26", 
+      bg = "#ff007c", 
+      bold = true, 
+      nocombine = true 
+    })
+    
+    vim.api.nvim_set_hl(0, "FlashCurrent", { 
+      fg = "#1a1b26", 
+      bg = "#7aa2f7", 
+      bold = true, 
+      nocombine = true 
+    })
+    
+    vim.api.nvim_set_hl(0, "FlashBackdrop", { 
+      fg = "#545c7e",
+      nocombine = true
+    })
+  end,
 } 
