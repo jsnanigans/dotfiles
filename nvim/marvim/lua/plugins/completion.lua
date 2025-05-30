@@ -66,6 +66,7 @@ return {
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
+        { name = "copilot", group_index = 2 },
         { name = "nvim_lsp" },
         { name = "luasnip" }, -- snippets
         { name = "buffer" }, -- text within current buffer
@@ -78,6 +79,7 @@ return {
           maxwidth = 50,
           ellipsis_char = "...",
           symbol_map = {
+            Copilot = "",
             Text = "󰉿",
             Method = "󰆧",
             Function = "󰊕",
@@ -107,6 +109,16 @@ return {
         }),
       },
     })
+
+    -- Hide copilot suggestions when cmp menu is open
+    -- Prevents double suggestions
+    cmp.event:on("menu_opened", function()
+      vim.b.copilot_suggestion_hidden = true
+    end)
+
+    cmp.event:on("menu_closed", function()
+      vim.b.copilot_suggestion_hidden = false
+    end)
 
     -- `/` cmdline setup.
     cmp.setup.cmdline("/", {
