@@ -1,6 +1,14 @@
 -- Neotest - Testing framework for Neovim
 return {
   "nvim-neotest/neotest",
+  cmd = { "Neotest" },
+  keys = {
+    { "<leader>tt", desc = "Run nearest test" },
+    { "<leader>tf", desc = "Run tests in current file" },
+    { "<leader>td", desc = "Debug nearest test" },
+    { "<leader>tl", desc = "Run last test" },
+    { "<leader>tS", desc = "Toggle test summary" },
+  },
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",

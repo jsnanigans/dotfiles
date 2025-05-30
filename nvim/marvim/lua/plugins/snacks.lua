@@ -15,7 +15,7 @@ return {
     statuscolumn = { enabled = true },
     words = { enabled = true },
     
-    -- Bigfile configuration
+    -- Bigfile configuration - optimize for better performance
     bigfile = {
       notify = true, -- show notification when big file is opened
       size = 1.5 * 1024 * 1024, -- 1.5MB
@@ -90,7 +90,7 @@ return {
       enabled = true,
     },
     
-    -- Scroll configuration
+    -- Scroll configuration - optimized for smooth performance
     scroll = {
       animate = {
         duration = { step = 15, total = 250 },

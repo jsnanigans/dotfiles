@@ -5,12 +5,12 @@ local augroup = vim.api.nvim_create_augroup
 -- General settings group
 local general = augroup("General", { clear = true })
 
--- Highlight on yank
+-- Highlight on yank (with lower timeout for performance)
 autocmd("TextYankPost", {
   group = general,
   pattern = "*",
   callback = function()
-    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 150 })
   end,
   desc = "Highlight yanked text",
 })
@@ -41,7 +41,14 @@ autocmd("BufWritePre", {
 autocmd("BufWritePre", {
   group = general,
   pattern = "*",
-  command = [[%s/\s\+$//e]],
+  callback = function()
+    -- Save cursor position
+    local save_cursor = vim.fn.getpos(".")
+    -- Remove trailing whitespace
+    vim.cmd([[keeppatterns %s/\s\+$//e]])
+    -- Restore cursor position
+    vim.fn.setpos(".", save_cursor)
+  end,
   desc = "Remove trailing whitespace",
 })
 
@@ -87,12 +94,28 @@ autocmd("FileType", {
   desc = "Close with q",
 })
 
--- Disable autocomment on new line
-autocmd("BufEnter", {
-  group = general,
-  pattern = "*",
-  command = "set fo-=c fo-=r fo-=o",
-  desc = "Disable autocomment",
+-- Performance optimization group
+local perf = augroup("Performance", { clear = true })
+
+-- Check for large files and disable heavy features
+autocmd({ "BufReadPre", "FileReadPre" }, {
+  group = perf,
+  callback = function()
+    local ok, stats = pcall(vim.loop.fs_stat, vim.fn.expand("<afile>"))
+    if ok and stats and stats.size > 1024 * 1024 then -- 1MB
+      vim.b.large_file = true
+      vim.opt_local.spell = false
+      vim.opt_local.swapfile = false
+      vim.opt_local.undofile = false
+      vim.opt_local.breakindent = false
+      vim.opt_local.colorcolumn = ""
+      vim.opt_local.statuscolumn = ""
+      vim.opt_local.signcolumn = "no"
+      vim.opt_local.foldcolumn = "0"
+      vim.opt_local.winbar = ""
+    end
+  end,
+  desc = "Optimize for large files",
 })
 
 -- Terminal settings
@@ -121,6 +144,37 @@ autocmd("FileType", {
     vim.opt_local.conceallevel = 0
   end,
   desc = "JSON settings",
+})
+
+-- Disable format options for all files to prevent auto-commenting
+autocmd("BufEnter", {
+  group = filetypes,
+  pattern = "*",
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
+  desc = "Disable auto-commenting",
+})
+
+-- Auto-create directories when saving files
+autocmd("BufWritePre", {
+  group = general,
+  callback = function(event)
+    if event.match:match("^%w%w+:[\\/][\\/]") then
+      return
+    end
+    local file = vim.uv.fs_realpath(event.match) or event.match
+    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end,
+  desc = "Auto create dir when saving",
+})
+
+-- Disable autocomment on new line
+autocmd("BufEnter", {
+  group = general,
+  pattern = "*",
+  command = "set fo-=c fo-=r fo-=o",
+  desc = "Disable autocomment",
 })
 
 -- Alpha (dashboard) settings

@@ -2,6 +2,15 @@
 return {
   "ibhagwan/fzf-lua",
   dependencies = { "nvim-tree/nvim-web-devicons" },
+  keys = {
+    { "<leader>zf", desc = "FZF Files" },
+    { "<leader>zr", desc = "FZF Recent files" },
+    { "<leader>zb", desc = "FZF Buffers" },
+    { "<leader>zg", desc = "FZF Live grep" },
+    { "<leader>zh", desc = "FZF Help tags" },
+    { "<leader>zc", desc = "FZF Commands" },
+    { "<leader>zk", desc = "FZF Keymaps" },
+  },
   config = function()
     local fzf = require("fzf-lua")
     

@@ -7,11 +7,8 @@ return {
 
     -- Configure linters by filetype
     lint.linters_by_ft = {
-      javascript = { "eslint_d" },
-      javascriptreact = { "eslint_d" },
-      typescript = { "eslint_d" },
-      typescriptreact = { "eslint_d" },
-      vue = { "eslint_d" },
+      -- NOTE: JavaScript/TypeScript linting is handled by ESLint LSP server
+      -- No need for eslint_d linter as it would create duplicate diagnostics
       python = { "pylint", "flake8" },
       dockerfile = { "hadolint" },
       yaml = { "yamllint" },
@@ -23,16 +20,7 @@ return {
     }
 
     -- Custom linter configurations
-    lint.linters.eslint_d.args = {
-      "--no-warn-ignored",
-      "--format",
-      "json",
-      "--stdin",
-      "--stdin-filename",
-      function()
-        return vim.api.nvim_buf_get_name(0)
-      end,
-    }
+    -- NOTE: Removed eslint_d configuration since we use ESLint LSP server
 
     -- Custom luacheck config for Neovim
     lint.linters.luacheck.args = {

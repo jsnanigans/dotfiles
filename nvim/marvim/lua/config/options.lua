@@ -31,10 +31,13 @@ opt.smartcase = true                  -- Case-sensitive if uppercase present
 opt.incsearch = true                  -- Incremental search
 opt.hlsearch = false                  -- Don't highlight search results
 
--- Performance
+-- Performance optimizations
 opt.updatetime = 250                  -- Faster completion
 opt.timeoutlen = 300                  -- Faster key sequence timeout
-opt.lazyredraw = true                 -- Lazy redraw for performance
+opt.ttimeoutlen = 0                   -- No delay for escape sequences
+opt.lazyredraw = false                -- Don't lazy redraw (can cause issues)
+opt.ttyfast = true                    -- Fast terminal connection
+opt.synmaxcol = 200                   -- Limit syntax highlighting column
 
 -- Splits
 opt.splitright = true                 -- Split vertical windows to right
@@ -50,6 +53,7 @@ opt.undolevels = 10000               -- More undo levels
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.foldenable = false                -- Don't fold by default
+opt.foldlevel = 99                    -- High fold level by default
 
 -- Miscellaneous
 opt.conceallevel = 0                  -- Show concealed text
@@ -57,4 +61,19 @@ opt.fileencoding = "utf-8"            -- File encoding
 opt.cmdheight = 1                     -- Command line height
 opt.showmode = false                  -- Don't show mode (status line shows it)
 opt.showtabline = 2                   -- Always show tabline
-opt.wrap = false                      -- Don't wrap lines 
+opt.wrap = false                      -- Don't wrap lines
+opt.linebreak = true                  -- Break lines at word boundaries
+opt.formatoptions:remove({ "c", "r", "o" }) -- Disable auto-commenting
+
+-- Session and view options
+opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+opt.viewoptions = "cursor,folds,slash,unix"
+
+-- Fill characters
+opt.fillchars = {
+  eob = " ",                          -- Empty line at end of buffer
+  fold = " ",                         -- Fold character
+  foldsep = " ",                      -- Fold separator
+  foldopen = "▾",                     -- Fold open
+  foldclose = "▸",                    -- Fold close
+} 

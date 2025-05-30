@@ -2,6 +2,11 @@
 return {
   "echasnovski/mini.files",
   version = "*",
+  keys = {
+    { "<leader>ee", desc = "Toggle file explorer" },
+    { "<leader>ef", desc = "Toggle file explorer on current file" },
+    { "<leader>ed", desc = "Open file explorer in current directory" },
+  },
   config = function()
     local mini_files = require("mini.files")
     

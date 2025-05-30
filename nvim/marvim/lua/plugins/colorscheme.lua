@@ -3,7 +3,7 @@ return {
   "catppuccin/nvim",
   name = "catppuccin",
   priority = 1000, -- Make sure to load this before all the other start plugins
-  lazy = false, -- Make sure we load this during startup
+  lazy = false, -- Don't lazy load colorscheme for immediate visual feedback
   config = function()
     require("catppuccin").setup({
       flavour = "mocha", -- latte, frappe, macchiato, mocha
@@ -71,10 +71,6 @@ return {
     })
 
     -- Load colorscheme with error handling
-    local status_ok, _ = pcall(vim.cmd.colorscheme, "catppuccin")
-    if not status_ok then
-      vim.notify("Failed to load catppuccin colorscheme, falling back to default", vim.log.levels.WARN)
-      vim.cmd.colorscheme("default")
-    end
+    vim.cmd.colorscheme("catppuccin")
   end,
 } 

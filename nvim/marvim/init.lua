@@ -1,17 +1,38 @@
 -- MARVIM: Minimal Awesome Robust Vim
 -- A poweruser's dream configuration
 
+-- Performance: Disable some vim defaults early
+vim.g.loaded_gzip = 1
+vim.g.loaded_zip = 1
+vim.g.loaded_zipPlugin = 1
+vim.g.loaded_tar = 1
+vim.g.loaded_tarPlugin = 1
+vim.g.loaded_getscript = 1
+vim.g.loaded_getscriptPlugin = 1
+vim.g.loaded_vimball = 1
+vim.g.loaded_vimballPlugin = 1
+vim.g.loaded_2html_plugin = 1
+vim.g.loaded_logiPat = 1
+vim.g.loaded_rrhelper = 1
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrwSettings = 1
+vim.g.loaded_netrwFileHandlers = 1
+
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
+if not vim.uv.fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -19,12 +40,12 @@ vim.opt.rtp:prepend(lazypath)
 require("config.options")
 require("config.keymaps")
 
--- Plugin management with proper lazy configuration
+-- Plugin management with optimized lazy configuration
 require("lazy").setup("plugins", {
-  -- Don't make everything lazy by default - let plugins decide
+  -- Improved defaults for better performance
   defaults = {
-    lazy = false, -- Plugins are not lazy by default
-    version = false, -- Don't version lock plugins
+    lazy = true, -- Make plugins lazy by default for better startup
+    version = false, -- Don't version lock plugins for latest fixes
   },
   -- Installation settings
   install = {
@@ -56,12 +77,7 @@ require("lazy").setup("plugins", {
       source = " ",
       start = " ",
       task = "✔ ",
-      list = {
-        "●",
-        "➜",
-        "★",
-        "‒",
-      },
+      list = { "●", "➜", "★", "‒" },
     },
   },
   -- Update checking (disabled by default for performance)
@@ -97,7 +113,7 @@ require("lazy").setup("plugins", {
     patterns = {},
     fallback = false,
   },
-  -- Profiling
+  -- Profiling (enable for debugging startup times)
   profiling = {
     loader = false,
     require = false,
@@ -109,6 +125,9 @@ require("config.autocmds")
 
 -- Initialize project utilities for monorepo support
 require("config.project-utils").setup()
+
+-- Initialize performance monitoring
+require("config.performance").setup()
 
 -- Add keybinding to open lazy
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy plugin manager" })

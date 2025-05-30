@@ -151,12 +151,34 @@ marvim/
 
 ## 🚀 Performance
 
-MARVIM is optimized for speed:
-- Lazy loading of all plugins
-- Disabled unnecessary built-in plugins
-- Minimal startup time (~50ms)
-- Efficient key timeout settings
-- Smart completion and LSP configuration
+MARVIM is heavily optimized for speed and efficiency:
+
+### Startup Performance
+- **Target**: <100ms startup time
+- **Lazy loading**: All plugins load on-demand for faster startup
+- **Disabled plugins**: Unnecessary built-in vim plugins are disabled
+- **Optimized options**: Performance-tuned vim settings
+
+### Performance Monitoring
+Built-in performance monitoring tools:
+- `:MarvimPerf` - Check current startup time
+- `:MarvimMemory` - Monitor memory usage  
+- `:MarvimCleanup` - Run garbage collection
+- `<leader>cp` - Quick performance check
+- `<leader>cm` - Quick memory check
+- `<leader>cc` - Quick cleanup
+
+### Large File Optimization
+- Automatic detection of files >1MB
+- Disables heavy features (syntax, undo, swap) for large files
+- Maintains responsiveness with massive codebases
+
+### Key Optimizations
+- Efficient key timeout settings (300ms)
+- Smart completion configuration
+- Optimized LSP settings
+- Minimal autocmd overhead
+- Strategic plugin lazy loading
 
 ## 📦 Monorepo Workflow
 

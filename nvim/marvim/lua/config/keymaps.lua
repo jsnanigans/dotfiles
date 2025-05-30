@@ -90,13 +90,7 @@ end, { desc = "Toggle to previous buffer" })
 keymap({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 keymap({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
--- Enhanced line movement with Alt keys
-keymap("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move line down" })
-keymap("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move line up" })
-keymap("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move line down" })
-keymap("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move line up" })
-keymap("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move selection down" })
-keymap("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
+-- NOTE: Line movement is handled by mini.move plugin with <M-hjkl> keys
 
 -- Smart indenting (stay in visual mode)
 keymap("v", "<", "<gv", { desc = "Decrease indent" })
