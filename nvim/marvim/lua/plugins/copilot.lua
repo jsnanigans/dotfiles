@@ -1,63 +1,45 @@
--- GitHub Copilot - AI-powered code completion
+-- GitHub Copilot - AI-powered code completion with ghost text
 return {
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        panel = {
-          enabled = true,
-          auto_refresh = false,
-          keymap = {
-            jump_prev = "[[",
-            jump_next = "]]",
-            accept = "<CR>",
-            refresh = "gr",
-            open = "<M-CR>"
-          },
-          layout = {
-            position = "bottom", -- | top | left | right
-            ratio = 0.4
-          },
+  "zbirenbaum/copilot.lua",
+  cmd = "Copilot",
+  event = "InsertEnter",
+  config = function()
+    require("copilot").setup({
+      panel = {
+        enabled = false, -- Disable panel
+      },
+      suggestion = {
+        enabled = true,
+        auto_trigger = true, -- Enable ghost text suggestions
+        hide_during_completion = true,
+        debounce = 75,
+        keymap = {
+          accept = "<C-l>",
+          accept_word = "<M-w>",
+          accept_line = "<M-e>",
+          next = "<C-;>",
+          prev = "<C-S-;>",
+          dismiss = "<C-]>",
         },
-        suggestion = {
-          enabled = true,
-          auto_trigger = false,
-          hide_during_completion = true,
-          debounce = 75,
-          keymap = {
-            accept = "<M-l>",
-            accept_word = false,
-            accept_line = false,
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
-          },
-        },
-        filetypes = {
-          yaml = false,
-          markdown = false,
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ["."] = false,
-        },
-        copilot_node_command = 'node', -- Node.js version must be > 20
-        server_opts_overrides = {},
-      })
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    dependencies = { "copilot.lua" },
-    opts = {},
-    config = function(_, opts)
-      local copilot_cmp = require("copilot_cmp")
-      copilot_cmp.setup(opts)
-    end,
-  },
+      },
+      filetypes = {
+        yaml = false,
+        markdown = false,
+        help = false,
+        gitcommit = false,
+        gitrebase = false,
+        hgcommit = false,
+        svn = false,
+        cvs = false,
+        ["."] = false,
+      },
+      copilot_node_command = 'node', -- Node.js version must be > 20
+      server_opts_overrides = {},
+    })
+
+    -- Optional: Add a keymap to toggle auto suggestions
+    vim.keymap.set("n", "<leader>ct", function()
+      require("copilot.suggestion").toggle_auto_trigger()
+    end, { desc = "Toggle Copilot auto trigger" })
+  end,
 } 
