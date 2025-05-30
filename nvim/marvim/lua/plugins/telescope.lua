@@ -18,6 +18,177 @@ return {
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
+    local builtin = require("telescope.builtin")
+
+    -- Store the initial workspace root (where nvim was opened)
+    local INITIAL_WORKSPACE_ROOT = vim.fn.getcwd()
+
+    -- Helper function to find the nearest package.json directory
+    local function find_project_root()
+      local current_dir = vim.fn.expand('%:p:h')
+      local root_patterns = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' }
+      
+      -- Start from current file's directory and go up
+      local function find_root(path)
+        for _, pattern in ipairs(root_patterns) do
+          if vim.fn.filereadable(path .. '/' .. pattern) == 1 or vim.fn.isdirectory(path .. '/' .. pattern) == 1 then
+            return path
+          end
+        end
+        
+        local parent = vim.fn.fnamemodify(path, ':h')
+        if parent == path then
+          return nil -- Reached filesystem root
+        end
+        
+        return find_root(parent)
+      end
+      
+      return find_root(current_dir) or INITIAL_WORKSPACE_ROOT
+    end
+
+    -- Helper function to get current file's directory
+    local function get_current_dir()
+      local current_file = vim.fn.expand('%:p')
+      if current_file == '' then
+        return vim.fn.getcwd()
+      end
+      return vim.fn.fnamemodify(current_file, ':h')
+    end
+
+    -- Helper function to find all package.json locations in workspace (for monorepos)
+    local function find_monorepo_packages()
+      local packages = {}
+      
+      -- Use find command to locate all package.json files from initial workspace root
+      local cmd = "find " .. INITIAL_WORKSPACE_ROOT .. " -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null"
+      local handle = io.popen(cmd)
+      
+      if handle then
+        for line in handle:lines() do
+          local dir = vim.fn.fnamemodify(line, ':h')
+          table.insert(packages, {
+            path = dir,
+            name = vim.fn.fnamemodify(dir, ':t'),
+            relative = vim.fn.fnamemodify(dir, ':~:.'),
+          })
+        end
+        handle:close()
+      end
+      
+      return packages
+    end
+
+    -- Custom telescope functions for different scopes
+    local function telescope_current_dir_files()
+      local current_dir = get_current_dir()
+      builtin.find_files({
+        prompt_title = "Find Files in Current Dir (" .. vim.fn.fnamemodify(current_dir, ':t') .. ")",
+        cwd = current_dir,
+        find_command = { "fd", "--type", "f", "--hidden", "--follow", "--exclude", "node_modules", "--exclude", ".git" }
+      })
+    end
+
+    local function telescope_current_dir_grep()
+      local current_dir = get_current_dir()
+      builtin.live_grep({
+        prompt_title = "Live Grep in Current Dir (" .. vim.fn.fnamemodify(current_dir, ':t') .. ")",
+        cwd = current_dir,
+      })
+    end
+
+    local function telescope_current_dir_grep_string()
+      local current_dir = get_current_dir()
+      builtin.grep_string({
+        prompt_title = "Grep String in Current Dir (" .. vim.fn.fnamemodify(current_dir, ':t') .. ")",
+        cwd = current_dir,
+      })
+    end
+
+    local function telescope_project_files()
+      local project_root = find_project_root()
+      builtin.find_files({
+        prompt_title = "Find Files in Project (" .. vim.fn.fnamemodify(project_root, ':t') .. ")",
+        cwd = project_root,
+        find_command = { "fd", "--type", "f", "--hidden", "--follow", "--exclude", "node_modules", "--exclude", ".git" }
+      })
+    end
+
+    local function telescope_project_grep()
+      local project_root = find_project_root()
+      builtin.live_grep({
+        prompt_title = "Live Grep in Project (" .. vim.fn.fnamemodify(project_root, ':t') .. ")",
+        cwd = project_root,
+      })
+    end
+
+    -- Functions for workspace root (where nvim was opened)
+    local function telescope_workspace_files()
+      builtin.find_files({
+        prompt_title = "Find Files in Workspace Root (" .. vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':t') .. ")",
+        cwd = INITIAL_WORKSPACE_ROOT,
+        find_command = { "fd", "--type", "f", "--hidden", "--follow", "--exclude", "node_modules", "--exclude", ".git" }
+      })
+    end
+
+    local function telescope_workspace_grep()
+      builtin.live_grep({
+        prompt_title = "Live Grep in Workspace Root (" .. vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':t') .. ")",
+        cwd = INITIAL_WORKSPACE_ROOT,
+      })
+    end
+
+    local function telescope_monorepo_picker()
+      local packages = find_monorepo_packages()
+      
+      if #packages == 0 then
+        vim.notify("No packages found in monorepo", vim.log.levels.WARN)
+        return
+      end
+      
+      -- If only one package, go directly to it
+      if #packages == 1 then
+        telescope_project_files()
+        return
+      end
+      
+      -- Multiple packages - show picker
+      require("telescope.pickers").new({}, {
+        prompt_title = "Select Package",
+        finder = require("telescope.finders").new_table({
+          results = packages,
+          entry_maker = function(entry)
+            return {
+              value = entry,
+              display = entry.name .. " (" .. entry.relative .. ")",
+              ordinal = entry.name .. " " .. entry.relative,
+            }
+          end,
+        }),
+        sorter = require("telescope.config").values.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = require("telescope.actions.state").get_selected_entry()
+            builtin.find_files({
+              prompt_title = "Find Files in " .. selection.value.name,
+              cwd = selection.value.path,
+            })
+          end)
+          
+          map("i", "<C-g>", function()
+            actions.close(prompt_bufnr)
+            local selection = require("telescope.actions.state").get_selected_entry()
+            builtin.live_grep({
+              prompt_title = "Live Grep in " .. selection.value.name,
+              cwd = selection.value.path,
+            })
+          end)
+          
+          return true
+        end,
+      }):find()
+    end
 
     telescope.setup({
       defaults = {
@@ -100,6 +271,24 @@ return {
             ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             ["<C-l>"] = actions.complete_tag,
             ["<C-_>"] = actions.which_key,
+            ["<c-s>"] = function(prompt_bufnr)
+              require("flash").jump({
+                pattern = "^",
+                label = { after = { 0, 0 } },
+                search = {
+                  mode = "search",
+                  exclude = {
+                    function(win)
+                      return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "TelescopeResults"
+                    end,
+                  },
+                },
+                action = function(match)
+                  local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+                  picker:set_selection(match.pos[1] - 1)
+                end,
+              })
+            end,
           },
           n = {
             ["<esc>"] = actions.close,
@@ -125,6 +314,24 @@ return {
             ["<PageUp>"] = actions.results_scrolling_up,
             ["<PageDown>"] = actions.results_scrolling_down,
             ["?"] = actions.which_key,
+            ["s"] = function(prompt_bufnr)
+              require("flash").jump({
+                pattern = "^",
+                label = { after = { 0, 0 } },
+                search = {
+                  mode = "search",
+                  exclude = {
+                    function(win)
+                      return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "TelescopeResults"
+                    end,
+                  },
+                },
+                action = function(match)
+                  local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+                  picker:set_selection(match.pos[1] - 1)
+                end,
+              })
+            end,
           },
         },
       },
@@ -145,32 +352,96 @@ return {
     pcall(require("telescope").load_extension, "fzf")
     pcall(require("telescope").load_extension, "ui-select")
 
-    -- Keymaps
-    local builtin = require("telescope.builtin")
+    -- Keymaps - Enhanced with monorepo support
     local keymap = vim.keymap.set
 
-    keymap("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+    -- === FILE SEARCH COMMANDS ===
+    -- Project scope (nearest package.json/git root) - most common use case
+    keymap("n", "<leader>ff", telescope_project_files, { desc = "Find files in project" })
     keymap("n", "<leader>fr", builtin.oldfiles, { desc = "Find recent files" })
-    keymap("n", "<leader>fs", builtin.live_grep, { desc = "Find string in cwd" })
-    keymap("n", "<leader>fc", builtin.grep_string, { desc = "Find string under cursor in cwd" })
-    keymap("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
+    
+    -- Current directory scope (where current file is located)
+    keymap("n", "<leader>fd", telescope_current_dir_files, { desc = "Find files in current dir" })
+    
+    -- Workspace scope (where nvim was opened)
+    keymap("n", "<leader>fw", telescope_workspace_files, { desc = "Find files in workspace root" })
+    
+    -- Monorepo scope (select package first)
+    keymap("n", "<leader>fm", telescope_monorepo_picker, { desc = "Find files in monorepo package" })
 
+    -- === STRING SEARCH COMMANDS ===
+    -- Project scope (nearest package.json/git root) - most common use case
+    keymap("n", "<leader>fs", telescope_project_grep, { desc = "Find string in project" })
+    keymap("n", "<leader>fc", function()
+      local project_root = find_project_root()
+      builtin.grep_string({
+        prompt_title = "Grep String in Project (" .. vim.fn.fnamemodify(project_root, ':t') .. ")",
+        cwd = project_root,
+      })
+    end, { desc = "Find string under cursor in project" })
+    
+    -- Current directory scope
+    keymap("n", "<leader>fS", telescope_current_dir_grep, { desc = "Find string in current dir" })
+    keymap("n", "<leader>fC", telescope_current_dir_grep_string, { desc = "Find string under cursor in current dir" })
+    
+    -- Workspace scope (where nvim was opened)
+    keymap("n", "<leader>fW", telescope_workspace_grep, { desc = "Find string in workspace root" })
+    
+    -- Monorepo scope (select package first)
+    keymap("n", "<leader>fM", function()
+      local packages = find_monorepo_packages()
+      if #packages == 0 then
+        vim.notify("No packages found in monorepo", vim.log.levels.WARN)
+        return
+      end
+      
+      require("telescope.pickers").new({}, {
+        prompt_title = "Select Package for Grep",
+        finder = require("telescope.finders").new_table({
+          results = packages,
+          entry_maker = function(entry)
+            return {
+              value = entry,
+              display = entry.name .. " (" .. entry.relative .. ")",
+              ordinal = entry.name .. " " .. entry.relative,
+            }
+          end,
+        }),
+        sorter = require("telescope.config").values.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, map)
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = require("telescope.actions.state").get_selected_entry()
+            builtin.live_grep({
+              prompt_title = "Live Grep in " .. selection.value.name,
+              cwd = selection.value.path,
+            })
+          end)
+          return true
+        end,
+      }):find()
+    end, { desc = "Find string in monorepo package" })
+
+    -- === OTHER FIND COMMANDS ===
+    keymap("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Find todos" })
     keymap("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
     keymap("n", "<leader>fh", builtin.help_tags, { desc = "Find help" })
     keymap("n", "<leader>fk", builtin.keymaps, { desc = "Find keymaps" })
-    keymap("n", "<leader>fC", builtin.commands, { desc = "Find commands" })
+    keymap("n", "<leader>fq", builtin.commands, { desc = "Find commands" })
     keymap("n", "<leader>f:", builtin.command_history, { desc = "Find command history" })
     keymap("n", "<leader>f/", builtin.search_history, { desc = "Find search history" })
 
     keymap("n", "<leader>gc", builtin.git_commits, { desc = "Find git commits" })
     keymap("n", "<leader>gfc", builtin.git_bcommits, { desc = "Find git commits for current buffer" })
     keymap("n", "<leader>gb", builtin.git_branches, { desc = "Find git branches" })
-    keymap("n", "<leader>gs", builtin.git_status, { desc = "Find git status" })
+    keymap("n", "<leader>gst", builtin.git_status, { desc = "Find git status (telescope)" })
 
     keymap("n", "<leader>lds", builtin.lsp_document_symbols, { desc = "Find document symbols" })
     keymap("n", "<leader>lws", builtin.lsp_dynamic_workspace_symbols, { desc = "Find workspace symbols" })
     keymap("n", "<leader>lr", builtin.lsp_references, { desc = "Find references" })
+    -- NOTE: <leader>li conflicts with "LSP Info" in keymaps.lua
     keymap("n", "<leader>li", builtin.lsp_implementations, { desc = "Find implementations" })
+    -- NOTE: <leader>ld conflicts with "LSP Diagnostics" function in keymaps.lua  
     keymap("n", "<leader>ld", builtin.lsp_definitions, { desc = "Find definitions" })
     keymap("n", "<leader>lt", builtin.lsp_type_definitions, { desc = "Find type definitions" })
   end,

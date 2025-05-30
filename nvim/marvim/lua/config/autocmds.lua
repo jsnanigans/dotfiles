@@ -15,14 +15,26 @@ autocmd("TextYankPost", {
   desc = "Highlight yanked text",
 })
 
--- Auto format on save for specific filetypes
+-- Auto format on save for specific filetypes (excluding JS/TS - handled by eslint/prettier)
 autocmd("BufWritePre", {
   group = general,
-  pattern = { "*.lua", "*.py", "*.js", "*.ts", "*.jsx", "*.tsx", "*.json", "*.md" },
+  pattern = { "*.lua", "*.py", "*.json", "*.md" },
   callback = function()
+    -- Check if current file is a JS/TS file and skip formatting
+    local filetype = vim.bo.filetype
+    local js_ts_types = {
+      "javascript", "javascriptreact", "typescript", "typescriptreact", "vue"
+    }
+    
+    for _, ft in ipairs(js_ts_types) do
+      if filetype == ft then
+        return
+      end
+    end
+    
     vim.lsp.buf.format({ async = false })
   end,
-  desc = "Auto format on save",
+  desc = "Auto format on save (excluding JS/TS)",
 })
 
 -- Remove trailing whitespace on save

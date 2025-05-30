@@ -48,14 +48,20 @@ return {
         keymap("n", "K", vim.lsp.buf.hover, opts)
         keymap("n", "<leader>rs", ":LspRestart<CR>", opts)
 
-        -- Format on save for specific clients
+        -- Conditional formatting for specific file types only
         if client.supports_method("textDocument/formatting") then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({ bufnr = bufnr })
-            end,
-          })
+          -- Disable formatting for ts_ls - let prettier/eslint handle it
+          if client.name == "ts_ls" then
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          else
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.format({ bufnr = bufnr })
+              end,
+            })
+          end
         end
       end
 
@@ -71,7 +77,7 @@ return {
 
       mason_lspconfig.setup({
         ensure_installed = {
-          "tsserver",
+          "ts_ls",
           "html",
           "cssls",
           "tailwindcss",
@@ -80,88 +86,176 @@ return {
           "emmet_ls",
           "prismals",
           "pyright",
+          "eslint",
         },
-      })
+        handlers = {
+          -- Default handler
+          function(server_name)
+            lspconfig[server_name].setup({
+              capabilities = capabilities,
+              on_attach = on_attach,
+            })
+          end,
+          -- Custom handlers
+          ["lua_ls"] = function()
+            lspconfig["lua_ls"].setup({
+              capabilities = capabilities,
+              on_attach = on_attach,
+              settings = {
+                Lua = {
+                  diagnostics = {
+                    globals = { "vim" },
+                  },
+                  completion = {
+                    callSnippet = "Replace",
+                  },
+                },
+              },
+            })
+          end,
+          ["ts_ls"] = function()
+            -- Get vue language server path for Vue support
+            local mason_registry = require("mason-registry")
+            local vue_language_server_path = nil
+            
+            -- Try to get Vue language server path if vue-language-server is installed
+            if mason_registry.is_installed("vue-language-server") then
+              vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server"
+            end
 
-      mason_lspconfig.setup_handlers({
-        -- Default handler
-        function(server_name)
-          lspconfig[server_name].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-          })
-        end,
-        -- Custom handlers
-        ["lua_ls"] = function()
-          lspconfig["lua_ls"].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = {
-              Lua = {
-                diagnostics = {
-                  globals = { "vim" },
+            local init_options = {
+              preferences = {
+                disableSuggestions = false,
+                quotePreference = "auto",
+                includeCompletionsForModuleExports = true,
+                includeCompletionsForImportStatements = true,
+                includeCompletionsWithSnippetText = true,
+                includeAutomaticOptionalChainCompletions = true,
+              },
+            }
+
+            -- Add Vue plugin if vue-language-server is available
+            if vue_language_server_path then
+              init_options.plugins = {
+                {
+                  name = "@vue/typescript-plugin",
+                  location = vue_language_server_path,
+                  languages = { "vue" },
                 },
-                completion = {
-                  callSnippet = "Replace",
+              }
+            end
+
+            lspconfig["ts_ls"].setup({
+              capabilities = capabilities,
+              on_attach = on_attach,
+              init_options = init_options,
+              filetypes = {
+                "javascript",
+                "javascriptreact",
+                "javascript.jsx",
+                "typescript",
+                "typescriptreact",
+                "typescript.tsx",
+                vue_language_server_path and "vue" or nil,
+              },
+              settings = {
+                typescript = {
+                  inlayHints = {
+                    includeInlayParameterNameHints = "literal",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = false,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  },
+                },
+                javascript = {
+                  inlayHints = {
+                    includeInlayParameterNameHints = "all",
+                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayVariableTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayEnumMemberValueHints = true,
+                  },
                 },
               },
-            },
-          })
-        end,
-        ["tsserver"] = function()
-          lspconfig["tsserver"].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = {
-              typescript = {
-                inlayHints = {
-                  includeInlayParameterNameHints = "literal",
-                  includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                  includeInlayFunctionParameterTypeHints = true,
-                  includeInlayVariableTypeHints = false,
-                  includeInlayPropertyDeclarationTypeHints = true,
-                  includeInlayFunctionLikeReturnTypeHints = true,
-                  includeInlayEnumMemberValueHints = true,
+            })
+          end,
+          ["eslint"] = function()
+            lspconfig["eslint"].setup({
+              capabilities = capabilities,
+              on_attach = function(client, bufnr)
+                on_attach(client, bufnr)
+                
+                -- Auto-fix on save
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                  buffer = bufnr,
+                  command = "EslintFixAll",
+                })
+              end,
+              settings = {
+                packageManager = "npm",
+                useESLintClass = false,
+                experimental = {
+                  useFlatConfig = false,
+                },
+                codeAction = {
+                  disableRuleComment = {
+                    enable = true,
+                    location = "separateLine",
+                  },
+                  showDocumentation = {
+                    enable = true,
+                  },
+                },
+                codeActionOnSave = {
+                  enable = false,
+                  mode = "all",
+                },
+                format = true,
+                nodePath = "",
+                onIgnoredFiles = "off",
+                problems = {
+                  shortenToSingleLine = false,
+                },
+                quiet = false,
+                rulesCustomizations = {},
+                run = "onType",
+                validate = "on",
+                workingDirectory = {
+                  mode = "location",
                 },
               },
-              javascript = {
-                inlayHints = {
-                  includeInlayParameterNameHints = "all",
-                  includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                  includeInlayFunctionParameterTypeHints = true,
-                  includeInlayVariableTypeHints = true,
-                  includeInlayPropertyDeclarationTypeHints = true,
-                  includeInlayFunctionLikeReturnTypeHints = true,
-                  includeInlayEnumMemberValueHints = true,
+            })
+          end,
+          ["emmet_ls"] = function()
+            lspconfig["emmet_ls"].setup({
+              capabilities = capabilities,
+              on_attach = on_attach,
+              filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+            })
+          end,
+          ["pyright"] = function()
+            lspconfig["pyright"].setup({
+              capabilities = capabilities,
+              on_attach = on_attach,
+              settings = {
+                pyright = {
+                  disableOrganizeImports = false,
+                  analysis = {
+                    useLibraryCodeForTypes = true,
+                    autoSearchPaths = true,
+                    diagnosticMode = "workspace",
+                    autoImportCompletions = true,
+                  },
                 },
               },
-            },
-          })
-        end,
-        ["emmet_ls"] = function()
-          lspconfig["emmet_ls"].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
-          })
-        end,
-        ["pyright"] = function()
-          lspconfig["pyright"].setup({
-            capabilities = capabilities,
-            on_attach = on_attach,
-            settings = {
-              pyright = {
-                disableOrganizeImports = false,
-                analysis = {
-                  useLibraryCodeForTypes = true,
-                  autoSearchPaths = true,
-                  diagnosticMode = "workspace",
-                  autoImportCompletions = true,
-                },
-              },
-            },
-          })
-        end,
+            })
+          end,
+        },
       })
     end,
   },

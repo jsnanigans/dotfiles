@@ -1,5 +1,21 @@
 -- Essential utilities for power users
 return {
+  -- Mini.icons - Modern icon provider for better which-key support
+  {
+    "echasnovski/mini.icons",
+    event = "VeryLazy",
+    opts = {},
+    specs = {
+      { "nvim-tree/nvim-web-devicons", enabled = false, optional = true },
+    },
+    init = function()
+      package.preload["nvim-web-devicons"] = function()
+        require("mini.icons").mock_nvim_web_devicons()
+        return package.loaded["nvim-web-devicons"]
+      end
+    end,
+  },
+
   -- Which-key - Never forget a keybinding again
   {
     "folke/which-key.nvim",
@@ -9,28 +25,27 @@ return {
       vim.o.timeoutlen = 300
     end,
     opts = {
+      preset = "classic",
       icons = {
         breadcrumb = "»",
         separator = "➜",
         group = "+",
+        mappings = true,
       },
-      popup_mappings = {
+      keys = {
         scroll_down = "<c-d>",
         scroll_up = "<c-u>",
       },
-      window = {
+      win = {
         border = "rounded",
-        position = "bottom",
-        margin = { 1, 0, 1, 0 },
-        padding = { 1, 2, 1, 2 },
-        winblend = 0,
+        padding = { 1, 2 }, -- top/bottom, left/right
+        title = true,
+        title_pos = "center",
         zindex = 1000,
       },
       layout = {
-        height = { min = 4, max = 25 },
         width = { min = 20, max = 50 },
         spacing = 3,
-        align = "left",
       },
     },
   },
@@ -215,7 +230,8 @@ return {
         dashboard.button("SPC ee", "  > Toggle file explorer", "<cmd>NvimTreeToggle<CR>"),
         dashboard.button("SPC ff", "󰱼  > Find File", "<cmd>Telescope find_files<CR>"),
         dashboard.button("SPC fs", "  > Find Word", "<cmd>Telescope live_grep<CR>"),
-        dashboard.button("SPC wr", "󰁯  > Restore Session For Current Directory", "<cmd>SessionRestore<CR>"),
+        dashboard.button("SPC fr", "󰄉  > Recent Files", "<cmd>Telescope oldfiles<CR>"),
+        dashboard.button("SPC L", "󰒲  > Plugin Manager", "<cmd>Lazy<CR>"),
         dashboard.button("q", "  > Quit NVIM", "<cmd>qa<CR>"),
       }
 

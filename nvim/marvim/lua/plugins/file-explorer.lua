@@ -1,52 +1,51 @@
--- Nvim-tree - A blazing fast file explorer
+-- Mini.files - A modern file explorer
 return {
-  "nvim-tree/nvim-tree.lua",
-  dependencies = "nvim-tree/nvim-web-devicons",
+  "echasnovski/mini.files",
+  version = "*",
   config = function()
-    local nvimtree = require("nvim-tree")
-
-    -- Recommended settings from nvim-tree documentation
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
-
-    nvimtree.setup({
-      view = {
-        width = 35,
-        relativenumber = true,
+    local mini_files = require("mini.files")
+    
+    mini_files.setup({
+      -- Customization of explorer windows
+      windows = {
+        -- Whether to show preview of file/directory under cursor
+        preview = false,
+        -- Width of focused window
+        width_focus = 50,
+        -- Width of non-focused window
+        width_nofocus = 15,
+        -- Width of preview window
+        width_preview = 25,
       },
-      renderer = {
-        indent_markers = {
-          enable = true,
-        },
-        icons = {
-          glyphs = {
-            folder = {
-              arrow_closed = "",
-              arrow_open = "",
-            },
-          },
-        },
+      
+      -- Module mappings created only inside explorer.
+      mappings = {
+        close       = 'q',
+        go_in       = 'l',
+        go_in_plus  = 'L',
+        go_out      = 'h',
+        go_out_plus = 'H',
+        reset       = '<BS>',
+        reveal_cwd  = '@',
+        show_help   = 'g?',
+        synchronize = '=',
+        trim_left   = '<',
+        trim_right  = '>',
       },
-      actions = {
-        open_file = {
-          window_picker = {
-            enable = false,
-          },
-        },
-      },
-      filters = {
-        custom = { ".DS_Store" },
-      },
-      git = {
-        ignore = false,
+      
+      -- General options
+      options = {
+        -- Whether to delete permanently or move into module-specific trash
+        permanent_delete = true,
+        -- Whether to use for editing directories
+        use_as_default_explorer = true,
       },
     })
 
     -- Set keymaps
     local keymap = vim.keymap.set
-    keymap("n", "<leader>ee", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
-    keymap("n", "<leader>ef", "<cmd>NvimTreeFindFileToggle<CR>", { desc = "Toggle file explorer on current file" })
-    keymap("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" })
-    keymap("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" })
+    keymap("n", "<leader>ee", function() mini_files.open() end, { desc = "Toggle file explorer" })
+    keymap("n", "<leader>ef", function() mini_files.open(vim.api.nvim_buf_get_name(0)) end, { desc = "Toggle file explorer on current file" })
+    keymap("n", "<leader>ed", function() mini_files.open(vim.fn.getcwd()) end, { desc = "Open file explorer in current directory" })
   end
 } 
