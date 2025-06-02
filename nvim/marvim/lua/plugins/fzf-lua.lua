@@ -14,6 +14,81 @@ return {
   config = function()
     local fzf = require("fzf-lua")
     
+    -- Store the initial workspace root (where nvim was opened)
+    local INITIAL_WORKSPACE_ROOT = vim.fn.getcwd()
+    
+    -- Helper function to find the nearest package.json directory within initial workspace
+    local function find_project_root()
+      local current_dir = vim.fn.expand('%:p:h')
+      local root_patterns = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' }
+      
+      -- Start from current file's directory and go up
+      local function find_root(path)
+        -- Stop if we've reached the initial workspace root's parent
+        local initial_parent = vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':h')
+        if path == initial_parent or vim.fn.fnamemodify(path, ':h') == initial_parent then
+          return INITIAL_WORKSPACE_ROOT
+        end
+        
+        for _, pattern in ipairs(root_patterns) do
+          if vim.fn.filereadable(path .. '/' .. pattern) == 1 or vim.fn.isdirectory(path .. '/' .. pattern) == 1 then
+            return path
+          end
+        end
+        
+        local parent = vim.fn.fnamemodify(path, ':h')
+        if parent == path then
+          return INITIAL_WORKSPACE_ROOT -- Return initial workspace root instead of nil
+        end
+        
+        -- Don't go beyond the initial workspace root
+        if vim.fn.stridx(path, INITIAL_WORKSPACE_ROOT) ~= 0 then
+          return INITIAL_WORKSPACE_ROOT
+        end
+        
+        return find_root(parent)
+      end
+      
+      -- If current dir is outside initial workspace, use initial workspace
+      if vim.fn.stridx(current_dir, INITIAL_WORKSPACE_ROOT) ~= 0 then
+        return INITIAL_WORKSPACE_ROOT
+      end
+      
+      return find_root(current_dir)
+    end
+    
+    -- Helper function to get current file's directory
+    local function get_current_dir()
+      local current_file = vim.fn.expand('%:p')
+      if current_file == '' then
+        return vim.fn.getcwd()
+      end
+      return vim.fn.fnamemodify(current_file, ':h')
+    end
+    
+    -- Helper function to find all package.json locations in workspace (for monorepos)
+    local function find_monorepo_packages()
+      local packages = {}
+      
+      -- Use find command to locate all package.json files from initial workspace root
+      local cmd = "find " .. INITIAL_WORKSPACE_ROOT .. " -name 'package.json' -not -path '*/node_modules/*' 2>/dev/null"
+      local handle = io.popen(cmd)
+      
+      if handle then
+        for line in handle:lines() do
+          local dir = vim.fn.fnamemodify(line, ':h')
+          table.insert(packages, {
+            path = dir,
+            name = vim.fn.fnamemodify(dir, ':t'),
+            relative = vim.fn.fnamemodify(dir, ':~:.'),
+          })
+        end
+        handle:close()
+      end
+      
+      return packages
+    end
+    
     fzf.setup({
       "telescope", -- Use telescope-like defaults
       
@@ -261,48 +336,197 @@ return {
       },
     })
 
-    -- Keymaps for FZF-lua (alternative to telescope)
+    -- Custom fzf functions for different scopes
+    local function fzf_current_dir_files()
+      local current_dir = get_current_dir()
+      fzf.files({
+        prompt = "Files in " .. vim.fn.fnamemodify(current_dir, ':t') .. "❯ ",
+        cwd = current_dir,
+      })
+    end
+    
+    local function fzf_current_dir_grep()
+      local current_dir = get_current_dir()
+      fzf.live_grep({
+        prompt = "Grep in " .. vim.fn.fnamemodify(current_dir, ':t') .. "❯ ",
+        cwd = current_dir,
+      })
+    end
+    
+    local function fzf_project_files()
+      local project_root = find_project_root()
+      fzf.files({
+        prompt = "Files in " .. vim.fn.fnamemodify(project_root, ':t') .. "❯ ",
+        cwd = project_root,
+      })
+    end
+    
+    local function fzf_project_grep()
+      local project_root = find_project_root()
+      fzf.live_grep({
+        prompt = "Grep in " .. vim.fn.fnamemodify(project_root, ':t') .. "❯ ",
+        cwd = project_root,
+      })
+    end
+    
+    local function fzf_workspace_files()
+      fzf.files({
+        prompt = "Files in " .. vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':t') .. "❯ ",
+        cwd = INITIAL_WORKSPACE_ROOT,
+      })
+    end
+    
+    local function fzf_workspace_grep()
+      fzf.live_grep({
+        prompt = "Grep in " .. vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':t') .. "❯ ",
+        cwd = INITIAL_WORKSPACE_ROOT,
+      })
+    end
+    
+    local function fzf_monorepo_picker()
+      local packages = find_monorepo_packages()
+      
+      if #packages == 0 then
+        vim.notify("No packages found in monorepo", vim.log.levels.WARN)
+        return
+      end
+      
+      -- If only one package, go directly to it
+      if #packages == 1 then
+        fzf_project_files()
+        return
+      end
+      
+      -- Multiple packages - show picker
+      local entries = {}
+      for _, pkg in ipairs(packages) do
+        table.insert(entries, pkg.name .. " (" .. pkg.relative .. ")")
+      end
+      
+      fzf.fzf_exec(entries, {
+        prompt = "Select Package❯ ",
+        actions = {
+          ['default'] = function(selected)
+            local idx = 1
+            for i, entry in ipairs(entries) do
+              if entry == selected[1] then
+                idx = i
+                break
+              end
+            end
+            fzf.files({
+              prompt = "Files in " .. packages[idx].name .. "❯ ",
+              cwd = packages[idx].path,
+            })
+          end,
+        }
+      })
+    end
+    
+    -- Keymaps - Unified with telescope structure
     local keymap = vim.keymap.set
     
-    -- File pickers (alternative to telescope)
-    keymap("n", "<leader>zf", fzf.files, { desc = "FZF Find files" })
-    keymap("n", "<leader>zr", fzf.oldfiles, { desc = "FZF Recent files" })
-    keymap("n", "<leader>zb", fzf.buffers, { desc = "FZF Buffers" })
-    keymap("n", "<leader>zh", fzf.help_tags, { desc = "FZF Help" })
-    keymap("n", "<leader>zk", fzf.keymaps, { desc = "FZF Keymaps" })
-    keymap("n", "<leader>zc", fzf.commands, { desc = "FZF Commands" })
-    keymap("n", "<leader>z:", fzf.command_history, { desc = "FZF Command history" })
-    keymap("n", "<leader>z/", fzf.search_history, { desc = "FZF Search history" })
+    -- === FILE SEARCH COMMANDS (z prefix for fzf) ===
+    -- Project scope (nearest package.json/git root) - most common use case
+    keymap("n", "<leader>zf", fzf_project_files, { desc = "FZF files in project" })
+    keymap("n", "<leader>zr", fzf.oldfiles, { desc = "FZF recent files" })
     
-    -- Search pickers
-    keymap("n", "<leader>zs", fzf.live_grep, { desc = "FZF Live grep" })
-    keymap("n", "<leader>zw", fzf.grep_cword, { desc = "FZF Grep word under cursor" })
-    keymap("v", "<leader>zs", fzf.grep_visual, { desc = "FZF Grep selection" })
-    keymap("n", "<leader>zl", fzf.lines, { desc = "FZF Lines" })
-    keymap("n", "<leader>zL", fzf.blines, { desc = "FZF Buffer lines" })
+    -- Current directory scope (where current file is located)
+    keymap("n", "<leader>zd", fzf_current_dir_files, { desc = "FZF files in current dir" })
     
-    -- Git pickers
-    keymap("n", "<leader>zgf", fzf.git_files, { desc = "FZF Git files" })
-    keymap("n", "<leader>zgc", fzf.git_commits, { desc = "FZF Git commits" })
-    keymap("n", "<leader>zgb", fzf.git_bcommits, { desc = "FZF Git buffer commits" })
-    keymap("n", "<leader>zgB", fzf.git_branches, { desc = "FZF Git branches" })
-    keymap("n", "<leader>zgs", fzf.git_status, { desc = "FZF Git status" })
-    keymap("n", "<leader>zgt", fzf.git_stash, { desc = "FZF Git stash" })
+    -- Workspace scope (where nvim was opened)
+    keymap("n", "<leader>zw", fzf_workspace_files, { desc = "FZF files in workspace root" })
     
-    -- LSP pickers
-    keymap("n", "<leader>zlr", fzf.lsp_references, { desc = "FZF LSP references" })
-    keymap("n", "<leader>zld", fzf.lsp_definitions, { desc = "FZF LSP definitions" })
-    keymap("n", "<leader>zli", fzf.lsp_implementations, { desc = "FZF LSP implementations" })
-    keymap("n", "<leader>zlt", fzf.lsp_typedefs, { desc = "FZF LSP type definitions" })
-    keymap("n", "<leader>zls", fzf.lsp_document_symbols, { desc = "FZF LSP document symbols" })
-    keymap("n", "<leader>zlw", fzf.lsp_workspace_symbols, { desc = "FZF LSP workspace symbols" })
-    keymap("n", "<leader>zlD", fzf.lsp_document_diagnostics, { desc = "FZF LSP diagnostics" })
-    keymap("n", "<leader>zlW", fzf.lsp_workspace_diagnostics, { desc = "FZF LSP workspace diagnostics" })
+    -- Monorepo scope (select package first)
+    keymap("n", "<leader>zm", fzf_monorepo_picker, { desc = "FZF files in monorepo package" })
     
-    -- Other pickers
-    keymap("n", "<leader>zq", fzf.quickfix, { desc = "FZF Quickfix" })
-    keymap("n", "<leader>zQ", fzf.loclist, { desc = "FZF Location list" })
-    keymap("n", "<leader>zt", fzf.tabs, { desc = "FZF Tabs" })
-    keymap("n", "<leader>za", fzf.args, { desc = "FZF Args" })
+    -- === STRING SEARCH COMMANDS ===
+    -- Project scope (nearest package.json/git root) - most common use case
+    keymap("n", "<leader>zs", fzf_project_grep, { desc = "FZF string in project" })
+    keymap("n", "<leader>zc", function()
+      local project_root = find_project_root()
+      fzf.grep_cword({
+        prompt = "Grep word in " .. vim.fn.fnamemodify(project_root, ':t') .. "❯ ",
+        cwd = project_root,
+      })
+    end, { desc = "FZF string under cursor in project" })
+    
+    -- Current directory scope
+    keymap("n", "<leader>zS", fzf_current_dir_grep, { desc = "FZF string in current dir" })
+    keymap("n", "<leader>zC", function()
+      local current_dir = get_current_dir()
+      fzf.grep_cword({
+        prompt = "Grep word in " .. vim.fn.fnamemodify(current_dir, ':t') .. "❯ ",
+        cwd = current_dir,
+      })
+    end, { desc = "FZF string under cursor in current dir" })
+    
+    -- Workspace scope (where nvim was opened)
+    keymap("n", "<leader>zW", fzf_workspace_grep, { desc = "FZF string in workspace root" })
+    
+    -- Monorepo scope (select package first)
+    keymap("n", "<leader>zM", function()
+      local packages = find_monorepo_packages()
+      if #packages == 0 then
+        vim.notify("No packages found in monorepo", vim.log.levels.WARN)
+        return
+      end
+      
+      local entries = {}
+      for _, pkg in ipairs(packages) do
+        table.insert(entries, pkg.name .. " (" .. pkg.relative .. ")")
+      end
+      
+      fzf.fzf_exec(entries, {
+        prompt = "Select Package for Grep❯ ",
+        actions = {
+          ['default'] = function(selected)
+            local idx = 1
+            for i, entry in ipairs(entries) do
+              if entry == selected[1] then
+                idx = i
+                break
+              end
+            end
+            fzf.live_grep({
+              prompt = "Grep in " .. packages[idx].name .. "❯ ",
+              cwd = packages[idx].path,
+            })
+          end,
+        }
+      })
+    end, { desc = "FZF string in monorepo package" })
+    
+    -- === OTHER FIND COMMANDS ===
+    keymap("n", "<leader>zt", "<cmd>TodoFzfLua<cr>", { desc = "FZF todos" })
+    keymap("n", "<leader>zb", fzf.buffers, { desc = "FZF buffers" })
+    keymap("n", "<leader>zh", fzf.help_tags, { desc = "FZF help" })
+    keymap("n", "<leader>zk", fzf.keymaps, { desc = "FZF keymaps" })
+    keymap("n", "<leader>zq", fzf.commands, { desc = "FZF commands" })
+    keymap("n", "<leader>z:", fzf.command_history, { desc = "FZF command history" })
+    keymap("n", "<leader>z/", fzf.search_history, { desc = "FZF search history" })
+    
+    -- Git commands (matching telescope structure)
+    keymap("n", "<leader>zgc", fzf.git_commits, { desc = "FZF git commits" })
+    keymap("n", "<leader>zgfc", fzf.git_bcommits, { desc = "FZF git commits for current buffer" })
+    keymap("n", "<leader>zgb", fzf.git_branches, { desc = "FZF git branches" })
+    keymap("n", "<leader>zgst", fzf.git_status, { desc = "FZF git status" })
+    
+    -- LSP commands (matching telescope structure)
+    keymap("n", "<leader>zlds", fzf.lsp_document_symbols, { desc = "FZF document symbols" })
+    keymap("n", "<leader>zlws", fzf.lsp_workspace_symbols, { desc = "FZF workspace symbols" })
+    keymap("n", "<leader>zlr", fzf.lsp_references, { desc = "FZF references" })
+    keymap("n", "<leader>zlfi", fzf.lsp_implementations, { desc = "FZF implementations" })
+    keymap("n", "<leader>zlfd", fzf.lsp_definitions, { desc = "FZF definitions" })
+    keymap("n", "<leader>zlft", fzf.lsp_typedefs, { desc = "FZF type definitions" })
+    
+    -- Additional FZF-specific commands
+    keymap("n", "<leader>zl", fzf.lines, { desc = "FZF lines in all buffers" })
+    keymap("n", "<leader>zL", fzf.blines, { desc = "FZF lines in current buffer" })
+    keymap("v", "<leader>zs", fzf.grep_visual, { desc = "FZF grep selection" })
+    keymap("n", "<leader>zQ", fzf.quickfix, { desc = "FZF quickfix" })
+    keymap("n", "<leader>zZ", fzf.loclist, { desc = "FZF location list" })
+    keymap("n", "<leader>zT", fzf.tabs, { desc = "FZF tabs" })
+    keymap("n", "<leader>za", fzf.args, { desc = "FZF args" })
   end,
 } 

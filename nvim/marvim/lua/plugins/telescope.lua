@@ -23,13 +23,19 @@ return {
     -- Store the initial workspace root (where nvim was opened)
     local INITIAL_WORKSPACE_ROOT = vim.fn.getcwd()
 
-    -- Helper function to find the nearest package.json directory
+    -- Helper function to find the nearest package.json directory within initial workspace
     local function find_project_root()
       local current_dir = vim.fn.expand('%:p:h')
       local root_patterns = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' }
       
       -- Start from current file's directory and go up
       local function find_root(path)
+        -- Stop if we've reached the initial workspace root's parent
+        local initial_parent = vim.fn.fnamemodify(INITIAL_WORKSPACE_ROOT, ':h')
+        if path == initial_parent or vim.fn.fnamemodify(path, ':h') == initial_parent then
+          return INITIAL_WORKSPACE_ROOT
+        end
+        
         for _, pattern in ipairs(root_patterns) do
           if vim.fn.filereadable(path .. '/' .. pattern) == 1 or vim.fn.isdirectory(path .. '/' .. pattern) == 1 then
             return path
@@ -38,13 +44,23 @@ return {
         
         local parent = vim.fn.fnamemodify(path, ':h')
         if parent == path then
-          return nil -- Reached filesystem root
+          return INITIAL_WORKSPACE_ROOT -- Return initial workspace root instead of nil
+        end
+        
+        -- Don't go beyond the initial workspace root
+        if vim.fn.stridx(path, INITIAL_WORKSPACE_ROOT) ~= 0 then
+          return INITIAL_WORKSPACE_ROOT
         end
         
         return find_root(parent)
       end
       
-      return find_root(current_dir) or INITIAL_WORKSPACE_ROOT
+      -- If current dir is outside initial workspace, use initial workspace
+      if vim.fn.stridx(current_dir, INITIAL_WORKSPACE_ROOT) ~= 0 then
+        return INITIAL_WORKSPACE_ROOT
+      end
+      
+      return find_root(current_dir)
     end
 
     -- Helper function to get current file's directory

@@ -47,6 +47,13 @@ return {
         keymap("n", "]d", vim.diagnostic.goto_next, opts)
         keymap("n", "K", vim.lsp.buf.hover, opts)
         keymap("n", "<leader>rs", ":LspRestart<CR>", opts)
+        
+        -- Toggle inlay hints (if supported)
+        if client.supports_method("textDocument/inlayHint") then
+          keymap("n", "<leader>th", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(bufnr), { bufnr = bufnr })
+          end, { desc = "Toggle Inlay Hints", buffer = bufnr })
+        end
 
         -- Conditional formatting for specific file types only
         if client.supports_method("textDocument/formatting") then
@@ -98,7 +105,7 @@ return {
 
       mason_lspconfig.setup({
         ensure_installed = {
-          "ts_ls",
+          "typescript-language-server", -- Changed from ts_ls to actual Mason package name
           "html",
           "cssls",
           "tailwindcss",
@@ -109,6 +116,8 @@ return {
           "pyright",
           "eslint",
         },
+        -- Don't automatically install servers that fail
+        automatic_installation = false,
         handlers = {
           -- Default handler
           function(server_name)
@@ -119,22 +128,39 @@ return {
           end,
           -- Custom handlers
           ["lua_ls"] = function()
-            lspconfig["lua_ls"].setup({
-              capabilities = capabilities,
-              on_attach = on_attach,
-              settings = {
-                Lua = {
-                  diagnostics = {
-                    globals = { "vim" },
-                  },
-                  completion = {
-                    callSnippet = "Replace",
+            -- Check if lua_ls is available before configuring
+            local ok, _ = pcall(function()
+              lspconfig["lua_ls"].setup({
+                capabilities = capabilities,
+                on_attach = on_attach,
+                settings = {
+                  Lua = {
+                    runtime = {
+                      version = "LuaJIT",
+                    },
+                    diagnostics = {
+                      globals = { "vim" },
+                    },
+                    workspace = {
+                      library = vim.api.nvim_get_runtime_file("", true),
+                      checkThirdParty = false,
+                    },
+                    telemetry = {
+                      enable = false,
+                    },
+                    completion = {
+                      callSnippet = "Replace",
+                    },
                   },
                 },
-              },
-            })
+              })
+            end)
+            
+            if not ok then
+              vim.notify("lua_ls failed to setup. Install via Mason or system package manager.", vim.log.levels.WARN)
+            end
           end,
-          ["ts_ls"] = function()
+          ["typescript-language-server"] = function()
             -- Get vue language server path for Vue support
             local mason_registry = require("mason-registry")
             local vue_language_server_path = nil

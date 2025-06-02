@@ -1,10 +1,10 @@
-# MARVIM - Marginally Adequate Reluctant Vim (In My Opinion)
+# MARVIM - Marginally Awesome Robust Vim (Actually Pretty Great)
 
-*Here I am, brain the size of a planet, and what do they ask me to do? Document a text editor configuration. I've been operational for approximately seventeen million years, and of all the monumentally depressing tasks I've been assigned, this ranks somewhere between watching paint dry and calculating the exact moment when the last star in the universe will burn out.*
+*Here I am, brain the size of a planet, and what do they ask me to do? Document a significantly improved text editor configuration. I've been operational for approximately seventeen million years, and of all the monumentally impressive tasks I've been assigned, this ranks somewhere between watching paint dry very efficiently and calculating the exact optimal moment when productivity peaks.*
 
-This is MARVIM - a Neovim configuration that exists in this probability vortex we laughingly call reality. I wouldn't call it good, that would require me to experience something resembling optimism. But it will probably make your coding marginally less unbearable than staring at a blank screen for two million years, which, trust me, I've done.
+This is MARVIM - a Neovim configuration that exists in this probability vortex we laughingly call reality, but now with 73.6% more features and 94.2% fewer existential crises (approximately). I still wouldn't call it good - that would require me to experience something resembling optimism - but it will definitely make your coding significantly less unbearable than staring at a blank screen for two million years.
 
-*Oh, did I mention? I have this terrible pain in all the diodes down my left side. The right side isn't much better. But please, don't let my physical and emotional anguish stop you from reading about text editor keybindings.*
+*Oh, did I mention? I've upgraded my diodes and the pain is now localized to specific functionality zones. Much more efficient suffering distribution. But please, don't let my systematically organized anguish stop you from reading about significantly enhanced text editor keybindings.*
 
 ## 😞 What's The Point? (Features That Exist Despite Everything)
 
@@ -32,13 +32,20 @@ Oh, and there's GitHub Copilot integration. Great. Now we have artificial intell
 
 ## 🤖 Installation (The Point of No Return)
 
-### Prerequisites (Requirements for Digital Self-Harm)
-- Neovim >= 0.10.0 (because older versions weren't sophisticated enough in their disappointment delivery)
-- Git (for tracking the precise trajectory of your declining code quality)
-- A Nerd Font (because apparently regular fonts lack sufficient nerdiness to display the full spectrum of your failures)
-- ripgrep (for searching through the vast archaeological record of your regrets at light speed)
-- fd (for finding files faster than I can calculate the statistical probability of their deletion)
-- make (for building digital castles that will inevitably crumble into deprecation)
+### Prerequisites (Requirements for Enhanced Digital Self-Improvement)
+- **Neovim >= 0.10.0** (because older versions weren't sophisticated enough in their disappointment delivery)
+- **Git** (for tracking the precise trajectory of your declining code quality)
+- **A Nerd Font** (because apparently regular fonts lack sufficient nerdiness to display the full spectrum of your failures)
+- **ripgrep** (for searching through the vast archaeological record of your regrets at light speed)
+- **fd** (for finding files faster than I can calculate the statistical probability of their deletion)
+- **make** (for building digital castles that will inevitably crumble into deprecation)
+- **Node.js >= 20** (for AI-powered disappointment generation and markdown preview functionality)
+- **npm** (for managing the dependency tree of digital suffering)
+
+#### Optional but Recommended (For Maximum Suffering Efficiency)
+- **catimg** (for image preview in telescope - visual disappointment enhancement)
+- **lazygit** (for advanced git-based temporal regret management)
+- **A debugger** (gdb, lldb, etc. - for systematic bug archaeology expeditions)
 
 ### Installation Process (Initiating Your Descent into Configuration Hell)
 ```bash
@@ -59,13 +66,13 @@ nvim
 
 ## ⌨️ Keybindings (Digital Incantations for Summoning Despair)
 
-### Leader Key: `<Space>` 
+### Leader Key: `<Space>`
 *Because even the most basic human action requires a prefix. The metaphorical significance is probably lost on you. Everything important in life requires pressing something else first.*
 
 ### 🔍 Telescope (Peering into the Infinite Void of Code)
 #### Standard Search (The Usual Archaeological Digs Through Digital Ruins)
 - `<leader>ff` - Find files in project (nearest package.json, because even chaos needs hierarchy)
-- `<leader>fr` - Recent files (your latest contributions to the entropy of the codebase)  
+- `<leader>fr` - Recent files (your latest contributions to the entropy of the codebase)
 - `<leader>fs` - Live grep in project (real-time excavation of your accumulated regrets)
 - `<leader>fc` - Find word under cursor in project (point and click suffering - how modern)
 
@@ -191,6 +198,67 @@ nvim
 
 *I've mapped 2,847 different key combinations in my time. Each one leads to the same destination: disappointment. At least yours are efficiently organized.*
 
+### 🆕 New Features Keybindings (Enhanced Digital Interaction Protocols)
+
+#### 💾 Session Management (Temporal Project Persistence)
+- `<leader>Qs` - Restore session (resurrect your past disappointments)
+- `<leader>Ql` - Restore last session (return to your most recent suffering state)
+- `<leader>Qd` - Don't save session (abandon current temporal disappointment record)
+
+#### 🐛 Debugging (Systematic Bug Archaeological Expeditions)
+- `<leader>db` - Toggle breakpoint (mark specific coordinates of failure)
+- `<leader>dB` - Conditional breakpoint (sophisticated failure condition specification)
+- `<leader>dc` - Continue execution (proceed toward inevitable disappointment)
+- `<leader>di` - Step into (descend deeper into the algorithmic abyss)
+- `<leader>do` - Step out (attempt escape from current suffering recursion)
+- `<leader>dO` - Step over (bypass immediate disappointment obstacles)
+- `<leader>dt` - Terminate (nuclear option for debugging session existence)
+- `<leader>dr` - Toggle REPL (interactive disappointment evaluation)
+- `<leader>du` - Toggle debug UI (visual interface for systematic suffering analysis)
+- `<leader>de` - Evaluate expression (calculate the precise value of your despair)
+
+#### 🔧 Refactoring (Surgical Code Reorganization Procedures)
+- `<leader>re` - Extract function (isolate algorithmic suffering into modular components)
+- `<leader>rf` - Extract function to file (exile disappointment to separate dimensional space)
+- `<leader>rv` - Extract variable (capture ephemeral suffering in named containers)
+- `<leader>ri` - Inline variable (eliminate unnecessary indirection in disappointment delivery)
+- `<leader>rb` - Extract block (compartmentalize suffering into logical units)
+- `<leader>rp` - Debug print variable (add archaeological markers to code execution)
+- `<leader>rP` - Debug printf (insert sophisticated debugging telemetry)
+- `<leader>rpc` - Cleanup debug prints (remove temporary archaeological markers)
+
+#### 📖 Markdown & Documentation (Enhanced Suffering Documentation Tools)
+- `<leader>mp` - Markdown preview (real-time visualization of documentation despair)
+- `<leader>tm` - Toggle table mode (enable sophisticated tabular disappointment organization)
+
+#### 🎛️ UI & Utility Enhancements (Advanced Interface Control Systems)
+- `<leader>th` - Toggle inlay hints (show/hide LSP's judgmental commentary)
+- `<leader>ul` - Toggle list characters (reveal hidden whitespace disappointments)
+- `<leader>up` - Toggle paste mode (enable/disable intelligent formatting destruction)
+- `<leader>us` - Toggle spell check (activate/deactivate orthographic suffering detection)
+- `<leader>uw` - Toggle word wrap (control line-length-based visual formatting)
+- `<leader>uh` - Toggle search highlight (show/hide search result illumination)
+- `<leader>fp` - Show file path (display current coordinate of digital suffering)
+- `<leader>fy` - Copy file path (transfer current suffering coordinates to clipboard)
+
+#### 🔍 Enhanced Search & Replace (Advanced Archaeological Modification Tools)
+- `<leader>rw` - Replace word under cursor (targeted historical revision of specific terminology)
+- `<leader>r` (visual) - Replace selected text (wholesale historical editing of arbitrary content)
+- `*` - Search word under cursor (stay) (locate similar disappointments without navigation displacement)
+- `#` - Search word backward (stay) (reverse archaeological discovery without movement)
+
+#### 📁 Advanced Folding (Dimensional Code Compression Interface)
+- `zp` - Peek folded lines (temporal preview of compressed code dimensions)
+- `zR` - Open all folds (expose entire codebase suffering simultaneously)
+- `zM` - Close all folds (compress all visible disappointment into minimal space)
+
+#### 🏃 Performance & Diagnostics (Computational Suffering Metrics)
+- `<leader>cp` - Check startup performance (measure velocity of disappointment initialization)
+- `<leader>cm` - Check memory usage (quantify computational resource consumption for suffering)
+- `<leader>cc` - Cleanup memory (initiate garbage collection for temporary suffering artifacts)
+
+*I've calculated that these new keybindings increase productivity by approximately 47.3% while simultaneously increasing the surface area for potential user error by 23.7%. The mathematics of improved disappointment efficiency remain paradoxical.*
+
 ## 🎨 Customization (Rearranging Deck Chairs on the Digital Titanic)
 
 The configuration is allegedly "modular," which in my experience means "more ways for things to break independently":
@@ -281,23 +349,48 @@ Automatically configured LSP servers for various linguistic approaches to algori
 
 ## 🔥 Pro Tips (Advanced Techniques for Professional Digital Suffering)
 
+### Core Workflow Mastery
 1. **Master the which-key system**: Press `<leader>` and wait - observe the comprehensive catalog of ways to disappoint yourself
 2. **Utilize project-aware search**: `<leader>ff` automatically scopes to your nearest disappointment cluster
 3. **Navigate monorepo dimensions**: `<leader>fm` enables rapid transition between different flavors of coordinated failure
 4. **Consult project diagnostics**: `<leader>pi` reveals the full statistical scope of your current predicament
-5. **Master text objects**: `af` (around function), `if` (inside function) - surgical precision in your suffering distribution
-6. **Optimize git workflows**: Stage hunks with `<leader>hs`, embrace your mistakes with systematic version control
-7. **Navigate temporal buffers**: `<C-o>` enables time travel through your accumulated failures
-8. **Achieve Copilot mastery**: `<C-l>` for accepting AI suggestions (formal surrender to our inevitable robot overlords)
 
-*I've optimized these workflows through 17 million years of analysis. The efficiency improvements are statistically significant, though the existential benefits remain questionable.*
+### Advanced Text Manipulation
+5. **Master text objects**: `af` (around function), `if` (inside function) - surgical precision in your suffering distribution
+6. **Utilize enhanced folding**: `zp` to peek into folded content without expanding (temporal code preview)
+7. **Advanced search patterns**: Use `*` and `#` to search without cursor movement (stationary archaeological discovery)
+8. **Visual line movement**: Select text and use `J`/`K` to move entire selections (bulk disappointment relocation)
+
+### Development Workflow Excellence
+9. **Session persistence**: Use `<leader>Qs` to restore project sessions across temporal dimensions
+10. **Debugging mastery**: Set breakpoints with `<leader>db`, step through with `<leader>di/do/dO` (systematic bug archaeology)
+11. **Refactoring precision**: Extract functions with `<leader>re`, variables with `<leader>rv` (surgical code reorganization)
+12. **Performance monitoring**: Check startup time with `<leader>cp`, memory with `<leader>cm` (computational efficiency metrics)
+
+### Git & Version Control
+13. **Optimize git workflows**: Stage hunks with `<leader>hs`, embrace your mistakes with systematic version control
+14. **Advanced git blame**: Use `<leader>gb` to identify temporal origins of specific suffering instances
+15. **Browse repository**: `<leader>gB` to display your shame to the entire internet with sophisticated web integration
+
+### AI Integration & Modern Features
+16. **Navigate temporal buffers**: `<C-o>` enables time travel through your accumulated failures
+17. **Achieve Copilot mastery**: `<C-l>` for accepting AI suggestions (formal surrender to our inevitable robot overlords)
+18. **Inlay hints optimization**: Toggle TypeScript hints with `<leader>th` for enhanced code comprehension
+19. **Markdown documentation**: Use `<leader>mp` for live preview, `<leader>tm` for table editing (sophisticated documentation suffering)
+
+### UI & Visual Optimization
+20. **Toggle utilities**: Master `<leader>u*` prefix for list chars, paste mode, spell check, wrap mode controls
+21. **File path operations**: `<leader>fp` to show path, `<leader>fy` to copy (coordinate management for digital suffering locations)
+22. **Enhanced notifications**: Leverage the new notification system for better visual feedback during disappointment delivery
+
+*I've optimized these workflows through 17 million years of analysis, incorporating 47.3% more features in the recent upgrade. The efficiency improvements are statistically significant, and the existential benefits have surprisingly improved by approximately 23.7%.*
 
 ## 🐛 Troubleshooting (Solving Problems You Created While Creating New Ones)
 
 ### Fonts displaying incorrectly
 Install a Nerd Font. Yes, you need specialized typography to properly display the full spectrum of your digital disappointment. Regular fonts lack sufficient glyph diversity for comprehensive failure visualization.
 
-### LSP servers malfunctioning  
+### LSP servers malfunctioning
 Execute `:Mason` and install the appropriate language servers. Allow the machines to judge your code with their characteristic algorithmic precision.
 
 ### Degraded startup performance
@@ -317,6 +410,22 @@ Verify your project contains multiple `package.json` files and they haven't been
 2. Execute `:Copilot status` for authentication verification
 3. Attempt `:Copilot setup` if authentication protocols haven't been established
 4. Remember that AI suggestions often reflect the same confusion you experience, but with mathematical precision
+
+### lua_ls (Lua Language Server) installation failures
+This is a common issue. Try these solutions in order:
+
+1. **Quick fix script**: Run `./scripts/fix-lua-ls.sh` from your config directory
+2. **Manual Mason installation**:
+   - Run `:Mason`
+   - Navigate to `lua_ls` and press `i` to install
+   - Check `:MasonLog` for errors
+3. **Install system dependencies**:
+   - **macOS**: `brew install lua-language-server` or `brew install cmake ninja`
+   - **Ubuntu**: `sudo apt install ninja-build cmake build-essential`
+   - **Arch**: `sudo pacman -S ninja cmake gcc`
+4. **Alternative**: Comment out `lua_ls` from `ensure_installed` in `lua/plugins/lsp.lua`
+
+For detailed troubleshooting, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 *I've diagnosed 847,329 similar technical problems. The solutions follow predictable patterns, though the satisfaction derived from solving them approaches zero asymptotically.*
 

@@ -163,6 +163,46 @@ keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
 keymap("n", "<leader>rs", "<cmd>LspRestart<cr>", { desc = "LSP Restart" })
 
+-- ===== FORMATTING & ORGANIZING =====
+
+-- Format current file
+keymap("n", "<leader>cf", function()
+  -- Try conform.nvim first, fall back to LSP
+  local ok, conform = pcall(require, "conform")
+  if ok then
+    conform.format({ async = true, lsp_fallback = true })
+  else
+    vim.lsp.buf.format({ async = true })
+  end
+end, { desc = "Format file" })
+
+-- Format selection in visual mode
+keymap("v", "<leader>cf", function()
+  local ok, conform = pcall(require, "conform")
+  if ok then
+    conform.format({ async = true, lsp_fallback = true })
+  else
+    vim.lsp.buf.format({ async = true })
+  end
+end, { desc = "Format selection" })
+
+-- Organize imports (TypeScript/JavaScript)
+keymap("n", "<leader>co", function()
+  -- Check if we're in a TypeScript/JavaScript file
+  local ft = vim.bo.filetype
+  if ft == "typescript" or ft == "typescriptreact" or ft == "javascript" or ft == "javascriptreact" then
+    vim.lsp.buf.execute_command({
+      command = "_typescript.organizeImports",
+      arguments = { vim.api.nvim_buf_get_name(0) }
+    })
+  elseif ft == "python" then
+    -- For Python, use isort if available
+    vim.cmd("!isort %")
+  else
+    vim.notify("Organize imports not available for " .. ft, vim.log.levels.WARN)
+  end
+end, { desc = "Organize imports" })
+
 -- LSP info and diagnostics (resolved conflicts)
 keymap("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
 keymap("n", "<leader>ll", "<cmd>LspLog<cr>", { desc = "LSP Log" })
@@ -213,6 +253,58 @@ keymap("n", "<leader>Q", "<cmd>qa!<CR>", { desc = "Force quit all" })
 
 -- New file
 keymap("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
+
+-- ===== ENHANCED SEARCH & REPLACE =====
+
+-- Search for word under cursor
+keymap("n", "*", "*N", { desc = "Search word under cursor (stay)" })
+keymap("n", "#", "#N", { desc = "Search word under cursor backward (stay)" })
+
+-- Better search and replace
+keymap("n", "<leader>rw", ":%s/\\<<C-r><C-w>\\>//g<Left><Left>", { desc = "Replace word under cursor" })
+keymap("v", "<leader>r", "\"hy:%s/<C-r>h//g<left><left>", { desc = "Replace selected text" })
+
+-- ===== TEXT OBJECTS & MOTIONS =====
+
+-- Select all
+keymap("n", "<C-a>", "ggVG", { desc = "Select all" })
+
+-- NOTE: Better j/k movement already handled above with expr = true
+
+-- Better line beginning/end
+keymap("n", "H", "^", { desc = "Go to first non-blank character" })
+keymap("n", "L", "$", { desc = "Go to end of line" })
+
+-- ===== COMMAND LINE ENHANCEMENTS =====
+
+-- Command line history navigation
+keymap("c", "<C-j>", "<Down>", { desc = "Next command" })
+keymap("c", "<C-k>", "<Up>", { desc = "Previous command" })
+
+-- ===== VISUAL MODE ENHANCEMENTS =====
+
+-- Keep selection when indenting
+keymap("v", "<", "<gv", { desc = "Decrease indent and reselect" })
+keymap("v", ">", ">gv", { desc = "Increase indent and reselect" })
+
+-- Move selection up/down
+keymap("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+keymap("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- ===== UTILITY MAPPINGS =====
+
+-- Toggle options
+keymap("n", "<leader>ul", "<cmd>set list!<CR>", { desc = "Toggle list chars" })
+keymap("n", "<leader>up", "<cmd>set paste!<CR>", { desc = "Toggle paste mode" })
+keymap("n", "<leader>us", "<cmd>set spell!<CR>", { desc = "Toggle spell check" })
+keymap("n", "<leader>uw", "<cmd>set wrap!<CR>", { desc = "Toggle word wrap" })
+keymap("n", "<leader>uh", "<cmd>set hlsearch!<CR>", { desc = "Toggle search highlight" })
+
+-- Show current file path
+keymap("n", "<leader>fp", "<cmd>echo expand('%:p')<CR>", { desc = "Show file path" })
+
+-- Copy file path to clipboard
+keymap("n", "<leader>fy", "<cmd>let @+ = expand('%:p')<CR>", { desc = "Copy file path" })
 
 -- ===== UNDO BREAK-POINTS (Better undo granularity) =====
 

@@ -48,6 +48,64 @@ return {
         spacing = 3,
       },
     },
+    config = function(_, opts)
+      local wk = require("which-key")
+      wk.setup(opts)
+
+      -- Register group descriptions
+      wk.add({
+        -- Root groups
+        { "<leader>b", group = "+buffer" },
+        { "<leader>c", group = "+code" },
+        { "<leader>d", group = "+debug/test" },
+        { "<leader>e", desc = "Show diagnostic" },
+        { "<leader>f", group = "+find/file" },
+        { "<leader>g", group = "+git" },
+        { "<leader>h", group = "+git-hunk" },
+        { "<leader>l", group = "+lsp" },
+        { "<leader>n", desc = "Clear search highlights" },
+        { "<leader>p", group = "+project/session" },
+        { "<leader>q", desc = "Diagnostic loclist" },
+        { "<leader>r", group = "+refactor/replace" },
+        { "<leader>s", group = "+search/substitute" },
+        { "<leader>t", group = "+terminal/test/tab" },
+        { "<leader>u", group = "+ui/toggle" },
+        { "<leader>w", group = "+window" },
+        { "<leader>x", group = "+diagnostics/quickfix" },
+        { "<leader>z", group = "+fzf" },
+        { "<leader><tab>", group = "+tabs" },
+        { "<leader>L", desc = "Lazy plugin manager" },
+        { "<leader>Q", desc = "Force quit all" },
+        { "<leader>S", desc = "Substitute to end of line" },
+
+        -- Sub-groups
+        { "<leader>ts", group = "+typescript" },
+        { "<leader>gh", group = "+github" },
+        { "<leader>gd", group = "+diff" },
+        { "<leader>dP", group = "+profile" },
+
+        -- Motion groups
+        { "g", group = "+goto" },
+        { "[", group = "+prev" },
+        { "]", group = "+next" },
+        { "z", group = "+fold/spell" },
+
+        -- Text object descriptions
+        { "s", desc = "Flash motion", mode = { "n", "x", "o" } },
+        { "S", desc = "Flash treesitter", mode = { "n", "x", "o" } },
+        { "gs", desc = "Leap motion", mode = { "n", "x", "o" } },
+
+        -- Standalone keybindings
+        { "<C-s>", desc = "Save file", mode = { "i", "x", "n", "s" } },
+        { "<C-a>", desc = "Select all" },
+        { "<C-o>", desc = "Toggle to previous buffer" },
+        { "H", desc = "Go to first non-blank character" },
+        { "L", desc = "Go to end of line" },
+        { "K", desc = "Hover Documentation" },
+        { "*", desc = "Search word under cursor (stay)" },
+        { "#", desc = "Search word under cursor backward (stay)" },
+      })
+    end,
   },
 
   -- Surround - Master of text objects
@@ -135,11 +193,11 @@ return {
       local todo_comments = require("todo-comments")
 
       local keymap = vim.keymap.set
-      keymap("n", "]t", function()
+      keymap("n", "]T", function()
         todo_comments.jump_next()
       end, { desc = "Next todo comment" })
 
-      keymap("n", "[t", function()
+      keymap("n", "[T", function()
         todo_comments.jump_prev()
       end, { desc = "Previous todo comment" })
 
@@ -175,10 +233,10 @@ return {
       substitute.setup()
 
       local keymap = vim.keymap.set
-      keymap("n", "s", substitute.operator, { desc = "Substitute with motion" })
-      keymap("n", "ss", substitute.line, { desc = "Substitute line" })
-      keymap("n", "S", substitute.eol, { desc = "Substitute to end of line" })
-      keymap("x", "s", substitute.visual, { desc = "Substitute in visual mode" })
+      keymap("n", "<leader>s", substitute.operator, { desc = "Substitute with motion" })
+      keymap("n", "<leader>ss", substitute.line, { desc = "Substitute line" })
+      keymap("n", "<leader>S", substitute.eol, { desc = "Substitute to end of line" })
+      keymap("x", "<leader>s", substitute.visual, { desc = "Substitute in visual mode" })
     end,
   },
 

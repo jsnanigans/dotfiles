@@ -5,15 +5,6 @@ local augroup = vim.api.nvim_create_augroup
 -- General settings group
 local general = augroup("General", { clear = true })
 
--- Highlight on yank (with lower timeout for performance)
-autocmd("TextYankPost", {
-  group = general,
-  pattern = "*",
-  callback = function()
-    vim.highlight.on_yank({ higroup = "IncSearch", timeout = 150 })
-  end,
-  desc = "Highlight yanked text",
-})
 
 -- Auto format on save for specific filetypes (excluding JS/TS - handled by eslint/prettier)
 autocmd("BufWritePre", {
@@ -52,18 +43,6 @@ autocmd("BufWritePre", {
   desc = "Remove trailing whitespace",
 })
 
--- Remember last cursor position
-autocmd("BufReadPost", {
-  group = general,
-  pattern = "*",
-  callback = function()
-    local line = vim.fn.line("'\"")
-    if line > 1 and line <= vim.fn.line("$") and vim.bo.filetype ~= "commit" then
-      vim.cmd('normal! g`"')
-    end
-  end,
-  desc = "Go to last cursor position",
-})
 
 -- Auto resize splits when terminal is resized
 autocmd("VimResized", {
@@ -156,18 +135,6 @@ autocmd("BufEnter", {
   desc = "Disable auto-commenting",
 })
 
--- Auto-create directories when saving files
-autocmd("BufWritePre", {
-  group = general,
-  callback = function(event)
-    if event.match:match("^%w%w+:[\\/][\\/]") then
-      return
-    end
-    local file = vim.uv.fs_realpath(event.match) or event.match
-    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
-  end,
-  desc = "Auto create dir when saving",
-})
 
 -- Disable autocomment on new line
 autocmd("BufEnter", {
@@ -187,4 +154,125 @@ autocmd("User", {
     ]])
   end,
   desc = "Hide tabline in Alpha",
+})
+
+-- Auto create parent directories on save
+autocmd("BufWritePre", {
+  group = general,
+  callback = function(event)
+    if event.match:match("^%w%w+:[\\/][\\/]") then
+      return
+    end
+    local file = vim.uv.fs_realpath(event.match) or event.match
+    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end,
+  desc = "Auto create parent directories",
+})
+
+-- Better yank highlighting
+autocmd("TextYankPost", {
+  group = general,
+  callback = function()
+    vim.highlight.on_yank({
+      higroup = "Visual",
+      timeout = 200,
+    })
+  end,
+  desc = "Highlight yanked text",
+})
+
+-- Auto reload files changed outside of Neovim
+autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+  group = general,
+  command = "checktime",
+  desc = "Check for file changes",
+})
+
+-- Go to last location when opening a buffer
+autocmd("BufReadPost", {
+  group = general,
+  callback = function(event)
+    local exclude = { "gitcommit" }
+    local buf = event.buf
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
+      return
+    end
+    vim.b[buf].lazyvim_last_loc = true
+    local mark = vim.api.nvim_buf_get_mark(buf, '"')
+    local lcount = vim.api.nvim_buf_line_count(buf)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+  desc = "Go to last location when opening a buffer",
+})
+
+-- Show cursor line only in active window
+local cursorline_group = augroup("CursorLine", { clear = true })
+autocmd({ "InsertLeave", "WinEnter" }, {
+  group = cursorline_group,
+  callback = function()
+    if vim.w.auto_cursorline then
+      vim.wo.cursorline = true
+      vim.w.auto_cursorline = nil
+    end
+  end,
+  desc = "Show cursorline in active window",
+})
+
+autocmd({ "InsertEnter", "WinLeave" }, {
+  group = cursorline_group,
+  callback = function()
+    if vim.wo.cursorline then
+      vim.w.auto_cursorline = true
+      vim.wo.cursorline = false
+    end
+  end,
+  desc = "Hide cursorline in inactive window",
+})
+
+-- Auto toggle hlsearch
+local hlsearch_group = augroup("HlSearch", { clear = true })
+autocmd("CmdlineEnter", {
+  group = hlsearch_group,
+  callback = function()
+    local cmd = vim.v.event.cmdtype
+    if cmd == "/" or cmd == "?" then
+      vim.opt.hlsearch = true
+    end
+  end,
+  desc = "Auto enable hlsearch when searching",
+})
+
+autocmd("CmdlineLeave", {
+  group = hlsearch_group,
+  callback = function()
+    vim.defer_fn(function()
+      vim.opt.hlsearch = false
+    end, 50)
+  end,
+  desc = "Auto disable hlsearch after searching",
+})
+
+-- LSP Progress indicator
+autocmd("LspProgress", {
+  group = general,
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    local value = ev.data.params.value
+
+    if not client or type(value) ~= "table" then
+      return
+    end
+
+    local percentage = value.percentage and ("%.0f%%%%"):format(value.percentage) or ""
+    local title = value.title or ""
+    local message = value.message and (" " .. value.message) or ""
+
+    vim.notify(title .. message .. " " .. percentage, vim.log.levels.INFO, {
+      title = client.name,
+      timeout = 500,
+    })
+  end,
+  desc = "LSP Progress indicator",
 }) 

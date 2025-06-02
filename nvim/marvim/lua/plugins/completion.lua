@@ -5,7 +5,19 @@ return {
   dependencies = {
     "hrsh7th/cmp-buffer", -- source for text in buffer
     "hrsh7th/cmp-path", -- source for file system paths
-    "hrsh7th/cmp-cmdline", -- source for command line
+    {
+      "hrsh7th/cmp-cmdline", -- source for command line
+      event = { "CmdlineEnter" },
+      config = function()
+        -- Delay loading to avoid regex parsing issues
+        vim.defer_fn(function()
+          local ok, _ = pcall(require, "cmp_cmdline")
+          if not ok then
+            vim.notify("Failed to load cmp-cmdline", vim.log.levels.WARN)
+          end
+        end, 100)
+      end,
+    },
     {
       "L3MON4D3/LuaSnip",
       version = "v2.*",
@@ -108,23 +120,43 @@ return {
       },
     })
 
-    -- `/` cmdline setup.
-    cmp.setup.cmdline("/", {
-      mapping = cmp.mapping.preset.cmdline(),
-      sources = {
-        { name = "buffer" },
-      },
-    })
+    -- Setup cmdline completion with error handling
+    local setup_cmdline = function()
+      -- `/` and `?` cmdline setup for search
+      local ok, err = pcall(function()
+        cmp.setup.cmdline({ "/", "?" }, {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = {
+            { name = "buffer" },
+          },
+        })
+      end)
+      if not ok then
+        vim.notify("Failed to setup search cmdline completion: " .. tostring(err), vim.log.levels.WARN)
+      end
 
-    -- `:` cmdline setup.
-    cmp.setup.cmdline(":", {
-      mapping = cmp.mapping.preset.cmdline(),
-      sources = cmp.config.sources({
-        { name = "path" },
-      }, {
-        { name = "cmdline" },
-      }),
-      matching = { disallow_symbol_nonprefix_matching = false },
-    })
+      -- `:` cmdline setup for commands
+      ok, err = pcall(function()
+        cmp.setup.cmdline(":", {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = "path" },
+          }, {
+            { 
+              name = "cmdline",
+              option = {
+                ignore_cmds = { 'Man', '!' }
+              }
+            },
+          }),
+        })
+      end)
+      if not ok then
+        vim.notify("Failed to setup command cmdline completion: " .. tostring(err), vim.log.levels.WARN)
+      end
+    end
+
+    -- Defer cmdline setup to avoid loading issues
+    vim.defer_fn(setup_cmdline, 200)
   end,
 } 
