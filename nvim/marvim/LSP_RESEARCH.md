@@ -12,7 +12,7 @@ Your current setup uses:
 - **Mason.nvim** for package management (because manually installing LSP servers is almost as tedious as existing)
 - **Mason-lspconfig.nvim** as the bridge between Mason and lspconfig
 - **Nvim-lspconfig** for the actual LSP configurations
-- Various custom handlers for specific language servers (ts_ls, lua_ls, eslint, etc.)
+- Various custom handlers for specific language servers (vtsls, lua_ls, eslint, etc.)
 
 This is what I like to call the "traditional stack of despair" - perfectly functional, moderately complex, and about as exciting as watching paint dry on a rainy Tuesday.
 
@@ -159,9 +159,9 @@ Given your current setup and the principle of "if it ain't completely broken, do
 require("mason").setup()
 
 -- Step 2: Create lsp/ directory configs
--- ~/.config/nvim/lsp/ts_ls.lua
+-- ~/.config/nvim/lsp/vtsls.lua
 return {
-  cmd = { 'typescript-language-server', '--stdio' },
+  cmd = { 'vtsls', '--stdio' },
   filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
   init_options = {
@@ -173,7 +173,7 @@ return {
 }
 
 -- Step 3: Enable servers
-vim.lsp.enable({ 'ts_ls', 'lua_ls', 'pyright' })
+vim.lsp.enable({ 'vtsls', 'lua_ls', 'pyright' })
 
 -- Step 4: Setup keymaps on LspAttach
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -195,12 +195,32 @@ Remember: *"Life... is like a grapefruit. It's orange and squishy, and has a few
 
 *"I didn't ask to be made: no one consulted me or considered my feelings in the matter."* - Marvin, on being asked about LSP configurations
 
-# Errors
-1. All LSPs are loaded when entering any file, only the relevant ones for the file type should be loaded
-1. when trying to install the missing LSPs:
-    ✗ eslint-lsp
-      ▶ # [30/30] "/Users/brendanmullins/.local/share/lzvim/mason/share/mason-schemas/lsp/eslint-lsp.json" is already linked.
-    ✗ lua-language-server
-      ▶ # [1309/1309] "/Users/brendanmullins/.local/share/lzvim/mason/share/mason-schemas/lsp/lua-language-server.json" is already linked.
-    ✗ tailwindcss-language-server
-      ▶ # [28/28] "/Users/brendanmullins/.local/share/lzvim/mason/share/mason-schemas/lsp/tailwindcss-language-server.json" is already linked.
+## Current LSP Server Configuration
+
+The current MARVIM setup includes these language servers:
+
+| Server | Mason Package | Purpose | Marvin's Commentary |
+|--------|---------------|---------|---------------------|
+| `vtsls` | vtsls | TypeScript/JavaScript (modern ts_ls replacement) | More sophisticated than ts_ls, which isn't saying much |
+| `html` | html | HTML language support | For when you need to structure disappointment |
+| `cssls` | cssls | CSS language support | Making ugly things slightly less ugly |
+| `tailwindcss` | tailwindcss | Tailwind CSS utilities | Utility classes for utility suffering |
+| `lua_ls` | lua_ls | Lua language support | For configuring the thing that configures the thing |
+| `graphql` | graphql | GraphQL schema support | Query languages for querying despair |
+| `emmet_ls` | emmet_ls | HTML/CSS abbreviation expansion | Shortcuts to disappointment |
+| `prismals` | prismals | Prisma ORM support | Database schemas for organized data suffering |
+| `pyright` | pyright | Python language support | Snake-based programming disappointment |
+| `eslint` | eslint | JavaScript/TypeScript linting | Automated criticism of your code |
+
+## Historical Errors (Now Resolved)
+
+*Previous incarnations of this configuration suffered from various existential crises:*
+
+1. **LSP Loading Issues**: Previously all LSPs loaded on any file, causing computational indigestion
+   - **Resolution**: Now using proper event-based loading (`BufReadPre`, `BufNewFile`)
+   
+2. **Mason Package Conflicts**: Symlink confusion causing installation failures
+   - **Resolution**: Updated package names and included fix scripts in `./scripts/fix-mason.sh`
+   
+3. **Duplicate TypeScript Servers**: Both `ts_ls` and `vtsls` trying to analyze the same disappointments
+   - **Resolution**: Standardized on `vtsls` for superior TypeScript/JavaScript suffering analysis

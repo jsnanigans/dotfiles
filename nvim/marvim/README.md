@@ -201,9 +201,11 @@ nvim
 ### 🆕 New Features Keybindings (Enhanced Digital Interaction Protocols)
 
 #### 💾 Session Management (Temporal Project Persistence)
-- `<leader>Qs` - Restore session (resurrect your past disappointments)
-- `<leader>Ql` - Restore last session (return to your most recent suffering state)
-- `<leader>Qd` - Don't save session (abandon current temporal disappointment record)
+- `<leader>ps` - Restore session (resurrect your past disappointments)
+- `<leader>pl` - Restore last session (return to your most recent suffering state)
+- `<leader>pd` - Stop session recording (abandon current temporal disappointment record)
+- `<leader>pS` - Save current session (preserve current suffering state)
+- `<leader>pc` - Clear session (obliterate temporal evidence of failure)
 
 #### 🐛 Debugging (Systematic Bug Archaeological Expeditions)
 - `<leader>db` - Toggle breakpoint (mark specific coordinates of failure)

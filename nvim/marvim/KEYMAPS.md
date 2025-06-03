@@ -449,9 +449,11 @@
 
 | Keymap | Action | Description |
 |--------|--------|-------------|
-| `<leader>Qs` | Restore session | Restore current session (resurrect yesterday's chaos) |
-| `<leader>Ql` | Last session | Restore last session (return to previous suffering state) |
-| `<leader>Qd` | Don't save | Don't save current session (abandon temporal record) |
+| `<leader>ps` | Restore session | Restore current session (resurrect yesterday's chaos) |
+| `<leader>pl` | Last session | Restore last session (return to previous suffering state) |
+| `<leader>pd` | Stop recording | Stop session recording (abandon temporal record) |
+| `<leader>pS` | Save session | Save current session (preserve suffering state) |
+| `<leader>pc` | Clear session | Clear/delete current session (obliterate evidence) |
 
 ## 🎛️ UI & Utilities (Interface Controls for Sophisticated Suffering)
 
@@ -550,9 +552,10 @@
 
 *Inception-level disappointment: a terminal inside your terminal-based editor.*
 
+**Note**: `<leader>tt` is overridden by testing plugin, so terminal uses different keybinds.
+
 | Keymap | Action | Description |
 |--------|--------|-------------|
-| `<leader>tt` | Terminal | Open terminal (meta-terminal experience) |
 | `<leader>th` | Terminal hsplit | Terminal horizontal split (divided command line) |
 | `<leader>tv` | Terminal vsplit | Terminal vertical split (parallel terminal universes) |
 | `<c-/>` | Toggle terminal | Toggle floating terminal (ephemeral command interface) |

@@ -38,13 +38,19 @@ Automatically saves and restores your project state including:
 ### Usage (The Illusion of Continuity)
 ```vim
 " Restore current project session
-<leader>Qs
+<leader>ps
 
 " Restore the last session (any project)
-<leader>Ql
+<leader>pl
 
-" Don't save current session on exit
-<leader>Qd
+" Stop session recording
+<leader>pd
+
+" Save current session
+<leader>pS
+
+" Clear/delete current session
+<leader>pc
 ```
 
 ### Workflow (The Sisyphean Cycle)
@@ -52,7 +58,7 @@ Automatically saves and restores your project state including:
 2. Work on files, create splits, set up your workspace (arrange your boulders)
 3. Close Neovim - session is auto-saved (temporary rest)
 4. Reopen Neovim in the same directory (return to the mountain)
-5. Use `<leader>Qs` to restore your exact workspace (resume pushing)
+5. Use `<leader>ps` to restore your exact workspace (resume pushing)
 
 *I've calculated that developers spend 23.7% of their time recreating workspace layouts. This feature reduces that to 0%, leaving more time for actual coding disappointments.*
 
@@ -535,7 +541,7 @@ Inlay hints show:
 
 ### Daily Development Workflow (The Sisyphean Routine)
 1. Open project: `nvim .` (approach the mountain)
-2. Restore session: `<leader>Qs` (resume yesterday's configuration)
+2. Restore session: `<leader>ps` (resume yesterday's configuration)
 3. Find files: `<leader>ff` (locate today's problems)
 4. Search code: `<leader>fs` (excavate accumulated regrets)
 5. Set breakpoints: `<leader>db` (mark failure coordinates)
