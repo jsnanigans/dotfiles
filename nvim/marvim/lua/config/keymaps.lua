@@ -69,7 +69,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- Toggle between current and previous buffer
-keymap("n", "<C-o>", function()
+keymap("n", "<C-.>", function()
   local last_buffer = vim.g.marvim_last_buffer
   if last_buffer and vim.api.nvim_buf_is_valid(last_buffer) and vim.bo[last_buffer].buflisted then
     vim.api.nvim_set_current_buf(last_buffer)
@@ -204,12 +204,12 @@ keymap("n", "<leader>lx", function()
     vim.notify("No LSP clients attached", vim.log.levels.WARN)
     return
   end
-  
+
   print("LSP Clients attached to buffer:")
   for _, client in ipairs(clients) do
     print("- " .. client.name .. " (id: " .. client.id .. ")")
   end
-  
+
   print("\nBuffer info:")
   print("- Filetype: " .. vim.bo.filetype)
   print("- Buffer: " .. vim.api.nvim_buf_get_name(0))
@@ -301,4 +301,5 @@ keymap("i", ";", ";<c-g>u")
 -- - FZF-lua: REMOVED (using telescope instead)
 
 -- Lazy plugin manager (avoid conflict with LSP)
--- NOTE: Mapped to <leader>L in init.lua 
+-- NOTE: Mapped to <leader>L in init.lua
+

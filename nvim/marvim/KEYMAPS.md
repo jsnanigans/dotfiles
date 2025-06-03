@@ -120,7 +120,7 @@
 |--------|--------|-------------|
 | `<S-h>` | Previous buffer | Go to previous buffer (retreat to yesterday's problems) |
 | `<S-l>` | Next buffer | Go to next buffer (advance to tomorrow's disasters) |
-| `<C-o>` | Toggle buffer | Switch to last buffer (oscillate between temporal failures) |
+| `<C-.>` | Toggle buffer | Switch to last buffer (oscillate between temporal failures) |
 | `<leader>bd` | Delete buffer | Close current buffer (temporary amnesia for specific failures) |
 | `<leader>ba` | Delete others | Close all other buffers (nuclear option for memory management) |
 

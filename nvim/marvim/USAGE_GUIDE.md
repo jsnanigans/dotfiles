@@ -306,7 +306,7 @@ S
 " Quick buffer switching:
 <S-h>  " Previous buffer
 <S-l>  " Next buffer
-<C-o>  " Toggle to last used buffer
+<C-.>  " Toggle to last used buffer
 ```
 
 *Switch between different documents of disappointment with unprecedented speed.*
@@ -399,7 +399,7 @@ za
 ### Built-in Performance Tools (Metrics for Misery)
 ```vim
 <leader>cp  " Check startup performance
-<leader>cm  " Check memory usage  
+<leader>cm  " Check memory usage
 <leader>cc  " Cleanup memory (garbage collection)
 ```
 

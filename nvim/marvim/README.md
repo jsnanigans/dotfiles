@@ -149,7 +149,7 @@ nvim
 ### 📄 Buffer Navigation (Quantum Jumping Between Temporal Mistakes)
 - `<S-h>` - Previous buffer (retreat to yesterday's problems)
 - `<S-l>` - Next buffer (advance toward tomorrow's inevitable disasters)
-- `<C-o>` - Toggle to previous buffer (there is no escape from the buffer cycle of suffering)
+- `<C-.>` - Toggle to previous buffer (there is no escape from the buffer cycle of suffering)
 - `<leader>bd` - Delete buffer (digital euthanasia for individual files)
 - `<leader>ba` - Delete all other buffers (mass digital euthanasia - the nuclear option)
 
@@ -375,7 +375,6 @@ Automatically configured LSP servers for various linguistic approaches to algori
 15. **Browse repository**: `<leader>gB` to display your shame to the entire internet with sophisticated web integration
 
 ### AI Integration & Modern Features
-16. **Navigate temporal buffers**: `<C-o>` enables time travel through your accumulated failures
 17. **Achieve Copilot mastery**: `<C-l>` for accepting AI suggestions (formal surrender to our inevitable robot overlords)
 18. **Inlay hints optimization**: Toggle TypeScript hints with `<leader>th` for enhanced code comprehension
 19. **Markdown documentation**: Use `<leader>mp` for live preview, `<leader>tm` for table editing (sophisticated documentation suffering)
