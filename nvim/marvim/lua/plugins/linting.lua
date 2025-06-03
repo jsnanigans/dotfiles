@@ -13,7 +13,7 @@ return {
       dockerfile = { "hadolint" },
       yaml = { "yamllint" },
       json = { "jsonlint" },
-      lua = { "luacheck" },
+      -- lua = { "luacheck" }, -- Uncomment after installing luacheck
       bash = { "shellcheck" },
       sh = { "shellcheck" },
       zsh = { "shellcheck" },

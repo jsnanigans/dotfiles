@@ -126,22 +126,14 @@ autocmd("FileType", {
 })
 
 -- Disable format options for all files to prevent auto-commenting
-autocmd("BufEnter", {
+-- Use BufWinEnter instead of BufEnter to reduce frequency
+autocmd("BufWinEnter", {
   group = filetypes,
   pattern = "*",
   callback = function()
     vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
   desc = "Disable auto-commenting",
-})
-
-
--- Disable autocomment on new line
-autocmd("BufEnter", {
-  group = general,
-  pattern = "*",
-  command = "set fo-=c fo-=r fo-=o",
-  desc = "Disable autocomment",
 })
 
 -- Alpha (dashboard) settings
@@ -254,7 +246,7 @@ autocmd("CmdlineLeave", {
   desc = "Auto disable hlsearch after searching",
 })
 
--- LSP Progress indicator
+-- LSP Progress indicator (only show for long operations)
 autocmd("LspProgress", {
   group = general,
   callback = function(ev)
@@ -265,14 +257,21 @@ autocmd("LspProgress", {
       return
     end
 
-    local percentage = value.percentage and ("%.0f%%%%"):format(value.percentage) or ""
-    local title = value.title or ""
-    local message = value.message and (" " .. value.message) or ""
+    -- Only show notifications for operations that take more than 100ms
+    if value.kind == "begin" then
+      vim.defer_fn(function()
+        if value.percentage and value.percentage < 100 then
+          local percentage = ("%.0f%%%%"):format(value.percentage)
+          local title = value.title or ""
+          local message = value.message and (" " .. value.message) or ""
 
-    vim.notify(title .. message .. " " .. percentage, vim.log.levels.INFO, {
-      title = client.name,
-      timeout = 500,
-    })
+          vim.notify(title .. message .. " " .. percentage, vim.log.levels.INFO, {
+            title = client.name,
+            timeout = 500,
+          })
+        end
+      end, 100)
+    end
   end,
   desc = "LSP Progress indicator",
 }) 

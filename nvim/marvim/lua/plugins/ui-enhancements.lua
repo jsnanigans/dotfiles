@@ -1,26 +1,6 @@
 -- UI enhancements for better visual experience
 return {
-  -- Better notifications
-  {
-    "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    opts = {
-      stages = "fade_in_slide_out",
-      timeout = 3000,
-      max_height = function()
-        return math.floor(vim.o.lines * 0.75)
-      end,
-      max_width = function()
-        return math.floor(vim.o.columns * 0.75)
-      end,
-      on_open = function(win)
-        vim.api.nvim_win_set_config(win, { zindex = 100 })
-      end,
-    },
-    init = function()
-      vim.notify = require("notify")
-    end,
-  },
+  -- nvim-notify removed in favor of snacks.nvim notifier
 
   -- Better vim.ui interfaces
   {
@@ -61,24 +41,12 @@ return {
       },
       select = {
         enabled = true,
-        backend = { "telescope", "fzf_lua", "fzf", "builtin", "nui" },
+        backend = { "telescope", "builtin", "nui" },
         trim_prompt = true,
         telescope = require("telescope.themes").get_dropdown({
           winblend = 10,
           previewer = false,
         }),
-        fzf = {
-          window = {
-            width = 0.5,
-            height = 0.4,
-          },
-        },
-        fzf_lua = {
-          winopts = {
-            height = 0.5,
-            width = 0.5,
-          },
-        },
         nui = {
           position = "50%",
           size = nil,
@@ -207,45 +175,31 @@ return {
     },
     config = function(_, opts)
       require("barbecue").setup(opts)
-      vim.api.nvim_create_autocmd({
-        "WinScrolled",
-        "BufWinEnter",
-        "CursorHold",
-        "InsertLeave",
-        "BufModifiedSet",
-      }, {
-        group = vim.api.nvim_create_augroup("barbecue.updater", {}),
+      -- Defer autocmd creation until first buffer is actually displayed
+      local autocmd_created = false
+      vim.api.nvim_create_autocmd("BufWinEnter", {
+        group = vim.api.nvim_create_augroup("barbecue.setup", {}),
+        once = true,
         callback = function()
-          require("barbecue.ui").update()
+          if not autocmd_created then
+            autocmd_created = true
+            vim.api.nvim_create_autocmd({
+              "WinScrolled",
+              "BufWinEnter",
+              "CursorHold",
+              "InsertLeave",
+              "BufModifiedSet",
+            }, {
+              group = vim.api.nvim_create_augroup("barbecue.updater", {}),
+              callback = function()
+                require("barbecue.ui").update()
+              end,
+            })
+          end
         end,
       })
     end,
   },
 
-  -- Better scrolling
-  {
-    "karb94/neoscroll.nvim",
-    event = "VeryLazy",
-    opts = {
-      mappings = {
-        "<C-u>",
-        "<C-d>",
-        "<C-b>",
-        "<C-f>",
-        "<C-y>",
-        "<C-e>",
-        "zt",
-        "zz",
-        "zb",
-      },
-      hide_cursor = true,
-      stop_eof = true,
-      respect_scrolloff = false,
-      cursor_scrolls_alone = true,
-      easing_function = nil,
-      pre_hook = nil,
-      post_hook = nil,
-      performance_mode = false,
-    },
-  },
+  -- neoscroll removed in favor of snacks.nvim scroll module
 }

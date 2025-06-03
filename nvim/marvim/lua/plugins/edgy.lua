@@ -34,7 +34,7 @@ return {
         size = { height = 0.4 },
       },
     },
-    
+
     left = {
       -- Mini.files
       {
@@ -52,31 +52,19 @@ return {
         size = { width = 50 },
       },
     },
-    
+
     right = {
       -- Any right-side panels can go here
     },
-    
+
     top = {
       -- Any top panels can go here
     },
-    
+
     -- Global options
     options = {
-      -- Enable animations
-      animate = {
-        enabled = true,
-        fps = 100,
-        cps = 120,
-        on_begin = function()
-          vim.g.minianimate_disable = true
-        end,
-        on_end = function()
-          vim.g.minianimate_disable = false
-        end,
-      },
     },
-    
+
     -- Key mappings
     keys = {
       -- Increase width
@@ -96,7 +84,7 @@ return {
         win:resize("height", -2)
       end,
     },
-    
+
     -- Window configuration
     wo = {
       -- Setting to `true` will add a winbar to edgy windows
@@ -107,29 +95,29 @@ return {
       spell = false,
       signcolumn = "no",
     },
-    
+
     -- Buffer-local options for edgy buffers
     bo = {},
-    
+
     -- close edgy when all windows are hidden
     close_when_all_hidden = true,
-    
+
     -- Don't show edgy windows in the tabline
     exclude_ft = { "qf" },
-    
+
     -- override the default styles with new ones
     icons = {
       closed = " ",
       open = " ",
     },
-    
+
     -- exit edgy when switching to one of these filetypes
     exit_when_last = {},
-    
+
     -- enable this to debug edgy
     debug = false,
   },
-  
+
   -- Custom keymaps
   keys = {
     {
@@ -147,4 +135,4 @@ return {
       desc = "Edgy Select Window",
     },
   },
-} 
+}

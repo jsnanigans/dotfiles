@@ -1,3 +1,15 @@
 {
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:neovim.io)",
+      "Bash(rm:*)",
+      "Bash(chmod:*)",
+      "Bash(/Users/brendanmullins/dotfiles/nvim/marvim/scripts/fix-mason.sh:*)",
+      "Bash(find:*)",
+      "Bash(nvim:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:github.com)"
+    ]
+  },
   "enableAllProjectMcpServers": false
 }

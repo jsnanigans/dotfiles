@@ -356,6 +356,29 @@ return {
           file_ignore_patterns = { "node_modules", ".git", ".venv" },
           hidden = true,
         },
+        -- LSP pickers configuration to handle duplicates
+        lsp_references = {
+          show_line = false,
+          trim_text = true,
+          include_declaration = false,
+          -- Optionally filter duplicates
+          fname_width = 50,
+        },
+        lsp_definitions = {
+          show_line = false,
+          trim_text = true,
+          fname_width = 50,
+        },
+        lsp_implementations = {
+          show_line = false,
+          trim_text = true,
+          fname_width = 50,
+        },
+        lsp_type_definitions = {
+          show_line = false,
+          trim_text = true,
+          fname_width = 50,
+        },
       },
       extensions = {
         ["ui-select"] = {

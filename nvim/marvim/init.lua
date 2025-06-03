@@ -129,5 +129,8 @@ require("config.project-utils").setup()
 -- Initialize performance monitoring
 require("config.performance").setup()
 
+-- Load LSP debug utilities
+require("config.lsp-debug")
+
 -- Add keybinding to open lazy
 vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Lazy plugin manager" })

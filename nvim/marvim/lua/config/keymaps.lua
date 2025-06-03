@@ -47,7 +47,7 @@ keymap("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase windo
 -- Fast buffer switching (very common action)
 keymap("n", "<S-l>", ":bnext<CR>", { desc = "Next buffer" })
 keymap("n", "<S-h>", ":bprevious<CR>", { desc = "Previous buffer" })
-keymap("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
+-- Removed: <leader>bd is handled by snacks.bufdelete
 keymap("n", "<leader>ba", "<cmd>%bd|e#<CR>", { desc = "Delete all buffers except current" })
 
 -- Buffer toggle functionality - switch between current and previous buffer
@@ -148,20 +148,9 @@ keymap("n", "<leader>tt", "<cmd>terminal<CR>", { desc = "Open terminal" })
 keymap("n", "<leader>th", "<cmd>split | terminal<CR>", { desc = "Terminal horizontal split" })
 keymap("n", "<leader>tv", "<cmd>vsplit | terminal<CR>", { desc = "Terminal vertical split" })
 
--- ===== LSP OPERATIONS (Optimized & Conflict-Free) =====
-
--- Core LSP actions (most frequent)
-keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
-keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
-keymap("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature Documentation" })
-
--- LSP actions (with leader)
-keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
-keymap("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
-keymap("n", "<leader>rs", "<cmd>LspRestart<cr>", { desc = "LSP Restart" })
+-- ===== LSP OPERATIONS =====
+-- NOTE: LSP keymaps are defined in lua/plugins/lsp.lua within the on_attach function
+-- This ensures they're only active when an LSP server is attached to the buffer
 
 -- ===== FORMATTING & ORGANIZING =====
 
@@ -226,13 +215,8 @@ keymap("n", "<leader>lx", function()
   print("- Buffer: " .. vim.api.nvim_buf_get_name(0))
 end, { desc = "LSP Debug Info" })
 
--- ===== DIAGNOSTIC NAVIGATION (Optimized) =====
-
--- Quick diagnostic navigation
-keymap("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
-keymap("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-keymap("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
-keymap("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostic loclist" })
+-- ===== DIAGNOSTIC NAVIGATION =====
+-- NOTE: Diagnostic keymaps are defined in lua/plugins/lsp.lua within the on_attach function
 
 -- ===== QUICKFIX & LOCATION LIST =====
 
@@ -294,11 +278,7 @@ keymap("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 -- ===== UTILITY MAPPINGS =====
 
 -- Toggle options
-keymap("n", "<leader>ul", "<cmd>set list!<CR>", { desc = "Toggle list chars" })
-keymap("n", "<leader>up", "<cmd>set paste!<CR>", { desc = "Toggle paste mode" })
-keymap("n", "<leader>us", "<cmd>set spell!<CR>", { desc = "Toggle spell check" })
-keymap("n", "<leader>uw", "<cmd>set wrap!<CR>", { desc = "Toggle word wrap" })
-keymap("n", "<leader>uh", "<cmd>set hlsearch!<CR>", { desc = "Toggle search highlight" })
+-- Removed toggle mappings: handled by snacks.nvim toggle module
 
 -- Show current file path
 keymap("n", "<leader>fp", "<cmd>echo expand('%:p')<CR>", { desc = "Show file path" })
@@ -315,10 +295,10 @@ keymap("i", ";", ";<c-g>u")
 -- NOTE: Plugin-specific keymaps are defined in their respective plugin files:
 -- - Telescope: lua/plugins/telescope.lua (find operations: <leader>f*)
 -- - Flash: lua/plugins/flash.lua (s, S for motion)
--- - Leap: lua/plugins/leap.lua (gs, gS, gx, gl for motion)
+-- - Leap: REMOVED (using flash.nvim instead)
 -- - Git: lua/plugins/git.lua (git operations: <leader>g*, <leader>h*)
 -- - Trouble: lua/plugins/utils.lua (diagnostics: <leader>x*)
--- - FZF-lua: lua/plugins/fzf-lua.lua (alternative find: <leader>z*)
+-- - FZF-lua: REMOVED (using telescope instead)
 
 -- Lazy plugin manager (avoid conflict with LSP)
 -- NOTE: Mapped to <leader>L in init.lua 

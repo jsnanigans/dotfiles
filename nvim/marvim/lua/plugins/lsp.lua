@@ -31,12 +31,15 @@ return {
 
       -- Enable keybinds only for when lsp server available
       local on_attach = function(client, bufnr)
+        -- Configure diagnostics on first LSP attach
+        configure_diagnostics()
         local opts = { noremap = true, silent = true, buffer = bufnr }
         local keymap = vim.keymap.set
 
-        keymap("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
-        keymap("n", "gD", vim.lsp.buf.declaration, opts)
+        keymap("n", "gr", "<cmd>Telescope lsp_references<CR>", opts)
         keymap("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
+        
+        keymap("n", "gD", vim.lsp.buf.declaration, opts)
         keymap("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
         keymap("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts)
         keymap({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
@@ -47,7 +50,7 @@ return {
         keymap("n", "]d", vim.diagnostic.goto_next, opts)
         keymap("n", "K", vim.lsp.buf.hover, opts)
         keymap("n", "<leader>rs", ":LspRestart<CR>", opts)
-        
+
         -- Toggle inlay hints (if supported)
         if client.supports_method("textDocument/inlayHint") then
           keymap("n", "<leader>th", function()
@@ -75,37 +78,43 @@ return {
       -- Used to enable autocompletion (assign to every lsp server config)
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
-      -- Configure diagnostic signs and appearance
-      local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
-      
-      vim.diagnostic.config({
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = signs.Error,
-            [vim.diagnostic.severity.WARN] = signs.Warn,
-            [vim.diagnostic.severity.HINT] = signs.Hint,
-            [vim.diagnostic.severity.INFO] = signs.Info,
+      -- Defer diagnostic configuration until first LSP attaches
+      local diagnostic_configured = false
+      local function configure_diagnostics()
+        if diagnostic_configured then return end
+        diagnostic_configured = true
+
+        local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
+
+        vim.diagnostic.config({
+          signs = {
+            text = {
+              [vim.diagnostic.severity.ERROR] = signs.Error,
+              [vim.diagnostic.severity.WARN] = signs.Warn,
+              [vim.diagnostic.severity.HINT] = signs.Hint,
+              [vim.diagnostic.severity.INFO] = signs.Info,
+            },
           },
-        },
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "●",
-        },
-        float = {
-          focusable = false,
-          style = "minimal",
-          border = "rounded",
-          source = "always",
-          header = "",
-          prefix = "",
-        },
-        severity_sort = true,
-      })
+          virtual_text = {
+            spacing = 4,
+            source = "if_many",
+            prefix = "●",
+          },
+          float = {
+            focusable = false,
+            style = "minimal",
+            border = "rounded",
+            source = "always",
+            header = "",
+            prefix = "",
+          },
+          severity_sort = true,
+        })
+      end
 
       mason_lspconfig.setup({
         ensure_installed = {
-          "typescript-language-server", -- Changed from ts_ls to actual Mason package name
+          "vtsls", -- Using vtsls instead of ts_ls to avoid duplicates
           "html",
           "cssls",
           "tailwindcss",
@@ -155,16 +164,16 @@ return {
                 },
               })
             end)
-            
+
             if not ok then
               vim.notify("lua_ls failed to setup. Install via Mason or system package manager.", vim.log.levels.WARN)
             end
           end,
-          ["typescript-language-server"] = function()
+          ["vtsls"] = function()
             -- Get vue language server path for Vue support
             local mason_registry = require("mason-registry")
             local vue_language_server_path = nil
-            
+
             -- Try to get Vue language server path if vue-language-server is installed
             if mason_registry.is_installed("vue-language-server") then
               vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path() .. "/node_modules/@vue/language-server"
@@ -192,7 +201,7 @@ return {
               }
             end
 
-            lspconfig["ts_ls"].setup({
+            lspconfig["vtsls"].setup({
               capabilities = capabilities,
               on_attach = on_attach,
               init_options = init_options,
@@ -235,13 +244,47 @@ return {
             lspconfig["eslint"].setup({
               capabilities = capabilities,
               on_attach = function(client, bufnr)
-                on_attach(client, bufnr)
+                -- Disable ESLint LSP features that conflict with ts_ls
+                client.server_capabilities.documentFormattingProvider = false
+                client.server_capabilities.documentRangeFormattingProvider = false
+                client.server_capabilities.definitionProvider = false
+                client.server_capabilities.referencesProvider = false
+                client.server_capabilities.implementationProvider = false
+                client.server_capabilities.typeDefinitionProvider = false
                 
+                on_attach(client, bufnr)
+
                 -- Auto-fix on save
                 vim.api.nvim_create_autocmd("BufWritePre", {
                   buffer = bufnr,
                   command = "EslintFixAll",
                 })
+              end,
+              -- Check if the project has ESLint installed before attaching
+              root_dir = function(fname)
+                local util = require("lspconfig.util")
+                -- Look for ESLint config files or node_modules/eslint
+                local root = util.root_pattern(
+                  ".eslintrc",
+                  ".eslintrc.js",
+                  ".eslintrc.cjs",
+                  ".eslintrc.yaml",
+                  ".eslintrc.yml",
+                  ".eslintrc.json",
+                  "eslint.config.js",
+                  "eslint.config.mjs",
+                  "eslint.config.cjs"
+                )(fname)
+                
+                -- If we found a config but no local eslint, don't attach
+                if root then
+                  local eslint_path = root .. "/node_modules/eslint"
+                  if vim.fn.isdirectory(eslint_path) == 0 then
+                    return nil
+                  end
+                end
+                
+                return root
               end,
               settings = {
                 packageManager = "npm",
@@ -306,4 +349,4 @@ return {
       })
     end,
   },
-} 
+}
