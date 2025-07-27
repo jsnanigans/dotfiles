@@ -1,3 +1,5 @@
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/Users/brendanmullins/.zsh/completions:"* ]]; then export FPATH="/Users/brendanmullins/.zsh/completions:$FPATH"; fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -79,7 +81,7 @@ ZSH_CUSTOM=$HOME/dotfiles/zsh
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras cic mb-api)
+plugins=(git z fast-syntax-highlighting zsh-autosuggestions git-extras)
 # zsh-autosuggestions zsh-autocomplete
 
 source $ZSH/oh-my-zsh.sh
@@ -114,7 +116,7 @@ eval $(thefuck --alias)
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-export NVIM_APPNAME=lzvim
+export NVIM_APPNAME=marvim
 alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="nvim ~/.oh-my-zsh"
 alias v="nvim"
@@ -129,7 +131,7 @@ alias gpn="gp --follow-tags --no-verify"
 alias lz="lazygit"
 
 # jli
-alias j="bun /Users/bdan/rad/jli/index.ts"
+alias j="bun /Users/brendanmullinsrad/jli/index.ts"
 alias jf="j feat -t"
 alias jc="j commit -m"
 
@@ -141,8 +143,8 @@ alias pn="pnpm"
 
 alias ci="code-insiders"
 
-alias emulator="/Users/bdan/Library/Android/sdk/emulator/emulator"
-alias pixel="/Users/bdan/Library/Android/sdk/emulator/emulator -avd Pixel_6_Pro_API_33"
+alias emulator="/Users/brendanmullinsLibrary/Android/sdk/emulator/emulator"
+alias pixel="/Users/brendanmullinsLibrary/Android/sdk/emulator/emulator -avd Pixel_6_Pro_API_33"
 alias f="fuck"
 
 # yazi
@@ -161,7 +163,7 @@ function y() {
 
 # Add fastlane to path
 export PATH="$HOME/.fastlane/bin:$PATH"
-export PATH=/Users/bdan/.local/bin:$PATH
+export PATH=/Users/brendanmullins.local/bin:$PATH
 export PATH="/usr/local/gradle/gradle-8.8/bin:$PATH"
 
 
@@ -170,25 +172,25 @@ export PATH="$PATH:$HOME/.rvm/bin"
 eval "$(rbenv init - zsh)"
 
 # bun completions
-[ -s "/Users/bdan/.bun/_bun" ] && source "/Users/bdan/.bun/_bun"
+[ -s "/Users/brendanmullins.bun/_bun" ] && source "/Users/brendanmullins.bun/_bun"
 
 # bit
 case ":$PATH:" in
-  *":/Users/bdan/bin:"*) ;;
-  *) export PATH="$PATH:/Users/bdan/bin" ;;
+  *":/Users/brendanmullins/bin:"*) ;;
+  *) export PATH="$PATH:/Users/brendanmullins/bin" ;;
 esac
 # bit end
 
 # pnpm
-export PNPM_HOME="/Users/bdan/Library/pnpm"
+export PNPM_HOME="/Users/brendanmullins/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
 
-export PATH="$PATH:/Users/bdan/Projects/depot_tools"
-export ANDROID_HOME="/Users/bdan/Library/Android/sdk"
+export PATH="$PATH:/Users/brendanmullins/Projects/depot_tools"
+export ANDROID_HOME="/Users/brendanmullins/Library/Android/sdk"
 export IOS_API_FILE_PATH="/Users/brendanmullins/app_cert/old/AuthKey_TT439J2PCV.p8"
 export IOS_API_KEY_ID="TT439J2PCV"
 
@@ -237,3 +239,8 @@ fi
 # Created by `pipx` on 2025-05-26 07:13:19
 export PATH="$PATH:/Users/brendanmullins/.local/bin"
 export PATH="$PATH:/Users/brendanmullins/.local/bin"
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
+
+export GEMINI_API_KEY=""
