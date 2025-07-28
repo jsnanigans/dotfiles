@@ -107,16 +107,18 @@ if status is-interactive
 
     # Package managers
     alias pn pnpm
-    alias er "pnpm run"
-    alias d "er dev"
-    alias dapp "er dev --filter=user-app --ui=stream"
-    alias dpmp "er dev --filter=pmp --ui=stream"
-    alias t "er test"
+    alias nr "npm run"
+    alias pr "pnpm run"
+    # alias er "pnpm run"
+    # alias d "er dev"
+    # alias dapp "er dev --filter=user-app --ui=stream"
+    # alias dpmp "er dev --filter=pmp --ui=stream"
+    # alias t "er test"
 
     # Git
     alias gpn "gp --follow-tags --no-verify"
     alias lz lazygit
-    
+
     # Git abbreviations (like oh-my-zsh git plugin)
     abbr -a gst 'git status'
     abbr -a gc 'git commit'

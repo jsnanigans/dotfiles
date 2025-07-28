@@ -1,7 +1,7 @@
 theme = Monokai Pro
 font-feature= -liga
 
-shell-integration = zsh
+shell-integration = fish
 font-family = JetBrains Mono
 mouse-hide-while-typing = true
 scrollback-limit = 10000000
