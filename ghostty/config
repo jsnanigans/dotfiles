@@ -4,7 +4,7 @@ font-feature= -liga
 shell-integration = fish
 
 command = "/usr/bin/env /opt/homebrew/bin/fish -i"
-initial-command = "/usr/bin/env FIRST_LOGIN=1 /opt/homebrew/bin/fish -i`
+initial-command = "/usr/bin/env FIRST_LOGIN=1 /opt/homebrew/bin/fish -i"
 
 font-family = JetBrains Mono
 mouse-hide-while-typing = true
