@@ -84,6 +84,37 @@ A practical guide for Git users transitioning to Jujutsu, a Git-compatible VCS w
 
 ## Common Workflows
 
+### Simple Daily Workflow
+
+A typical day with jj:
+
+```bash
+# Morning: sync with remote
+jj git fetch
+jj log --limit 5  # See what's new
+
+# Start feature work
+jj new main -m "Add user avatars"
+vim src/avatar.js
+# Changes auto-save as you work!
+
+# Need to fix a bug?
+jj new main -m "Fix login timeout"
+vim src/auth.js
+
+# Check your work
+jj log  # See your changes
+jj diff  # See current change details
+
+# Go back to avatar feature
+jj edit @-
+vim src/avatar.test.js
+
+# Ready to push
+jj bookmark create add-avatars
+jj git push --bookmark add-avatars
+```
+
 ### Starting New Work
 
 ```bash
@@ -182,6 +213,43 @@ jj rebase -d main  # Rebase onto main
 jj git push  # Push changes
 ```
 
+### Merging Changes Locally
+
+```bash
+# Basic merge - create change with two parents
+jj new change1 change2 -m "Merge features"
+
+# Merge current with another change
+jj new @ other-change -m "Merge changes"
+
+# Merge feature into main
+jj new main feature-branch -m "Merge feature into main"
+
+# Handle conflicts
+jj new branch1 branch2 -m "Merge branches"
+# Fix conflicts in editor - they're just files
+# Changes save automatically when fixed!
+
+# Alternative: Rebase instead (often cleaner)
+jj rebase -d main
+```
+
+### Log Cleanup
+
+```bash
+# Abandon empty changes
+jj abandon <change-id>
+
+# Abandon multiple empty changes
+jj abandon change1 change2 change3
+
+# Find and abandon ALL empty changes
+jj log --no-graph -r 'empty()' -T 'change_id' | xargs -n1 jj abandon
+
+# Useful cleanup alias
+alias jjclean="jj log --no-graph -r 'empty()' -T 'change_id' | xargs -n1 jj abandon"
+```
+
 ## Tips and Gotchas
 
 ### Key Differences to Remember
@@ -198,6 +266,8 @@ jj git push  # Push changes
 2. **Describe early**: Use `jj describe` to add messages as you work
 3. **Edit freely**: Use `jj edit` to fix any change in your stack
 4. **Squash often**: Use `jj squash` to keep history clean before pushing
+5. **Clean regularly**: Run `jj abandon` on empty changes to keep log tidy
+6. **Use bookmarks**: Create bookmarks before pushing for cleaner Git integration
 
 ### Common Gotchas
 
@@ -216,6 +286,30 @@ alias js='jj status'
 alias jl='jj log'
 alias jd='jj diff'
 alias jn='jj new'
+alias jc='jj commit'
+alias jgf='jj git fetch'
+alias jgp='jj git push'
+alias jclean="jj log --no-graph -r 'empty()' -T 'change_id' | xargs -n1 jj abandon"
+```
+
+### Quick Troubleshooting
+
+```bash
+# "I messed up and want to undo"
+jj undo  # Undoes last operation
+
+# "I have too many empty changes"
+jj abandon  # Current change
+jjclean     # All empty (with alias above)
+
+# "I can't push - bookmark doesn't exist"
+jj bookmark create my-feature
+jj git push --bookmark my-feature
+
+# "How do I see what jj is tracking?"
+jj status   # Current change
+jj log      # Recent history
+jj op log   # Operation history
 ```
 
 ## Advanced Features
