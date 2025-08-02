@@ -1,10 +1,14 @@
-theme = Monokai Pro
+theme = Nord
 font-feature= -liga
 
 shell-integration = fish
+
+command = "/usr/bin/env /opt/homebrew/bin/fish -i"
+initial-command = "/usr/bin/env FIRST_LOGIN=1 /opt/homebrew/bin/fish -i`
+
 font-family = JetBrains Mono
 mouse-hide-while-typing = true
-scrollback-limit = 10000000
+scrollback-limit = 1000000
 
 #keybind = ctrl+n=new_window
 
@@ -26,4 +30,4 @@ keybind = ctrl+a>r=reload_config
 #keybind = super+r=reload_config
 
 window-save-state = always
-keybind = shift+enter=text:\n
+#keybind = shift+enter=text:\n

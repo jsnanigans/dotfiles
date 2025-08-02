@@ -244,3 +244,5 @@ export PATH="$PATH:/Users/brendanmullins/.local/bin"
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
 
 export GEMINI_API_KEY=""
+
+source /Users/brendanmullins/.config/op/plugins.sh
