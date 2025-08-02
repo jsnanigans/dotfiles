@@ -37,28 +37,30 @@ function __fish_jj_prompt --description 'Write out the jj prompt'
     # Build prompt
     echo -n ' ('
     
-    # Change ID
-    set_color $__fish_jj_prompt_color_change_id
-    echo -n $change_id
-    set_color normal
-    
-    # Show description if no bookmarks and description exists
-    if test (count $bookmarks) -eq 0 -a -n "$description"
-        echo -n ' '
-        set_color $fish_color_comment
-        # Truncate description if too long
-        set -l desc_display (string sub -l 20 $description)
-        if test (string length $description) -gt 20
-            set desc_display "$desc_display…"
-        end
-        echo -n $desc_display
-        set_color normal
-    else if test (count $bookmarks) -gt 0
+    # Show bookmarks first if they exist, otherwise show change ID
+    if test (count $bookmarks) -gt 0
         # Show bookmarks
-        echo -n ' '
         set_color $__fish_jj_prompt_color_bookmark
         echo -n (string join ', ' $bookmarks)
         set_color normal
+    else
+        # No bookmarks, show change ID
+        set_color $__fish_jj_prompt_color_change_id
+        echo -n $change_id
+        set_color normal
+        
+        # Show description if it exists
+        if test -n "$description"
+            echo -n ' '
+            set_color $fish_color_comment
+            # Truncate description if too long
+            set -l desc_display (string sub -l 20 $description)
+            if test (string length $description) -gt 20
+                set desc_display "$desc_display…"
+            end
+            echo -n $desc_display
+            set_color normal
+        end
     end
     
     # Status indicators
