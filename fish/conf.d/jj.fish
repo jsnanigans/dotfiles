@@ -22,14 +22,30 @@ if command -sq jj
     abbr -a jab 'jj abandon'
     abbr -a jres 'jj resolve'
     abbr -a jevo 'jj evolog'
+    abbr -a jop 'jj op log'
+    abbr -a jou 'jj op undo'
     
     # Useful jj aliases
     alias jlog "jj log --limit 10"
     alias jlogg "jj log --graph"
     alias jroot "cd (jj root)"
     
+    # Cleanup alias - removes all empty changes
+    alias jjclean "jj log --no-graph -r 'empty()' -T 'change_id' | xargs -n1 jj abandon"
+    
+    # Quick workflow aliases
+    alias jfinish "jj describe && jj git push"
+    alias jsync "jj git fetch && jj log --limit 5"
+    
     # Git colocated commands
     abbr -a jgf 'jj git fetch'
     abbr -a jgp 'jj git push'
     abbr -a jgi 'jj git init --colocate'
+    abbr -a jgpb 'jj git push --bookmark'
+    
+    # Navigation shortcuts
+    abbr -a j- 'jj edit @-'
+    abbr -a j-- 'jj edit @--'
+    abbr -a j+ 'jj edit @+'
+    abbr -a j++ 'jj edit @++'
 end

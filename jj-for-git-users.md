@@ -234,6 +234,32 @@ jj new branch1 branch2 -m "Merge branches"
 jj rebase -d main
 ```
 
+### Finishing Your Work
+
+When you're ready to share your changes:
+
+```bash
+# Quick finish - just push current work
+jj status  # Check what you've changed
+jj diff    # Review changes
+jj describe -m "Add feature X"  # Update message
+jj bookmark create my-feature   # Create bookmark
+jj git push --bookmark my-feature
+
+# Even quicker - push to generated branch name
+jj git push
+
+# Clean up before pushing
+jj log  # See your changes
+jj squash  # Combine with parent if needed
+jj describe -m "Final message"
+jj git push --bookmark feature-name
+
+# Close change and start fresh
+jj commit -m "Finished feature X"
+# Creates new empty change for next work
+```
+
 ### Log Cleanup
 
 ```bash
