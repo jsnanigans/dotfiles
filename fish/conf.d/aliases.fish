@@ -7,6 +7,10 @@ alias pn pnpm
 alias nr "npm run"
 alias pr "pnpm run"
 
+alias d "npm run dev"
+alias b "npm run build"
+alias t "npm run test"
+
 # MemoryBank aliases
 alias mbcd "cd $MB_ROOT"
 alias mbfind mb_find
@@ -27,3 +31,8 @@ alias md mkdir
 alias l "ls -l"
 alias la "ls -la"
 alias ll "ls -lh"
+
+# Tmux aliases
+alias t tm
+alias ts tmux-search
+alias tf tmux-filter

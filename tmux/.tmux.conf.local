@@ -316,13 +316,10 @@ set -g mode-keys vi
 
 # set fish as default shell
 set -g default-shell /opt/homebrew/bin/fish
+set -g default-command "/opt/homebrew/bin/fish"
 
-# replace C-b by C-a instead of using both prefixes
-set -gu prefix2
-unbind C-a
-unbind C-b
-set -g prefix C-a
-bind C-a send-prefix
+# Keep default Ctrl-b prefix to avoid conflicts with Ghostty
+# Ghostty uses Ctrl-a for its own keybindings
 
 # if you don't want Oh my tmux! to alter a binding, use #!important
 # bind c new-window -c '#{pane_current_path}' #!important
@@ -342,12 +339,12 @@ set -g status-position top
 # by default, launching tmux will update tpm and all plugins
 #   - true (default)
 #   - false
-tmux_conf_update_plugins_on_launch=false
+tmux_conf_update_plugins_on_launch=true
 
 # by default, reloading the configuration will update tpm and all plugins
 #   - true (default)
 #   - false
-tmux_conf_update_plugins_on_reload=false
+tmux_conf_update_plugins_on_reload=true
 
 # by default, reloading the configuration will uninstall tpm and plugins when no
 # plugins are enabled
@@ -365,11 +362,29 @@ tmux_conf_uninstall_plugins_on_reload=false
 
 # to enable a plugin, use the 'set -g @plugin' syntax:
 # visit https://github.com/tmux-plugins for available plugins
-#set -g @plugin 'tmux-plugins/tmux-copycat'
-#set -g @plugin 'tmux-plugins/tmux-cpu'
-#set -g @plugin 'tmux-plugins/tmux-resurrect'
-#set -g @plugin 'tmux-plugins/tmux-continuum'
-#set -g @continuum-restore 'on'
+set -g @plugin 'tmux-plugins/tmux-copycat'      # Enhanced search
+set -g @plugin 'tmux-plugins/tmux-open'         # Open files/URLs from tmux
+set -g @plugin 'tmux-plugins/tmux-yank'         # Enhanced copy functionality
+set -g @plugin 'laktak/extrakto'                # Fuzzy find text in tmux pane
+set -g @plugin 'alexwforsythe/tmux-which-key'   # Display keybindings like which-key
+
+# Copycat search bindings (after pressing prefix)
+# prefix + / - search regex
+# prefix + ctrl-f - search file
+# prefix + ctrl-g - search git status files 
+# prefix + alt-h - search sha1/sha256 hashes
+# prefix + ctrl-u - search URLs
+# prefix + ctrl-d - search numbers
+# prefix + alt-i - search IP addresses
+
+# Extrakto settings
+set -g @extrakto_split_direction 'v'
+set -g @extrakto_split_size '15'
+set -g @extrakto_grab_area 'window full'
+set -g @extrakto_filter_order 'word line'
+
+# Which-key settings
+set -g @tmux-which-key-config "$DOTFILES/tmux/tmux-which-key.conf"
 
 # -- custom variables ----------------------------------------------------------
 
@@ -406,9 +421,11 @@ set -sg escape-time 0
 # Enable focus events for Neovim
 set -g focus-events on
 
-# Better terminal features
+# Better terminal features (optimized for Ghostty)
 set -g default-terminal "tmux-256color"
 set -ga terminal-overrides ',xterm-256color:Tc'
+set -ga terminal-overrides ',ghostty:Tc'
+set -as terminal-features ',ghostty:RGB'
 
 # -- Project management keybindings -------------------------------------------
 
@@ -460,3 +477,68 @@ bind-key -n S-Left resize-pane -L 2
 bind-key -n S-Down resize-pane -D 2
 bind-key -n S-Up resize-pane -U 2
 bind-key -n S-Right resize-pane -R 2
+
+# -- Fish shell specific optimizations ----------------------------------------
+
+# Fix Fish shell history search in tmux
+bind-key -n PageUp if-shell "$is_vim" 'send-keys PageUp' 'copy-mode -e \; send-keys -X halfpage-up'
+bind-key -n PageDown if-shell "$is_vim" 'send-keys PageDown' 'copy-mode -e \; send-keys -X halfpage-down'
+
+# Ensure Fish shell integration works correctly
+set-environment -g FISH_LAUNCHED_FROM_TMUX 1
+
+# -- Ghostty terminal optimizations -------------------------------------------
+
+# Enable undercurl support for better diagnostics in Neovim
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+
+# Enable clipboard integration with OSC 52
+set -g set-clipboard on
+
+# Better mouse support for Ghostty
+set -g mouse on
+set -g @scroll-speed-num-lines-per-scroll 3
+
+# -- Enhanced search, filter, and sort features -------------------------------
+
+# Custom search bindings
+bind-key / copy-mode \; send-keys ?
+bind-key ? copy-mode \; send-keys /
+
+# FZF integration for better filtering
+bind-key S display-popup -E "\
+    tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
+    sed '/^$/d' |\
+    fzf --reverse --header 'Switch to session' |\
+    xargs tmux switch-client -t"
+
+bind-key W display-popup -E "\
+    tmux list-windows -F '#I:#W' |\
+    fzf --reverse --header 'Switch to window' |\
+    cut -d: -f1 |\
+    xargs tmux select-window -t"
+
+# Session/window sorting and filtering
+bind-key s choose-tree -Zs -O name    # Sort sessions by name
+bind-key w choose-tree -Zw -O name    # Sort windows by name
+
+# Enhanced pane search with ripgrep
+bind-key F display-popup -E -w 80% -h 80% "\
+    rg --color=always --line-number --no-heading --smart-case '.*' |\
+    fzf --ansi --delimiter ':' \
+        --preview 'echo {} | cut -d: -f1 | xargs -I{} sh -c \"tmux capture-pane -t {} -p | head -50\"' \
+        --preview-window=right:50% \
+        --header 'Search in all panes' |\
+    cut -d: -f1 |\
+    xargs tmux select-pane -t"
+
+# Quick filter for command output
+bind-key f copy-mode \; send-keys "/"
+
+# Extract text from pane (requires extrakto plugin)
+bind-key e run-shell "tmux split-window -h 'tmux capture-pane -t #{pane_id} -p | fzf --reverse | pbcopy'"
+
+# Show keybindings help (which-key style)
+bind-key ? display-popup -E -w 82 -h 40 "fish -c 'tmux-help | less'"
+bind-key C-h display-popup -E -w 80% -h 80% "fish -c 'tmux-keys'"

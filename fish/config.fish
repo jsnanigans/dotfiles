@@ -118,6 +118,19 @@ if status is-interactive
     # Plugin configuration handled by conf.d/ files
     # Enable fish autosuggestions
     set -g fish_autosuggestion_enabled 1
+    
+    # ============================================================================
+    # TMUX INTEGRATION
+    # ============================================================================
+    # Auto-launch tmux if not already in a session
+    if not set -q TMUX
+        and test "$TERM_PROGRAM" != "vscode"
+        and status is-login
+        # Source the tmux launcher
+        source $DOTFILES/tmux/tmux-launcher.fish
+        # Auto-attach to existing session or create new one
+        tmux-launcher
+    end
 end
 
 set -U fish_greeting "🐟"

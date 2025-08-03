@@ -10,7 +10,10 @@ A beautiful and fast tmux setup optimized for Neovim users and multiple project 
 - 🔀 **Smart Pane Navigation** - Seamlessly navigate between tmux panes and Neovim splits
 - 📁 **Project Management** - Quick session switching with tmux-sessionizer
 - ⌨️ **Intuitive Keybindings** - Vim-like navigation and convenient shortcuts
-- 🐟 **Fish Shell** - Set as default shell for better terminal experience
+- 🐟 **Fish Shell** - Set as default shell with proper integration
+- 👻 **Ghostty Optimized** - Full support for Ghostty terminal features including undercurl and OSC 52 clipboard
+- 🔍 **Advanced Search** - Multiple search modes with tmux-copycat and custom functions
+- 🔧 **Filter & Sort** - Powerful filtering and sorting capabilities for sessions, windows, and panes
 
 ## Installation
 
@@ -28,7 +31,7 @@ The installer will:
 ## Key Bindings
 
 ### Prefix
-- `Ctrl-a` - Main prefix key (GNU Screen compatible)
+- `Ctrl-b` - Main prefix key (default tmux prefix, avoids conflict with Ghostty)
 
 ### Session Management
 - `<prefix> C` - Create new session with prompt
@@ -63,11 +66,42 @@ The installer will:
 - `<prefix> p` - Paste from buffer
 - `<prefix> P` - Choose buffer to paste
 
+### Search Features
+- `<prefix> /` - Search backward in copy mode
+- `<prefix> ?` - Search forward in copy mode
+- `<prefix> Ctrl-f` - Search for files (copycat)
+- `<prefix> Ctrl-g` - Search git status files (copycat)
+- `<prefix> Ctrl-u` - Search URLs (copycat)
+- `<prefix> Ctrl-d` - Search numbers (copycat)
+- `<prefix> Alt-i` - Search IP addresses (copycat)
+- `<prefix> e` - Extract text with fzf (extrakto)
+- `<prefix> f` - Quick filter in copy mode
+- `<prefix> F` - Search across all panes with ripgrep
+
+### Filter & Sort
+- `<prefix> S` - Filter and switch sessions with fzf
+- `<prefix> W` - Filter and switch windows with fzf
+- `<prefix> s` - Show session tree sorted by name
+- `<prefix> w` - Show window tree sorted by name
+
+### Fish Functions
+- `ts sessions` - Search and switch sessions with preview
+- `ts windows` - Search windows across all sessions
+- `ts panes` - Search content in all panes
+- `ts history` - Search command history
+- `ts find <text>` - Find text in current pane
+- `tf active` - Show sessions with activity
+- `tf detached` - Show detached sessions
+- `tf recent` - Sort sessions by activity
+- `tf size` - Sort windows by pane count
+
 ### Other
 - `<prefix> r` - Reload configuration
 - `<prefix> e` - Edit local configuration
 - `<prefix> m` - Toggle mouse mode
 - `<prefix> b` - List paste buffers
+- `<prefix> ?` - Show keybindings help (which-key style)
+- `<prefix> Ctrl-h` - Show searchable keybindings list
 
 ## Configuration Files
 
@@ -100,6 +134,15 @@ The included tmux-sessionizer (`<prefix> f`) searches for projects in:
 
 You can modify these paths in `~/.local/bin/tmux-sessionizer`.
 
+### Fish Shell Integration
+A tmux launcher script is included for Fish users:
+```fish
+source ~/dotfiles/tmux/tmux-launcher.fish
+tmux-launcher
+```
+
+Add this to your `config.fish` for easy tmux session management.
+
 ### Neovim Integration
 For the best experience with Neovim:
 1. Install [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) in Neovim
@@ -114,6 +157,12 @@ This configuration enables true color support. Ensure your terminal emulator als
 1. Ensure your terminal supports true colors
 2. Check that `$TERM` is set correctly
 3. Try setting `tmux_conf_24b_colour=true` in `.tmux.conf.local`
+
+### Ghostty-specific issues
+If using Ghostty and experiencing issues:
+1. Ensure Ghostty is up to date
+2. The configuration automatically detects and optimizes for Ghostty
+3. Clipboard integration should work out of the box with OSC 52
 
 ### Fish shell not found
 If tmux can't find fish, update the path in `.tmux.conf.local`:
