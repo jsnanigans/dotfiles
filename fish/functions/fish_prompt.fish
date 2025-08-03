@@ -12,19 +12,19 @@ function fish_prompt --description 'Write out the prompt'
         set -g __fish_git_prompt_showupstream informative
         set -g __fish_git_prompt_describe_style branch
         
-        # Git colors
-        set -g __fish_git_prompt_color_branch magenta --bold
-        set -g __fish_git_prompt_color_dirtystate blue
-        set -g __fish_git_prompt_color_stagedstate yellow
-        set -g __fish_git_prompt_color_invalidstate red
-        set -g __fish_git_prompt_color_untrackedfiles $fish_color_normal
-        set -g __fish_git_prompt_color_cleanstate green --bold
+        # Git colors - Rose Pine theme
+        set -g __fish_git_prompt_color_branch c4a7e7 --bold  # iris
+        set -g __fish_git_prompt_color_dirtystate f6c177     # gold
+        set -g __fish_git_prompt_color_stagedstate 9ccfd8    # foam
+        set -g __fish_git_prompt_color_invalidstate eb6f92   # love
+        set -g __fish_git_prompt_color_untrackedfiles 908caa # subtle
+        set -g __fish_git_prompt_color_cleanstate 31748f     # pine
         
-        # JJ colors
-        set -g __fish_jj_prompt_color_change_id cyan --bold
-        set -g __fish_jj_prompt_color_bookmark magenta --bold
-        set -g __fish_jj_prompt_color_dirty yellow
-        set -g __fish_jj_prompt_color_conflict red --bold
+        # JJ colors - Rose Pine theme
+        set -g __fish_jj_prompt_color_change_id 9ccfd8 --bold    # foam
+        set -g __fish_jj_prompt_color_bookmark c4a7e7 --bold     # iris
+        set -g __fish_jj_prompt_color_dirty f6c177               # gold
+        set -g __fish_jj_prompt_color_conflict eb6f92 --bold     # love
         
         set -g __fish_vcs_prompt_initialized 1
     end
