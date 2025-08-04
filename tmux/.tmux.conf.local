@@ -449,6 +449,10 @@ bind-key -n M-7 select-window -t 7
 bind-key -n M-8 select-window -t 8
 bind-key -n M-9 select-window -t 9
 
+# Cycle through windows with Alt+Space (like Alt+Tab)
+bind-key -n M-Space next-window
+bind-key -n M-S-Space previous-window
+
 # Quick pane switching with vim keys (no prefix needed) 
 bind-key -n M-h select-pane -L
 bind-key -n M-j select-pane -D
