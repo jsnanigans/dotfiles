@@ -321,7 +321,7 @@ set -g mode-keys vi
 
 # Default shell
 set -g default-shell /opt/homebrew/bin/fish
-set -g default-command "/opt/homebrew/bin/fish"
+# Removed default-command to preserve working directory when creating panes/windows
 
 # Status position
 set -g status-position top

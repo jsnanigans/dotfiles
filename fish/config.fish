@@ -139,3 +139,4 @@ set -U fish_greeting "🐟"
 
 # opencode
 fish_add_path /Users/brendanmullins/.opencode/bin
+fish_add_path $HOME/.local/bin
