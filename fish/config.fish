@@ -1,51 +1,52 @@
 # Fish Shell Configuration
-# Migrated from .zshrc
 
 # ============================================================================
-# ENVIRONMENT VARIABLES
+# CORE ENVIRONMENT
 # ============================================================================
 
-# Set default editor
+# Dotfiles directory (used by other configs)
+set -gx DOTFILES $HOME/dotfiles
+
+# Editor configuration
 if test -n "$SSH_CONNECTION"
     set -gx EDITOR vim
 else
     set -gx EDITOR nvim
 end
-
-# Set NVIM_APPNAME
 set -gx NVIM_APPNAME marvim
 
-# Dotfiles directory
-set -gx DOTFILES $HOME/dotfiles
+# ============================================================================
+# DEVELOPMENT TOOLS
+# ============================================================================
 
-# Bat config
-set -gx BAT_CONFIG_PATH $DOTFILES/bat/bat.conf
+# Package managers
+set -gx BUN_INSTALL $HOME/.bun
+set -gx N_PREFIX $HOME/n
+set -gx PNPM_HOME $HOME/Library/pnpm
 
-# API Keys (empty by default)
-set -gx GEMINI_API_KEY ""
-
-# Android and iOS development
+# Mobile development
 set -gx ANDROID_HOME /Users/brendanmullins/Library/Android/sdk
 set -gx IOS_API_FILE_PATH /Users/brendanmullins/app_cert/old/AuthKey_TT439J2PCV.p8
 set -gx IOS_API_KEY_ID TT439J2PCV
 
-# MemoryBank configuration
+# ============================================================================
+# APPLICATION CONFIGS
+# ============================================================================
+
+# Bat (better cat)
+set -gx BAT_CONFIG_PATH $DOTFILES/bat/bat.conf
+
+# MemoryBank
 set -gx MB_ROOT /Users/brendanmullins/Documents/Obsidian/MCP/MCP/MemoryBank
 set -gx MB_TEMPLATES $MB_ROOT/_System/templates
+
+# API Keys (empty by default)
+set -gx GEMINI_API_KEY ""
 
 # ============================================================================
 # PATH CONFIGURATION
 # ============================================================================
-# PATH configuration moved to conf.d/00_path.fish for better organization
-
-# BUN installation
-set -gx BUN_INSTALL $HOME/.bun
-
-# N prefix
-set -gx N_PREFIX $HOME/n
-
-# PNPM home
-set -gx PNPM_HOME $HOME/Library/pnpm
+# PATH is managed in conf.d/00_path.fish for early loading
 
 # ============================================================================
 # INTERACTIVE CONFIGURATION
@@ -90,11 +91,10 @@ if status is-interactive
     end
 
     # ============================================================================
-    # ALIASES
+    # INTERACTIVE SHORTCUTS
     # ============================================================================
-    # Aliases moved to conf.d/aliases.fish for better organization
-    
-    # The fuck shortcut remains here due to lazy loading dependency
+    # Most aliases are in conf.d/aliases.fish
+    # This one stays here due to lazy loading dependency
     alias f fuck
 
     # ============================================================================
@@ -113,10 +113,9 @@ if status is-interactive
 
 
     # ============================================================================
-    # COMPLETIONS & PLUGINS
+    # FISH FEATURES
     # ============================================================================
-    # Plugin configuration handled by conf.d/ files
-    # Enable fish autosuggestions
+    # Enable autosuggestions
     set -g fish_autosuggestion_enabled 1
     
     # ============================================================================
@@ -133,4 +132,7 @@ if status is-interactive
     end
 end
 
+# ============================================================================
+# GREETING
+# ============================================================================
 set -U fish_greeting "🐟"

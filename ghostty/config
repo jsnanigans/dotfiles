@@ -1,33 +1,43 @@
+# Ghostty Terminal Configuration
+
+# ============================================================================
+# APPEARANCE
+# ============================================================================
 theme = rose-pine
-font-feature= -liga
+font-family = JetBrains Mono
+font-feature = -liga
 
+# ============================================================================
+# SHELL
+# ============================================================================
 shell-integration = fish
-
 command = "/usr/bin/env /opt/homebrew/bin/fish -i"
 initial-command = "/usr/bin/env FIRST_LOGIN=1 /opt/homebrew/bin/fish -i"
 
-font-family = JetBrains Mono
+# ============================================================================
+# BEHAVIOR
+# ============================================================================
 mouse-hide-while-typing = true
 scrollback-limit = 1000000
+window-save-state = always
 
-#keybind = ctrl+n=new_window
-
-#keybind = ctrl+h=goto_split:left
-#keybind = ctrl+j=goto_split:bottom
-#keybind = ctrl+k=goto_split:top
-#keybind = ctrl+l=goto_split:right
-
+# ============================================================================
+# KEYBINDINGS - Tmux-style with ctrl+a prefix
+# ============================================================================
+# Split management
 keybind = ctrl+a>h=new_split:left
 keybind = ctrl+a>j=new_split:down
 keybind = ctrl+a>k=new_split:up
 keybind = ctrl+a>l=new_split:right
 keybind = ctrl+a>z=toggle_split_zoom
 
+# Tab management
 keybind = ctrl+a>n=next_tab
 keybind = ctrl+a>p=previous_tab
+keybind = ctrl+a>c=new_tab
+
+# Config reload
 keybind = ctrl+a>r=reload_config
 
-#keybind = super+r=reload_config
-
-window-save-state = always
-#keybind = shift+enter=text:\n
+# Window management
+keybind = ctrl+a>w=new_window

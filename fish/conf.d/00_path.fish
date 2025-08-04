@@ -1,30 +1,47 @@
 # Centralized PATH configuration
-# This file is loaded before config.fish due to conf.d naming
+# Loads after 00_environment.fish but before other configs
 
-# System-wide paths
-set -l paths \
+# Define paths in order of priority
+set -l paths
+
+# System essentials
+set -a paths \
     /opt/homebrew/bin \
+    /usr/local/bin \
     $HOME/.local/bin \
     $HOME/bin
 
-# Language-specific paths
+# Language/runtime paths
 set -a paths \
     $HOME/.bun/bin \
     $HOME/n/bin \
     $HOME/.rvm/bin \
-    /Users/brendanmullins/Library/Python/3.13/bin
+    $HOME/Library/Python/3.13/bin
+
+# Package managers
+set -a paths \
+    $HOME/Library/pnpm \
+    $HOME/.yarn/bin
 
 # Development tools
 set -a paths \
     $HOME/.fastlane/bin \
-    $HOME/Library/pnpm \
     $HOME/Projects/depot_tools \
     $HOME/development/flutter/bin \
     /usr/local/gradle/gradle-8.8/bin
 
-# Add all paths at once
+# Android SDK
+if test -n "$ANDROID_HOME"
+    set -a paths \
+        $ANDROID_HOME/emulator \
+        $ANDROID_HOME/tools \
+        $ANDROID_HOME/tools/bin \
+        $ANDROID_HOME/platform-tools
+end
+
+# Add paths only if they exist
 for path in $paths
     if test -d $path
-        fish_add_path $path
+        fish_add_path -g $path
     end
 end
