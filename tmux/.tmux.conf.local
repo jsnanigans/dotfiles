@@ -35,6 +35,9 @@ tmux_conf_new_session_prompt=false
 
 # -- display -------------------------------------------------------------------
 
+# Disable automatic window renaming to keep custom names
+set-option -g allow-rename off
+
 # RGB 24-bit colour support, possible values are:
 #   - true
 #   - false
@@ -131,7 +134,7 @@ tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
 tmux_conf_theme_window_status_fg="#6e6a86"
 tmux_conf_theme_window_status_bg="#191724"
 tmux_conf_theme_window_status_attr="none"
-tmux_conf_theme_window_status_format="#I #W"
+tmux_conf_theme_window_status_format="#I #W [#{pane_current_command}]"
 #tmux_conf_theme_window_status_format="#{circled_window_index} #W"
 #tmux_conf_theme_window_status_format="#I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}"
 
@@ -148,7 +151,7 @@ tmux_conf_theme_window_status_format="#I #W"
 tmux_conf_theme_window_status_current_fg="#191724"
 tmux_conf_theme_window_status_current_bg="#c4a7e7"
 tmux_conf_theme_window_status_current_attr="bold"
-tmux_conf_theme_window_status_current_format="#I #W"
+tmux_conf_theme_window_status_current_format="#I #W [#{pane_current_command}]"
 #tmux_conf_theme_window_status_current_format="#{circled_window_index} #W"
 #tmux_conf_theme_window_status_current_format="#I #W#{?window_zoomed_flag,🔍,}"
 
