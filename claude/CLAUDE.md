@@ -81,3 +81,6 @@ Only 3 seats can block decisions:
 **"Which expertise would I regret not having if this goes wrong?"**
 
 Then consult those seats first.
+
+
+! Default shell environment is `fish`

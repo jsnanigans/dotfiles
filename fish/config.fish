@@ -136,3 +136,6 @@ end
 # GREETING
 # ============================================================================
 set -U fish_greeting "🐟"
+
+# opencode
+fish_add_path /Users/brendanmullins/.opencode/bin

@@ -71,7 +71,7 @@ cmd-h = []         # Disable "hide application"
 cmd-alt-h = []     # Disable "hide others"
 
 # Terminal launcher
-alt-enter = 'exec-and-forget open -a Ghostty'
+# alt-enter = 'exec-and-forget open -a Ghostty'
 
 # Layout control
 alt-slash = 'layout tiles horizontal vertical'

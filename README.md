@@ -23,7 +23,14 @@ dotfiles/
 │   └── tmux-which-key.conf # Which-key config
 ├── ghostty/              # Ghostty terminal
 │   └── config           # Terminal settings
-└── .aerospace.toml      # AeroSpace window manager
+├── .aerospace.toml      # AeroSpace window manager (basic)
+├── aerospace-enhanced.toml # Enhanced AeroSpace config
+└── aerospace/           # AeroSpace extras
+    ├── README.md        # Setup guide
+    ├── install-extras.sh # Installer for JankyBorders, etc.
+    └── scripts/         # Helper scripts
+        ├── layout-preset.sh  # Layout presets
+        └── window-picker.sh  # FZF window picker
 
 ```
 
@@ -59,13 +66,15 @@ dotfiles/
 - Massive scrollback buffer (1M lines)
 
 ### AeroSpace
-- Tiling window manager for macOS
-- Vim-style navigation (hjkl)
-- 10 workspaces with monitor assignments
-- Smart window gaps (10px)
-- Multiple modes: main, service, resize
-- Auto-assignment of apps to workspaces
-- Floating rules for system windows
+- Advanced tiling window manager setup
+- Enhanced config with multiple modes (main, service, resize, swap)
+- JankyBorders integration for visual window highlighting
+- Custom scripts for layout presets and window picking
+- Fish integration with `aero` command
+- Smart app-to-workspace assignments
+- Optional Sketchybar integration
+- FZF-powered window picker
+- Configurable gaps (toggle with `aero gaps`)
 
 ## Keybinding Reference
 
@@ -110,6 +119,7 @@ dotfiles/
    - Tmux: `brew install tmux`
    - Ghostty: Download from ghostty.org
    - AeroSpace: `brew install --cask nikitabobko/tap/aerospace`
+   - JankyBorders: Run `~/dotfiles/aerospace/install-extras.sh`
    - FZF: `brew install fzf`
    - Ripgrep: `brew install ripgrep`
 4. Start AeroSpace:
