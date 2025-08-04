@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal configuration files for Fish shell, tmux, and Ghostty terminal.
+Personal configuration files for Fish shell, tmux, Ghostty terminal, and AeroSpace window manager.
 
 ## Structure
 
@@ -21,8 +21,9 @@ dotfiles/
 │   ├── keybindings.conf  # All keybindings
 │   ├── theme.conf        # Rose Pine theme
 │   └── tmux-which-key.conf # Which-key config
-└── ghostty/              # Ghostty terminal
-    └── config           # Terminal settings
+├── ghostty/              # Ghostty terminal
+│   └── config           # Terminal settings
+└── .aerospace.toml      # AeroSpace window manager
 
 ```
 
@@ -57,6 +58,15 @@ dotfiles/
 - Fish shell integration
 - Massive scrollback buffer (1M lines)
 
+### AeroSpace
+- Tiling window manager for macOS
+- Vim-style navigation (hjkl)
+- 10 workspaces with monitor assignments
+- Smart window gaps (10px)
+- Multiple modes: main, service, resize
+- Auto-assignment of apps to workspaces
+- Floating rules for system windows
+
 ## Keybinding Reference
 
 ### Tmux (prefix: `ctrl+b`)
@@ -71,11 +81,18 @@ dotfiles/
 - **Tabs**: n/p (navigate), c (create)
 - **Config**: r (reload)
 
+### AeroSpace (Alt as modifier)
+- **Navigation**: Alt+h/j/k/l (focus), Alt+Shift+h/j/k/l (move)
+- **Workspaces**: Alt+1-0 (switch), Alt+Shift+1-0 (move window)
+- **Resize**: Alt+Shift+minus/equal (smart), Alt+Ctrl+h/j/k/l (directional)
+- **Layouts**: Alt+/ (tiles), Alt+, (accordion), Alt+f (fullscreen)
+- **Modes**: Alt+Shift+; (service), Alt+Shift+r (resize)
+
 ### Global shortcuts (no prefix)
-- **Alt+h/j/k/l**: Quick pane switching
-- **Alt+1-9**: Quick window switching
-- **Alt+Space**: Cycle windows
-- **Shift+Arrows**: Resize panes
+- **Alt+h/j/k/l**: Quick pane switching (tmux)
+- **Alt+1-9**: Quick window switching (tmux)
+- **Alt+Space**: Cycle windows (tmux)
+- **Shift+Arrows**: Resize panes (tmux)
 
 ## Installation
 
@@ -86,10 +103,16 @@ dotfiles/
    ln -s ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
    ln -s ~/dotfiles/tmux/.tmux.conf.local ~/.tmux.conf.local
    ln -s ~/dotfiles/ghostty/config ~/.config/ghostty/config
+   ln -s ~/dotfiles/.aerospace.toml ~/.aerospace.toml
    ```
 3. Install dependencies:
    - Fish shell: `brew install fish`
    - Tmux: `brew install tmux`
    - Ghostty: Download from ghostty.org
+   - AeroSpace: `brew install --cask nikitabobko/tap/aerospace`
    - FZF: `brew install fzf`
    - Ripgrep: `brew install ripgrep`
+4. Start AeroSpace:
+   ```bash
+   aerospace reload-config
+   ```
