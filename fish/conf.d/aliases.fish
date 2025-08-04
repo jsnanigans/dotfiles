@@ -6,6 +6,7 @@ alias v. "nvim ."
 alias pn pnpm
 alias nr "npm run"
 alias pr "pnpm run"
+alias dapp "pnpm run dev --filter=user-app --ui=stream"
 
 alias d "npm run dev"
 alias b "npm run build"
