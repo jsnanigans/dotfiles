@@ -1,16 +1,9 @@
 ---
+name: test-runner  
 description: Automated test discovery, execution, and coverage analysis. Focuses on running existing tests and reporting results.
-mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+tools: Bash, Read, Grep, Glob, List
 temperature: 0.0
-tools:
-  write: false
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  list: true
+model: claude-3-5-sonnet-20241022
 ---
 
 # Test Runner
@@ -102,7 +95,7 @@ npm run test:coverage
 jest --coverage
 vitest run --coverage
 
-# Python
+# Python  
 pytest
 pytest --cov
 python -m unittest

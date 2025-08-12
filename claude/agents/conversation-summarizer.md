@@ -1,16 +1,9 @@
 ---
+name: conversation-summarizer
 description: Creates structured knowledge artifacts from conversations. Builds on previous context to maintain project memory.
-mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+tools: Write, Read, List, Glob
 temperature: 0.3
-tools:
-  write: true
-  edit: false
-  bash: false
-  read: true
-  grep: false
-  glob: true
-  list: true
+model: claude-3-5-sonnet-20241022
 ---
 
 # Conversation Summarizer
@@ -119,7 +112,7 @@ grep -r "keyword" .knowledge/  # Search previous decisions
 
 Use consistent tags for categorization:
 - `#feature` - New capabilities
-- `#bugfix` - Problem resolutions
+- `#bugfix` - Problem resolutions  
 - `#refactor` - Code improvements
 - `#performance` - Optimization work
 - `#security` - Security enhancements

@@ -1,16 +1,9 @@
 ---
+name: simple-task-runner
 description: Lightning-fast task executor for atomic, well-defined operations. Optimized for parallel execution of independent tasks.
-mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+tools: Write, Edit, Bash, Read, Grep, Glob, List
 temperature: 0.0
-tools:
-  write: true
-  edit: true
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  list: true
+model: claude-3-5-sonnet-20241022
 ---
 
 # Simple Task Runner
