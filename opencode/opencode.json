@@ -3,6 +3,7 @@
   "instructions": [
     ".cursor/rules/*.md",
     "GLOBAL.md",
+    "AGENTS.md",
     "CLAUDE.md",
     "~/.claude/CLAUDE.md",
     "~/.config/opencode/GLOBAL.md"
