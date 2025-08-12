@@ -138,34 +138,27 @@ backspace = ['close-all-windows-but-current', 'mode main']
 # ============================================================================
 # APPLICATION RULES
 # ============================================================================
-# System Preferences should float
 [[on-window-detected]]
-if.app-id = 'com.apple.systempreferences'
+if.app-id = 'com.1password.1password'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-id = 'com.apple.systemsettings'
+if.app-id = 'com.apple.systempreferences'
 run = 'layout floating'
 
 # Finder dialogs
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
-if.window-title-regex-substring = '^(Copy|Move|Delete|Info)$'
-run = 'layout floating'
-
-# Calculator
-[[on-window-detected]]
-if.app-id = 'com.apple.calculator'
-run = 'layout floating'
-
-# Archive Utility
-[[on-window-detected]]
-if.app-id = 'com.apple.archiveutility'
 run = 'layout floating'
 
 # Activity Monitor
 [[on-window-detected]]
 if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
+
+# Chromium
+[[on-window-detected]]
+if.app-id = 'org.chromium.Chromium'
 run = 'layout floating'
 
 # ============================================================================

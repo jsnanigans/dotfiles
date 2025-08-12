@@ -1,5 +1,5 @@
 ---
-description: Summarizes conversation history into concise markdown documents
+description: Creates organized markdown summaries of conversations capturing decisions, changes, and next steps - use proactively after completing complex tasks or long discussions
 mode: subagent
 model: anthropic/claude-sonnet-4-20250514
 temperature: 0.3

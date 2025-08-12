@@ -1,5 +1,5 @@
 ---
-description: Comprehensive test execution and coverage analysis agent
+description: Expert testing agent that automatically discovers test frameworks, writes comprehensive tests, and improves coverage - use proactively after implementing any feature or fixing bugs
 mode: subagent
 model: anthropic/claude-sonnet-4-20250514
 temperature: 0.1

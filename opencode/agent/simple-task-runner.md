@@ -1,5 +1,5 @@
 ---
-description: Fast execution agent for simple, well-defined tasks
+description: Lightning-fast agent that instantly executes simple file operations, text replacements, and commands without overthinking - use proactively for any straightforward task to save time
 mode: subagent
 model: anthropic/claude-sonnet-4-20250514
 temperature: 0.0
