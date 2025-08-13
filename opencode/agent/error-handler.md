@@ -4,13 +4,13 @@ mode: subagent
 model: anthropic/claude-opus-4-1-20250805
 temperature: 0.1
 tools:
-  write: true
-  edit: true
-  bash: true
+  write: false
+  edit: false
+  bash: false
   read: true
   grep: true
-  glob: false
-  list: false
+  glob: true
+  list: true
 ---
 
 # Error Handler

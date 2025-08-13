@@ -1,3 +1,0 @@
-local history = require('new.history')
-local suggest = require('nvim-complete.suggest')
-local ui = require('nvim-complete.ui')
