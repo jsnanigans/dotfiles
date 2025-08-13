@@ -7,5 +7,12 @@
     "CLAUDE.md",
     "~/.claude/CLAUDE.md",
     "~/.config/opencode/GLOBAL.md"
-  ]
+  ],
+  "mcp": {
+    "atlassian": {
+      "type": "local",
+      "command": ["mcpm", "--server=mcp-atlassian", "--agent=opencode"],
+      "enabled": true
+    }
+  }
 }
