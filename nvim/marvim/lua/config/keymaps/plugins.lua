@@ -441,7 +441,7 @@ M.smart_splits_keys = {
   { "<C-j>", function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" },
   { "<C-k>", function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" },
   { "<C-l>", function() require("smart-splits").move_cursor_right() end, desc = "Move to right split" },
-  -- Resizing splits
+  -- Resizing splits (nvim gets priority for Alt-hjkl)
   { "<A-h>", function() require("smart-splits").resize_left() end, desc = "Resize split left" },
   { "<A-j>", function() require("smart-splits").resize_down() end, desc = "Resize split down" },
   { "<A-k>", function() require("smart-splits").resize_up() end, desc = "Resize split up" },

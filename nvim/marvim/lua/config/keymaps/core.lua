@@ -33,7 +33,7 @@ function M.setup_editor()
   map("n", "gO", "<Cmd>call append(line('.') - 1, repeat([''], v:count1))<CR>", { desc = "Put Empty Line Above" })
   map("n", "go", "<Cmd>call append(line('.'), repeat([''], v:count1))<CR>", { desc = "Put Empty Line Below" })
 
-  -- Move Lines
+  -- Move Lines (nvim gets priority for Alt-j/k)
   map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
   map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
   map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
