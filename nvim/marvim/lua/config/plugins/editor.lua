@@ -172,6 +172,6 @@ return {
   },
 
   -- Complex plugins kept in separate files
-  { import = "config.plugins.editor.snacks" },
+  { import = "config.plugins.editor.snacks-full" }, -- Using full snacks config with session and lazygit
   { import = "config.plugins.editor.mini" },
 }

@@ -66,10 +66,11 @@ function M.setup_plugin_keymaps()
     map("n", "<leader>cm", "<cmd>Mason<cr>", { desc = "Mason" })
   end
 
-  -- LazyGit
-  if vim.fn.exists(":LazyGit") == 2 then
-    map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
-  end
+  -- LazyGit - MIGRATED TO SNACKS.LAZYGIT
+  -- Keymaps now handled in snacks-full.lua config
+  -- if vim.fn.exists(":LazyGit") == 2 then
+  --   map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+  -- end
 
   -- Git Blame
   if vim.fn.exists(":GitBlameToggle") == 2 then

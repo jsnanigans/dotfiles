@@ -6,7 +6,7 @@ return {
   { "nvim-lua/plenary.nvim", lazy = true },
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
-  -- Session persistence
+  -- Session persistence (snacks.nvim doesn't have session management)
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
