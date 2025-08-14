@@ -84,10 +84,10 @@ alt-shift-k = 'focus up'
 alt-shift-l = 'focus right'
 
 # Window movement (vim-style) - Using Alt-Cmd as alternative
-alt-cmd-h = 'move left'
-alt-cmd-j = 'move down'
-alt-cmd-k = 'move up'
-alt-cmd-l = 'move right'
+# alt-cmd-h = 'move left'
+# alt-cmd-j = 'move down'
+# alt-cmd-k = 'move up'
+# alt-cmd-l = 'move right'
 
 # Window resizing
 alt-shift-minus = 'resize smart -50'

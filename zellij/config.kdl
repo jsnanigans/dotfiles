@@ -274,12 +274,26 @@ plugins {
          black 0 0 0
          white 255 255 255
      }
+     rose-pine {
+         // Rose Pine color palette
+         fg 224 222 244      // #e0def4 - text
+         bg 25 23 36         // #191724 - base
+         red 235 111 146     // #eb6f92 - love
+         green 49 116 143    // #31748f - pine
+         yellow 246 193 119  // #f6c177 - gold
+         blue 196 167 231    // #c4a7e7 - iris
+         magenta 235 188 186 // #ebbcba - rose
+         orange 246 193 119  // #f6c177 - gold (reused)
+         cyan 156 207 216    // #9ccfd8 - foam
+         black 38 35 58      // #26233a - overlay
+         white 224 222 244   // #e0def4 - text
+     }
  }
 
 // Choose the theme that is specified in the themes section.
 // Default: default
-//
-theme "dracula"
+// Using Rose Pine theme for consistency across all tools
+theme "rose-pine"
 
 // The name of the default layout to load on startup
 // Default: "default"
