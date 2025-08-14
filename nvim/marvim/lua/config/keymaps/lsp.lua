@@ -229,12 +229,14 @@ function M.setup_lsp_keybindings(client, buffer)
 end
 
 -- ============================================================================
--- GITSIGNS KEYBINDINGS
+-- GIT DIFF KEYBINDINGS (using mini.diff and mini.git)
 -- ============================================================================
 
 function M.setup_gitsigns_keybindings(buffer)
-  local gs = package.loaded.gitsigns
-  if not gs then
+  -- Kept function name for compatibility with existing configs
+  -- Now uses mini.diff and mini.git instead of gitsigns
+  local ok_diff = pcall(require, "mini.diff")
+  if not ok_diff then
     return
   end
 
@@ -242,27 +244,49 @@ function M.setup_gitsigns_keybindings(buffer)
     vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
   end
 
-  -- Hunk navigation
-  git_map("n", "]h", gs.next_hunk, "Next Hunk")
-  git_map("n", "[h", gs.prev_hunk, "Prev Hunk")
-
-  -- Hunk actions
-  git_map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
-  git_map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
-  git_map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
-  git_map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
-  git_map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
-  git_map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
+  -- Note: mini.diff navigation is set up via opts.mappings in the config
+  -- These are already mapped: [h, ]h for navigation, gh for apply, gH for reset
+  
+  -- Additional git actions using shell commands
+  -- Stage/unstage operations using git commands
+  git_map({ "n", "v" }, "<leader>ghs", function()
+    -- Stage current hunk or selection
+    vim.cmd("!git add -p %")
+  end, "Stage Hunk")
+  
+  git_map({ "n", "v" }, "<leader>ghr", function()
+    -- Reset current hunk
+    vim.cmd("!git checkout -p %")
+  end, "Reset Hunk")
+  
+  git_map("n", "<leader>ghS", function()
+    vim.cmd("!git add %")
+    vim.notify("Buffer staged", vim.log.levels.INFO)
+  end, "Stage Buffer")
+  
+  git_map("n", "<leader>ghR", function()
+    vim.cmd("!git checkout %")
+    vim.notify("Buffer reset", vim.log.levels.INFO)
+  end, "Reset Buffer")
+  
+  git_map("n", "<leader>ghp", function()
+    require("mini.diff").toggle_overlay()
+  end, "Preview Hunks Overlay")
+  
   git_map("n", "<leader>ghb", function()
-    gs.blame_line({ full = true })
-  end, "Blame Line")
-  git_map("n", "<leader>ghd", gs.diffthis, "Diff This")
+    vim.cmd("!git blame %")
+  end, "Blame")
+  
+  git_map("n", "<leader>ghd", function()
+    vim.cmd("!git diff %")
+  end, "Diff This")
+  
   git_map("n", "<leader>ghD", function()
-    gs.diffthis("~")
+    vim.cmd("!git diff HEAD~1 %")
   end, "Diff This ~")
 
-  -- Text objects
-  git_map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+  -- Text object for hunks (using mini.diff's mappings)
+  git_map({ "o", "x" }, "ih", "gh", "Git Hunk")
 end
 
 return M

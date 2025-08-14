@@ -42,13 +42,14 @@ M.oil_keys = plugins.oil_keys
 M.dropbar_keys = plugins.dropbar_keys
 M.notify_keys = plugins.notify_keys
 M.noice_keys = plugins.noice_keys
+M.smart_splits_keys = plugins.smart_splits_keys
 
 -- ============================================================================
 -- LSP AND GITSIGNS SETUP FUNCTIONS - Re-export from lsp module
 -- ============================================================================
 
 M.setup_lsp_keybindings = lsp.setup_lsp_keybindings
-M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings
+M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings  -- Kept for compatibility, now uses mini.diff
 
 -- ============================================================================
 -- PLUGIN KEYMAPS (Non-lazy plugins only)
@@ -75,15 +76,13 @@ function M.setup_plugin_keymaps()
     map("n", "<leader>gb", "<cmd>GitBlameToggle<cr>", { desc = "Toggle Git Blame" })
   end
 
-  -- Git Conflicts
-  if vim.fn.exists(":GitConflictChooseOurs") == 2 then
-    map("n", "<leader>gxo", "<cmd>GitConflictChooseOurs<cr>", { desc = "Take Ours" })
-    map("n", "<leader>gxt", "<cmd>GitConflictChooseTheirs<cr>", { desc = "Take Theirs" })
-    map("n", "<leader>gxb", "<cmd>GitConflictChooseBoth<cr>", { desc = "Take Both" })
-    map("n", "<leader>gxn", "<cmd>GitConflictChooseNone<cr>", { desc = "Take None" })
-    map("n", "]x", "<cmd>GitConflictNextConflict<cr>", { desc = "Next Conflict" })
-    map("n", "[x", "<cmd>GitConflictPrevConflict<cr>", { desc = "Prev Conflict" })
-  end
+  -- Git Conflicts (using mini.git commands)
+  map("n", "<leader>gxo", "<cmd>GitConflictChooseOurs<cr>", { desc = "Take Ours" })
+  map("n", "<leader>gxt", "<cmd>GitConflictChooseTheirs<cr>", { desc = "Take Theirs" })
+  map("n", "<leader>gxb", "<cmd>GitConflictChooseBoth<cr>", { desc = "Take Both" })
+  map("n", "<leader>gxn", "<cmd>GitConflictChooseNone<cr>", { desc = "Take None" })
+  map("n", "]x", "<cmd>GitConflictNextConflict<cr>", { desc = "Next Conflict" })
+  map("n", "[x", "<cmd>GitConflictPrevConflict<cr>", { desc = "Prev Conflict" })
 
   -- Diffview
   if vim.fn.exists(":DiffviewOpen") == 2 then
@@ -93,22 +92,37 @@ function M.setup_plugin_keymaps()
     map("n", "<leader>gF", "<cmd>DiffviewFileHistory %<cr>", { desc = "Current File History" })
   end
 
-  -- Harpoon
-  if is_available("harpoon") then
+  -- Mini.visits for file navigation (replacing Harpoon)
+  if is_available("mini.visits") then
+    local MiniVisits = require("mini.visits")
+    
+    -- Add current file to pinned list (like harpoon add)
     map("n", "<leader>H", function()
-      require("harpoon"):list():add()
-    end, { desc = "Harpoon File" })
+      MiniVisits.add_label("pinned", vim.fn.expand("%:p"))
+      vim.notify("Added to pinned files", vim.log.levels.INFO)
+    end, { desc = "Pin File (Mini.visits)" })
+    
+    -- Show pinned files menu (like harpoon menu)
     map("n", "<leader>h", function()
-      local harpoon = require("harpoon")
-      harpoon.ui:toggle_quick_menu(harpoon:list())
-    end, { desc = "Harpoon Quick Menu" })
+      MiniVisits.select_path(nil, { filter = "pinned" })
+    end, { desc = "Pinned Files Menu" })
 
-    -- Harpoon file navigation (1-5)
+    -- Quick navigation to pinned files (1-5)
     for i = 1, 5 do
       map("n", "<leader>" .. i, function()
-        require("harpoon"):list():select(i)
-      end, { desc = "Harpoon to File " .. i })
+        local pinned = MiniVisits.list_paths(nil, { filter = "pinned" })
+        if pinned[i] then
+          vim.cmd("edit " .. pinned[i])
+        else
+          vim.notify("No file at position " .. i, vim.log.levels.WARN)
+        end
+      end, { desc = "Go to Pinned File " .. i })
     end
+    
+    -- Additional mini.visits commands
+    map("n", "<leader>fv", function()
+      MiniVisits.select_path()
+    end, { desc = "Recent Files (All)" })
   end
 
   -- Flash

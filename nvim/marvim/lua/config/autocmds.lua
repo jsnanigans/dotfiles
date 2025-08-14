@@ -49,7 +49,7 @@ autocmd("FileType", {
     "neotest-summary",
     "neotest-output-panel",
     "dbout",
-    "gitsigns.blame",
+    "git.blame",  -- mini.git blame window
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false

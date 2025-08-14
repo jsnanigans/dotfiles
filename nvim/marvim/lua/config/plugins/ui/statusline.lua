@@ -97,12 +97,25 @@ return {
                 removed = icons.git.removed,
               },
               source = function()
-                local gitsigns = vim.b.gitsigns_status_dict
-                if gitsigns then
+                -- Use mini.diff summary if available
+                local ok, diff = pcall(require, "mini.diff")
+                if ok then
+                  local summary = vim.b.minidiff_summary
+                  if summary then
+                    return {
+                      added = summary.add,
+                      modified = summary.change,
+                      removed = summary.delete,
+                    }
+                  end
+                end
+                -- Fallback to git status if available
+                local git_status = vim.b.git_status_dict
+                if git_status then
                   return {
-                    added = gitsigns.added,
-                    modified = gitsigns.changed,
-                    removed = gitsigns.removed,
+                    added = git_status.added,
+                    modified = git_status.changed,
+                    removed = git_status.removed,
                   }
                 end
               end,

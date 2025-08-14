@@ -9,33 +9,95 @@ return {
     opts = {},
   },
 
-  -- commenting
+  -- commenting with mini.comment
   {
-    "folke/ts-comments.nvim",
-    opts = {},
+    "echasnovski/mini.comment",
+    version = false,
     event = "VeryLazy",
-  },
-
-  -- File navigation with harpoon
-  {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {},
-  },
-
-  -- Auto pairs
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
     opts = {
-      check_ts = true,
-      ts_config = {
-        lua = { "string" },
-        javascript = { "template_string" },
-        java = false,
+      options = {
+        custom_commentstring = function()
+          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+        end,
       },
     },
+  },
+
+  -- File navigation with mini.visits
+  {
+    "echasnovski/mini.visits",
+    version = false,
+    event = "VeryLazy",
+    opts = {
+      -- Track visited files
+      track = {
+        event = "BufEnter",
+        delay = 1000,
+      },
+      -- Store visits data
+      store = {
+        path = vim.fn.stdpath("data") .. "/mini-visits.lua",
+        autowrite = true,
+      },
+    },
+    config = function(_, opts)
+      require("mini.visits").setup(opts)
+      -- Create labels for quick access (similar to harpoon)
+      local MiniVisits = require("mini.visits")
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MiniVisitsModule",
+        callback = function()
+          -- Create a label for pinned files (like harpoon)
+          MiniVisits.add_label("pinned", { sort = MiniVisits.gen_sort.default() })
+        end,
+      })
+    end,
+  },
+
+  -- Auto pairs with mini.pairs
+  {
+    "echasnovski/mini.pairs",
+    version = false,
+    event = "InsertEnter",
+    opts = {
+      modes = { insert = true, command = false, terminal = false },
+      -- Skip autopair when next character is one of these
+      skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+      -- Skip autopair when the cursor is inside these treesitter nodes
+      skip_ts = { "string" },
+      -- Skip autopair when next character is closing pair
+      -- and there are more closing pairs than opening pairs
+      skip_unbalanced = true,
+      -- Better mapping for completion acceptance
+      mappings = {
+        ["("] = { action = "open", pair = "()", neigh_pattern = "[^\\]." },
+        ["["] = { action = "open", pair = "[]", neigh_pattern = "[^\\]." },
+        ["{"] = { action = "open", pair = "{}", neigh_pattern = "[^\\]." },
+
+        [")"] = { action = "close", pair = "()", neigh_pattern = "[^\\]." },
+        ["]"] = { action = "close", pair = "[]", neigh_pattern = "[^\\]." },
+        ["}"] = { action = "close", pair = "{}", neigh_pattern = "[^\\]." },
+
+        ['"'] = { action = "closeopen", pair = '""', neigh_pattern = "[^\\].", register = { cr = false } },
+        ["'"] = { action = "closeopen", pair = "''", neigh_pattern = "[^%a\\].", register = { cr = false } },
+        ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\].", register = { cr = false } },
+      },
+    },
+    config = function(_, opts)
+      require("mini.pairs").setup(opts)
+      -- Integration with completion (if using blink.cmp or nvim-cmp)
+      local ok_cmp, cmp = pcall(require, "blink.cmp")
+      if ok_cmp then
+        -- For blink.cmp
+        vim.keymap.set("i", "<CR>", function()
+          if cmp.is_visible() then
+            return cmp.accept()
+          else
+            return require("mini.pairs").cr()
+          end
+        end, { expr = true })
+      end
+    end,
   },
 
   -- Smart splits for tmux/window navigation
