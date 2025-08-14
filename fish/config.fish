@@ -53,15 +53,6 @@ set -gx GEMINI_API_KEY ""
 # ============================================================================
 
 if status is-interactive
-    # Load .env.sh if exists
-    if test -f "$DOTFILES/.env.sh"
-        # Bass is needed to source bash scripts in fish
-        # Install with: fisher install edc/bass
-        if command -q bass
-            bass source "$DOTFILES/.env.sh"
-        end
-    end
-
     # Initialize tools (lazy loading for better performance)
     # Ruby environment - load only when needed
     function rbenv --wraps rbenv
@@ -117,7 +108,7 @@ if status is-interactive
     # ============================================================================
     # Enable autosuggestions
     set -g fish_autosuggestion_enabled 1
-    
+
     # ============================================================================
     # TMUX INTEGRATION
     # ============================================================================
