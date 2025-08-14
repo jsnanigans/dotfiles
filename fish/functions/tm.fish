@@ -1,8 +1,12 @@
-function tm --description "Tmux session manager"
-    # If no arguments, run the launcher
+function tm --description "Tmux session manager (legacy wrapper for 'session' command)"
+    # This is a compatibility wrapper for the new unified session manager
+    # Redirects to the 'session' command with appropriate arguments
+    
+    source $DOTFILES/fish/functions/session.fish
+    
+    # If no arguments, use session manager
     if test (count $argv) -eq 0
-        source $DOTFILES/tmux/tmux-launcher.fish
-        tmux-launcher
+        session
         return
     end
 
@@ -10,101 +14,41 @@ function tm --description "Tmux session manager"
 
     switch $cmd
         case new n
-            # Create new session
-            if test (count $argv) -gt 1
-                set session_name $argv[2]
-            else
-                read -P "Session name: " session_name
-            end
-            
-            if test -z "$session_name"
-                set session_name "session-"(date +%s)
-            end
-            
-            if set -q TMUX
-                tmux new-session -d -s $session_name
-                tmux switch-client -t $session_name
-            else
-                tmux new-session -s $session_name
-            end
+            session new $argv[2..-1]
 
         case kill k
-            # Kill session
-            if test (count $argv) -gt 1
-                tmux kill-session -t $argv[2]
-            else
-                # Show list of sessions to kill
-                set sessions (tmux list-sessions -F "#{session_name}" 2>/dev/null)
-                if test (count $sessions) -eq 0
-                    echo "No tmux sessions to kill"
-                    return 1
-                end
-                
-                echo "Select session to kill:"
-                for i in (seq (count $sessions))
-                    echo "  $i) $sessions[$i]"
-                end
-                
-                read -P "Choice: " choice
-                if string match -qr '^[0-9]+$' -- $choice
-                    and test $choice -ge 1
-                    and test $choice -le (count $sessions)
-                    tmux kill-session -t $sessions[$choice]
-                end
-            end
+            session kill $argv[2..-1]
 
         case list ls
-            # List sessions
-            tmux list-sessions 2>/dev/null || echo "No tmux sessions"
+            session list
 
         case attach a
-            # Attach to session
-            if test (count $argv) -gt 1
-                tmux attach-session -t $argv[2]
-            else
-                source $DOTFILES/tmux/tmux-launcher.fish
-                tmux-launcher
-            end
+            session attach $argv[2..-1]
 
         case switch s
-            # Switch to session (when already in tmux)
-            if not set -q TMUX
-                echo "Not in a tmux session"
-                return 1
-            end
-            
-            if test (count $argv) -gt 1
-                tmux switch-client -t $argv[2]
-            else
-                # Interactive session switcher
-                set sessions (tmux list-sessions -F "#{session_name}" 2>/dev/null)
-                echo "Switch to session:"
-                for i in (seq (count $sessions))
-                    echo "  $i) $sessions[$i]"
-                end
-                
-                read -P "Choice: " choice
-                if string match -qr '^[0-9]+$' -- $choice
-                    and test $choice -ge 1
-                    and test $choice -le (count $sessions)
-                    tmux switch-client -t $sessions[$choice]
-                end
-            end
+            session switch $argv[2..-1]
 
         case help h '*'
-            echo "Tmux session manager"
+            echo "Tmux session manager (Legacy)"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
             echo ""
-            echo "Usage: tm [command] [args]"
+            echo "⚠️  This command is deprecated!"
+            echo "Please use 'session' instead for the unified session manager."
             echo ""
-            echo "Commands:"
-            echo "  tm              - Launch tmux (attach or create session)"
-            echo "  tm new [name]   - Create new session"
-            echo "  tm kill [name]  - Kill session"
-            echo "  tm list         - List all sessions"
-            echo "  tm attach [name]- Attach to session"
-            echo "  tm switch [name]- Switch to session (when in tmux)"
-            echo "  tm help         - Show this help"
+            echo "Migration examples:"
+            echo "  tm           → session"
+            echo "  tm new       → session new"
+            echo "  tm kill      → session kill"
+            echo "  tm list      → session list"
+            echo "  tm attach    → session attach"
+            echo "  tm switch    → session switch"
             echo ""
-            echo "Aliases: n=new, k=kill, ls=list, a=attach, s=switch, h=help"
+            echo "New features in 'session':"
+            echo "  session project    - Project-based sessions"
+            echo "  session clone      - Clone sessions"
+            echo "  session save       - Save layouts"
+            echo "  session restore    - Restore layouts"
+            echo ""
+            echo "Run 'session help' for full documentation"
     end
 end
