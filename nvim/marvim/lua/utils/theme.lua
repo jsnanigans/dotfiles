@@ -224,13 +224,13 @@ M.ui_highlights = {
 
   WinBar = { fg = M.semantic.fg_secondary, bg = M.semantic.bg_statusline },
   WinBarNC = { fg = M.semantic.fg_muted, bg = M.semantic.bg_statusline },
-  
+
   -- Line numbers with better contrast
   LineNr = { fg = M.colors.subtle }, -- Use rose-pine subtle color
   LineNrAbove = { fg = M.colors.subtle },
   LineNrBelow = { fg = M.colors.subtle },
   CursorLineNr = { fg = M.colors.text, bold = true },
-  
+
   -- Snacks picker highlights for better contrast
   SnacksPickerMatch = { fg = M.colors.iris, bold = true },
   SnacksPickerMatchBorder = { fg = M.colors.foam },
@@ -239,7 +239,7 @@ M.ui_highlights = {
   SnacksPickerComment = { fg = M.colors.subtle }, -- Use rose-pine subtle color
   SnacksPickerSelection = { bg = M.colors.highlight_high, fg = M.colors.text },
   SnacksPickerSelectionBorder = { bg = M.colors.highlight_high, fg = M.colors.foam },
-  
+
   -- Telescope-like highlights that snacks might also use
   TelescopeNormal = { fg = M.colors.text },
   TelescopePreviewLine = { bg = M.colors.highlight_high },
@@ -247,7 +247,7 @@ M.ui_highlights = {
   TelescopeMatching = { fg = M.colors.iris, bold = true },
   TelescopeSelection = { bg = M.colors.highlight_high, fg = M.colors.text },
   TelescopeSelectionCaret = { fg = M.colors.foam },
-  
+
   -- General high-contrast improvements
   Comment = { fg = M.colors.muted, italic = true }, -- Uses rose-pine muted color
   NonText = { fg = M.colors.muted }, -- Use rose-pine muted color
@@ -272,7 +272,12 @@ function M.setup()
 
   vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
-      if vim.g.colors_name == "rose-pine" or vim.g.colors_name == "rose-pine-main" or vim.g.colors_name == "rose-pine-moon" or vim.g.colors_name == "rose-pine-dawn" then
+      if
+        vim.g.colors_name == "rose-pine"
+        or vim.g.colors_name == "rose-pine-main"
+        or vim.g.colors_name == "rose-pine-moon"
+        or vim.g.colors_name == "rose-pine-dawn"
+      then
         vim.schedule(function()
           M.set_highlights(M.ui_highlights)
         end)

@@ -49,7 +49,7 @@ M.smart_splits_keys = plugins.smart_splits_keys
 -- ============================================================================
 
 M.setup_lsp_keybindings = lsp.setup_lsp_keybindings
-M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings  -- Kept for compatibility, now uses mini.diff
+M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings -- Kept for compatibility, now uses mini.diff
 
 -- ============================================================================
 -- PLUGIN KEYMAPS (Non-lazy plugins only)
@@ -95,13 +95,13 @@ function M.setup_plugin_keymaps()
   -- Mini.visits for file navigation (replacing Harpoon)
   if is_available("mini.visits") then
     local MiniVisits = require("mini.visits")
-    
+
     -- Add current file to pinned list (like harpoon add)
     map("n", "<leader>H", function()
       MiniVisits.add_label("pinned", vim.fn.expand("%:p"))
       vim.notify("Added to pinned files", vim.log.levels.INFO)
     end, { desc = "Pin File (Mini.visits)" })
-    
+
     -- Show pinned files menu (like harpoon menu)
     map("n", "<leader>h", function()
       MiniVisits.select_path(nil, { filter = "pinned" })
@@ -118,7 +118,7 @@ function M.setup_plugin_keymaps()
         end
       end, { desc = "Go to Pinned File " .. i })
     end
-    
+
     -- Additional mini.visits commands
     map("n", "<leader>fv", function()
       MiniVisits.select_path()

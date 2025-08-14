@@ -150,8 +150,6 @@ return {
     end,
   },
 
-
-
   -- Better undo management with tree visualization
   {
     "mbbill/undotree",

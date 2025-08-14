@@ -18,8 +18,6 @@ return {
     end,
   },
 
-
-
   -- Complex plugins kept in separate files
   -- Using mini.diff and mini.git instead of gitsigns and git-conflict
   { import = "config.plugins.git.mini-git" },

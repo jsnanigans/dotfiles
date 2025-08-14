@@ -229,64 +229,16 @@ function M.setup_lsp_keybindings(client, buffer)
 end
 
 -- ============================================================================
--- GIT DIFF KEYBINDINGS (using mini.diff and mini.git)
+-- GIT DIFF KEYBINDINGS (using mini.diff)
 -- ============================================================================
 
 function M.setup_gitsigns_keybindings(buffer)
   -- Kept function name for compatibility with existing configs
-  -- Now uses mini.diff and mini.git instead of gitsigns
-  local ok_diff = pcall(require, "mini.diff")
-  if not ok_diff then
-    return
-  end
+  -- Git keybindings are now set up in utils/git/enhanced-keys.lua
+  -- This function is kept empty for compatibility
 
-  local function git_map(mode, l, r, desc)
-    vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
-  end
-
-  -- Note: mini.diff navigation is set up via opts.mappings in the config
-  -- These are already mapped: [h, ]h for navigation, gh for apply, gH for reset
-  
-  -- Additional git actions using shell commands
-  -- Stage/unstage operations using git commands
-  git_map({ "n", "v" }, "<leader>ghs", function()
-    -- Stage current hunk or selection
-    vim.cmd("!git add -p %")
-  end, "Stage Hunk")
-  
-  git_map({ "n", "v" }, "<leader>ghr", function()
-    -- Reset current hunk
-    vim.cmd("!git checkout -p %")
-  end, "Reset Hunk")
-  
-  git_map("n", "<leader>ghS", function()
-    vim.cmd("!git add %")
-    vim.notify("Buffer staged", vim.log.levels.INFO)
-  end, "Stage Buffer")
-  
-  git_map("n", "<leader>ghR", function()
-    vim.cmd("!git checkout %")
-    vim.notify("Buffer reset", vim.log.levels.INFO)
-  end, "Reset Buffer")
-  
-  git_map("n", "<leader>ghp", function()
-    require("mini.diff").toggle_overlay()
-  end, "Preview Hunks Overlay")
-  
-  git_map("n", "<leader>ghb", function()
-    vim.cmd("!git blame %")
-  end, "Blame")
-  
-  git_map("n", "<leader>ghd", function()
-    vim.cmd("!git diff %")
-  end, "Diff This")
-  
-  git_map("n", "<leader>ghD", function()
-    vim.cmd("!git diff HEAD~1 %")
-  end, "Diff This ~")
-
-  -- Text object for hunks (using mini.diff's mappings)
-  git_map({ "o", "x" }, "ih", "gh", "Git Hunk")
+  -- All git navigation and operations are handled by:
+  -- utils/git/enhanced-keys.lua
 end
 
 return M

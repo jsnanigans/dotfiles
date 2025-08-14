@@ -354,7 +354,15 @@ return {
       vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
         group = group,
         callback = function()
-          if package.loaded["dropbar"] and (vim.g.colors_name == "rose-pine" or vim.g.colors_name == "rose-pine-main" or vim.g.colors_name == "rose-pine-moon" or vim.g.colors_name == "rose-pine-dawn") then
+          if
+            package.loaded["dropbar"]
+            and (
+              vim.g.colors_name == "rose-pine"
+              or vim.g.colors_name == "rose-pine-main"
+              or vim.g.colors_name == "rose-pine-moon"
+              or vim.g.colors_name == "rose-pine-dawn"
+            )
+          then
             vim.schedule(setup_dropbar_highlights)
           end
         end,
