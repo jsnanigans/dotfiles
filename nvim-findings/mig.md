@@ -7,7 +7,7 @@
 5. flash.nvim → snacks.scope + snacks.jump (scope already enabled)
 6. todo-comments.nvim → Could potentially use snacks picker with custom
 patterns
-7. which-key.nvim → snacks.toggle can handle some toggle mappings
+7. [NO] which-key.nvim → snacks.toggle can handle some toggle mappings
 8. dropbar.nvim → snacks.statuscolumn might offer similar breadcrumb
 functionality
 
