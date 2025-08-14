@@ -88,58 +88,7 @@ return {
     end,
   },
 
-  -- Illuminate with proper config
-  {
-    "RRethy/vim-illuminate",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      providers = {
-        "lsp",
-        "treesitter",
-        "regex",
-      },
-      delay = 200,
-      filetype_overrides = {},
-      filetypes_denylist = {
-        "dirbuf",
-        "dirvish",
-        "fugitive",
-        "alpha",
-        "NvimTree",
-        "lazy",
-        "neogitstatus",
-        "Trouble",
-        "lir",
-        "Outline",
-        "spectre_panel",
-        "toggleterm",
-        "DressingSelect",
-        "TelescopePrompt",
-      },
-      filetypes_allowlist = {},
-      modes_denylist = {},
-      modes_allowlist = {},
-      providers_regex_syntax_denylist = {},
-      providers_regex_syntax_allowlist = {},
-      under_cursor = true,
-      large_file_cutoff = 2000,
-      large_file_overrides = {
-        providers = { "lsp" },
-      },
-      min_count_to_highlight = 1,
-    },
-    config = function(_, opts)
-      require("illuminate").configure(opts)
 
-      -- Set up highlight groups
-      vim.api.nvim_set_hl(0, "IlluminatedWordText", { link = "Visual" })
-      vim.api.nvim_set_hl(0, "IlluminatedWordRead", { link = "Visual" })
-      vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { link = "Visual" })
-    end,
-    keys = function()
-      return require("config.keymaps").illuminate_keys
-    end,
-  },
 
   -- Better undo management with tree visualization
   {

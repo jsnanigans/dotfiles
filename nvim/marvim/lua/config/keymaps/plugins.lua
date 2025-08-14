@@ -411,23 +411,7 @@ M.treesitter_keys = {
   },
 }
 
--- Illuminate
-M.illuminate_keys = {
-  {
-    "]]i",
-    function()
-      require("illuminate").goto_next_reference(false)
-    end,
-    desc = "Next Reference",
-  },
-  {
-    "[[i",
-    function()
-      require("illuminate").goto_prev_reference(false)
-    end,
-    desc = "Prev Reference",
-  },
-}
+
 
 -- Oil file manager
 M.oil_keys = {

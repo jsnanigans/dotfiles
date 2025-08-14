@@ -3,15 +3,9 @@ return {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/nvim-nio",
-      "nvim-neotest/neotest-jest",
       "marilari88/neotest-vitest",
-      "nvim-neotest/neotest-python",
-      "nvim-neotest/neotest-go",
-      "nvim-neotest/neotest-plenary",
-      "sidlatau/neotest-dart",
     },
     event = { "BufReadPost", "BufNewFile" },
     keys = function()
@@ -20,37 +14,32 @@ return {
     opts = function()
       return {
         adapters = {
-          require("neotest-jest")({
-            jestCommand = "npm test --",
-            jestConfigFile = "jest.config.js",
-            env = { CI = true },
-            cwd = function()
-              return vim.fn.getcwd()
-            end,
-          }),
           require("neotest-vitest")({
             vitestCommand = "npx vitest run",
             env = {
               CI = true,
               VITEST_REPORTER = "verbose",
             },
+            -- Additional TypeScript/Vitest specific settings
+            is_test_file = function(file_path)
+              local patterns = {
+                "%.test%.ts$",
+                "%.test%.tsx$",
+                "%.spec%.ts$",
+                "%.spec%.tsx$",
+                "%.test%.js$",
+                "%.test%.jsx$",
+                "%.spec%.js$",
+                "%.spec%.jsx$",
+              }
+              for _, pattern in ipairs(patterns) do
+                if file_path:match(pattern) then
+                  return true
+                end
+              end
+              return false
+            end,
           }),
-          require("neotest-python")({
-            args = { "--log-level", "DEBUG", "--quiet" },
-            runner = "pytest",
-            python = "python3",
-          }),
-          require("neotest-go")({
-            experimental = {
-              test_table = true,
-            },
-            args = { "-count=1", "-timeout=60s" },
-          }),
-          require("neotest-dart")({
-            command = "flutter",
-            use_lsp = true,
-          }),
-          require("neotest-plenary"),
         },
         status = {
           enabled = true,

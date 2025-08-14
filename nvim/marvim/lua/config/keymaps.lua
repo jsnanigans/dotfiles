@@ -37,7 +37,7 @@ M.trouble_keys = plugins.trouble_keys
 M.conform_keys = plugins.conform_keys
 M.luasnip_keys = plugins.luasnip_keys
 M.treesitter_keys = plugins.treesitter_keys
-M.illuminate_keys = plugins.illuminate_keys
+
 M.oil_keys = plugins.oil_keys
 M.dropbar_keys = plugins.dropbar_keys
 M.notify_keys = plugins.notify_keys
