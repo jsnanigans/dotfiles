@@ -1,86 +1,139 @@
 local M = {}
 
 -- ============================================================================
--- ROSE PINE COLORS
+-- THEME COLOR PALETTES
 -- ============================================================================
+
+-- Get the current theme from .current-theme file or default
+local function get_current_theme()
+  local theme_file = vim.fn.expand("~/dotfiles/theme/.current-theme")
+  if vim.fn.filereadable(theme_file) == 1 then
+    local lines = vim.fn.readfile(theme_file)
+    if lines and #lines > 0 then
+      return lines[1]
+    end
+  end
+  -- Default to github-dark-colorblind
+  return "github-dark-colorblind"
+end
 
 -- Get the current background and variant
 local function get_variant()
-  if vim.o.background == "light" then
-    return "dawn"
-  else
-    -- You can change this to "moon" if preferred
-    return "main"
+  local theme = get_current_theme()
+  if theme == "github-dark-colorblind" then
+    return "github-dark-colorblind"
   end
+  -- Default to dark for other themes
+  return "dark"
 end
 
--- Rose Pine color palettes
+-- Color palettes for different themes
 local palettes = {
-  main = {
+  ["github-dark-colorblind"] = {
     -- Base colors
-    base = "#191724",
-    surface = "#1f1d2e",
-    overlay = "#26233a",
-    highlight_low = "#21202e",
-    highlight_med = "#403d52",
-    highlight_high = "#524f67",
+    base = "#0d1117",
+    surface = "#161b22",
+    overlay = "#1f2428",
+    highlight_low = "#161b22",
+    highlight_med = "#30363d",
+    highlight_high = "#484f58",
 
     -- Text colors
-    muted = "#6e6a86",
-    subtle = "#908caa",
-    text = "#e0def4",
+    muted = "#6e7681",
+    subtle = "#6e7681",
+    text = "#c9d1d9",
 
-    -- Accent colors
-    love = "#eb6f92",
-    gold = "#f6c177",
-    rose = "#ebbcba",
-    pine = "#31748f",
-    foam = "#9ccfd8",
-    iris = "#c4a7e7",
+    -- Accent colors (colorblind-friendly mapping)
+    love = "#ec8e2c",     -- red (orange for colorblind)
+    gold = "#d29922",     -- yellow
+    rose = "#bc8cff",     -- magenta
+    pine = "#58a6ff",     -- blue (used for green in colorblind)
+    foam = "#39c5cf",     -- cyan
+    iris = "#bc8cff",     -- magenta
+    
+    -- Additional colors
+    green = "#58a6ff",      -- Using blue for green (colorblind)
+    bright_red = "#fdac54", -- Bright orange
+    bright_green = "#79c0ff", -- Bright blue
+    bright_yellow = "#e3b341",
+    bright_blue = "#79c0ff",
+    bright_magenta = "#d2a8ff",
+    bright_cyan = "#56d4dd",
+  },
+  dark = {
+    -- Flexoki Dark colors (fallback)
+    base = "#100f0f",
+    surface = "#575653",
+    overlay = "#575653",
+    highlight_low = "#575653",
+    highlight_med = "#878580",
+    highlight_high = "#878580",
+
+    -- Text colors
+    muted = "#878580",
+    subtle = "#878580",
+    text = "#cecdc3",
+
+    -- Accent colors (mapped from flexoki colors)
+    love = "#d14d41",     -- red
+    gold = "#d0a215",     -- yellow
+    rose = "#ce5d97",     -- magenta
+    pine = "#4385be",     -- blue
+    foam = "#3aa99f",     -- cyan
+    iris = "#ce5d97",     -- magenta
+    
+    -- Additional flexoki colors
+    green = "#879a39",
+    bright_red = "#af3029",
+    bright_green = "#66800b",
+    bright_yellow = "#ad8301",
+    bright_blue = "#205ea6",
+    bright_magenta = "#a02f6f",
+    bright_cyan = "#24837b",
   },
   moon = {
-    -- Base colors
-    base = "#232136",
-    surface = "#2a273f",
-    overlay = "#393552",
-    highlight_low = "#2a283e",
-    highlight_med = "#44415a",
-    highlight_high = "#56526e",
+    -- Fallback to dark theme
+    base = "#100f0f",
+    surface = "#575653",
+    overlay = "#575653",
+    highlight_low = "#575653",
+    highlight_med = "#878580",
+    highlight_high = "#878580",
 
     -- Text colors
-    muted = "#6e6a86",
-    subtle = "#908caa",
-    text = "#e0def4",
+    muted = "#878580",
+    subtle = "#878580",
+    text = "#cecdc3",
 
-    -- Accent colors
-    love = "#eb6f92",
-    gold = "#f6c177",
-    rose = "#ea9a97",
-    pine = "#3e8fb0",
-    foam = "#9ccfd8",
-    iris = "#c4a7e7",
+    -- Accent colors (same as dark for consistency)
+    love = "#d14d41",
+    gold = "#d0a215",
+    rose = "#ce5d97",
+    pine = "#4385be",
+    foam = "#3aa99f",
+    iris = "#ce5d97",
   },
   dawn = {
-    -- Base colors
-    base = "#faf4ed",
-    surface = "#fffaf3",
-    overlay = "#f2e9e1",
-    highlight_low = "#f4ede8",
-    highlight_med = "#dfdad9",
-    highlight_high = "#cecacd",
+    -- Fallback to dark theme (flexoki doesn't have a light variant)
+    base = "#100f0f",
+    surface = "#575653",
+    overlay = "#575653",
+    highlight_low = "#575653",
+    highlight_med = "#878580",
+    highlight_high = "#878580",
 
     -- Text colors
-    muted = "#9893a5",
-    subtle = "#797593",
-    text = "#575279",
+    muted = "#878580",
+    subtle = "#878580",
+    text = "#cecdc3",
 
     -- Accent colors
-    love = "#b4637a",
-    gold = "#ea9d34",
-    rose = "#d7827e",
-    pine = "#286983",
-    foam = "#56949f",
-    iris = "#907aa9",
+    love = "#d14d41",
+    gold = "#d0a215",
+    rose = "#ce5d97",
+    pine = "#4385be",
+    foam = "#3aa99f",
+    iris = "#ce5d97",
   },
 }
 
@@ -226,7 +279,7 @@ M.ui_highlights = {
   WinBarNC = { fg = M.semantic.fg_muted, bg = M.semantic.bg_statusline },
 
   -- Line numbers with better contrast
-  LineNr = { fg = M.colors.subtle }, -- Use rose-pine subtle color
+  LineNr = { fg = M.colors.subtle }, -- Use flexoki subtle color
   LineNrAbove = { fg = M.colors.subtle },
   LineNrBelow = { fg = M.colors.subtle },
   CursorLineNr = { fg = M.colors.text, bold = true },
@@ -235,8 +288,8 @@ M.ui_highlights = {
   SnacksPickerMatch = { fg = M.colors.iris, bold = true },
   SnacksPickerMatchBorder = { fg = M.colors.foam },
   SnacksPickerNormal = { fg = M.colors.text },
-  SnacksPickerFaint = { fg = M.colors.subtle }, -- Use rose-pine subtle color
-  SnacksPickerComment = { fg = M.colors.subtle }, -- Use rose-pine subtle color
+  SnacksPickerFaint = { fg = M.colors.subtle }, -- Use flexoki subtle color
+  SnacksPickerComment = { fg = M.colors.subtle }, -- Use flexoki subtle color
   SnacksPickerSelection = { bg = M.colors.highlight_high, fg = M.colors.text },
   SnacksPickerSelectionBorder = { bg = M.colors.highlight_high, fg = M.colors.foam },
 
@@ -249,8 +302,8 @@ M.ui_highlights = {
   TelescopeSelectionCaret = { fg = M.colors.foam },
 
   -- General high-contrast improvements
-  Comment = { fg = M.colors.muted, italic = true }, -- Uses rose-pine muted color
-  NonText = { fg = M.colors.muted }, -- Use rose-pine muted color
+  Comment = { fg = M.colors.muted, italic = true }, -- Uses flexoki muted color
+  NonText = { fg = M.colors.muted }, -- Use flexoki muted color
   SpecialKey = { fg = M.colors.muted },
   Conceal = { fg = M.colors.muted },
   Directory = { fg = M.colors.foam, bold = true },
@@ -273,10 +326,9 @@ function M.setup()
   vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
       if
-        vim.g.colors_name == "rose-pine"
-        or vim.g.colors_name == "rose-pine-main"
-        or vim.g.colors_name == "rose-pine-moon"
-        or vim.g.colors_name == "rose-pine-dawn"
+        vim.g.colors_name == "github-dark-colorblind"
+        or vim.g.colors_name == "flexoki-dark"
+        or vim.g.colors_name == "flexoki"
       then
         vim.schedule(function()
           M.set_highlights(M.ui_highlights)

@@ -1,3 +1,6 @@
+# Super important rules when coding:
+- NEVER WRITE ANY COMMENTS THAT ARE NOT SUPER DUPER MEGA IMPORTANT
+
 # IMPORTANT INSTRUCTIONS (COUNCIL) (Reference key:`council`)
 Remember this for every response. In every response start with "-- key:council --"
 When you see `key:council` in any message, remember what the council is.

@@ -1,46 +1,53 @@
-# Centralized Rose Pine Theme Configuration
+# Centralized Flexoki Dark Theme Configuration
 
-This directory contains the single source of truth for the Rose Pine theme used across all tools in the dotfiles.
+This directory contains the single source of truth for the Flexoki Dark theme used across all tools in the dotfiles.
 
 ## Overview
 
-The Rose Pine theme is now centralized to ensure consistency across all tools and eliminate color definition duplication.
+The Flexoki Dark theme is now centralized to ensure consistency across all tools and eliminate color definition duplication.
 
 ## Files
 
-- `rose-pine.env` - Bash/shell environment variables for the theme
-- `rose-pine.fish` - Fish shell specific theme configuration
-- `tmux-rose-pine.conf` - Tmux theme configuration
+- `flexoki-dark.env` - Bash/shell environment variables for the theme
+- `flexoki-dark.fish` - Fish shell specific theme configuration
+- `tmux-flexoki-dark.conf` - Tmux theme configuration
 
 ## Color Palette
 
-### Base Colors
-- **Base**: `#191724` - Main background
-- **Surface**: `#1f1d2e` - Secondary background (panels, sidebars)
-- **Overlay**: `#26233a` - Tertiary background (popups, modals)
-- **Highlight Low**: `#21202e` - Subtle highlights
-- **Highlight Med**: `#403d52` - Medium highlights (selections)
-- **Highlight High**: `#524f67` - Strong highlights (borders)
+### Base Colors (ANSI 16-color mapping)
+- **Black** (0): `#100f0f` - Background
+- **Red** (1): `#d14d41` - Errors, important
+- **Green** (2): `#879a39` - Success, strings
+- **Yellow** (3): `#d0a215` - Warnings
+- **Blue** (4): `#4385be` - Functions, primary
+- **Magenta** (5): `#ce5d97` - Keywords, special
+- **Cyan** (6): `#3aa99f` - Links, secondary
+- **White** (7): `#878580` - Comments, muted
 
-### Text Colors
-- **Text**: `#e0def4` - Primary text
-- **Subtle**: `#908caa` - Secondary text
-- **Muted**: `#6e6a86` - Comments, disabled text
+### Bright Colors
+- **Bright Black** (8): `#575653` - Borders, subtle
+- **Bright Red** (9): `#af3029` - Strong errors
+- **Bright Green** (10): `#66800b` - Strong success
+- **Bright Yellow** (11): `#ad8301` - Strong warnings
+- **Bright Blue** (12): `#205ea6` - Strong primary
+- **Bright Magenta** (13): `#a02f6f` - Strong special
+- **Bright Cyan** (14): `#24837b` - Strong secondary
+- **Bright White** (15): `#cecdc3` - Foreground text
 
-### Accent Colors
-- **Love**: `#eb6f92` - Errors, important actions
-- **Gold**: `#f6c177` - Warnings, highlights
-- **Rose**: `#ebbcba` - Keywords, special elements
-- **Pine**: `#31748f` - Functions, methods
-- **Foam**: `#9ccfd8` - Strings, success states
-- **Iris**: `#c4a7e7` - Variables, active elements
+### Theme Colors
+- **Background**: `#100f0f` - Main background
+- **Foreground**: `#cecdc3` - Primary text
+- **Cursor**: `#cecdc3` - Cursor color
+- **Cursor Text**: `#100f0f` - Text under cursor
+- **Selection Background**: `#cecdc3` - Selection highlight
+- **Selection Foreground**: `#100f0f` - Text in selection
 
 ## Tool Integration
 
 ### Fish Shell
 The Fish configuration automatically sources the theme from:
 ```fish
-source ~/dotfiles/theme/rose-pine.fish
+source ~/dotfiles/theme/flexoki-dark.fish
 ```
 
 This sets all Fish colors and exports environment variables for other tools like FZF, bat, and delta.
@@ -48,52 +55,47 @@ This sets all Fish colors and exports environment variables for other tools like
 ### Tmux
 Tmux sources the theme configuration from:
 ```tmux
-source-file ~/dotfiles/theme/tmux-rose-pine.conf
+source-file ~/dotfiles/theme/tmux-flexoki-dark.conf
 ```
 
 ### Neovim
-Neovim already uses the rose-pine plugin and has a dedicated theme utility at:
-`nvim/marvim/lua/utils/theme.lua`
+Neovim can be configured to use the flexoki-dark colorscheme if available.
 
 ### Ghostty
-Ghostty is configured to use the built-in rose-pine theme:
+Ghostty uses the inline flexoki-dark color palette configuration:
 ```
-theme = rose-pine
+palette = 0=#100f0f
+palette = 1=#d14d41
+# ... etc
+background = #100f0f
+foreground = #cecdc3
 ```
 
 ### Other Tools
 - **FZF**: Uses colors exported by Fish/Bash environment
-- **Bat**: Uses `BAT_THEME="rose-pine"` (configured in `bat/bat.conf`)
-- **Delta**: Uses `DELTA_FEATURES="rose-pine"`
-- **Lazygit**: Custom Rose Pine colors in `lazygit/config.yml`
-- **Zellij**: Rose Pine theme defined and active in `zellij/config.kdl`
-- **Yazi**: Uses default colors for file icons (intentionally kept for visibility)
+- **Bat**: Configure with `BAT_THEME="flexoki-dark"` if theme is available
+- **Delta**: Configure with `DELTA_FEATURES="flexoki-dark"` if theme is available
+- **Lazygit**: Custom Flexoki Dark colors can be configured
+- **Zellij**: Flexoki Dark theme can be configured
+- **Yazi**: Uses theme colors for file display
 
 ## Usage
 
 ### In Shell Scripts
 ```bash
-source ~/dotfiles/theme/rose-pine.env
-echo "Using primary background: $ROSE_PINE_BASE"
+source ~/dotfiles/theme/flexoki-dark.env
+echo "Using background: $FLEXOKI_BACKGROUND"
 ```
 
 ### In Fish
 ```fish
-source ~/dotfiles/theme/rose-pine.fish
-echo "Using primary text: $ROSE_PINE_TEXT"
+source ~/dotfiles/theme/flexoki-dark.fish
+echo "Using foreground: $FLEXOKI_BRIGHT_WHITE"
 ```
-
-### View Available Colors
-In Fish shell, run:
-```fish
-rose_pine_colors
-```
-
-This will display all Rose Pine colors with visual samples.
 
 ## Verification
 
-Run the theme verification script to ensure all tools are using Rose Pine:
+Run the theme verification script to ensure all tools are using Flexoki Dark:
 ```bash
 ./theme/verify-theme.sh
 ```
@@ -109,7 +111,7 @@ When updating the theme:
 1. Modify the color values in the appropriate theme file
 2. Reload your shell configuration
 3. Restart tmux for changes to take effect
-4. Source the new theme in Neovim if needed
+4. Restart Ghostty to apply the new colors
 5. Run `./theme/verify-theme.sh` to confirm all tools are configured correctly
 
 ## Benefits

@@ -6,6 +6,7 @@ require("lazy").setup({
     { import = "config.plugins.coding" },
     { import = "config.plugins.git" },
     { import = "config.plugins.lsp" },
+    { import = "config.plugins.navigation" },
     { import = "config.plugins.ui" },
     { import = "config.plugins.testing" },
     { import = "config.plugins.extras" },
@@ -17,7 +18,7 @@ require("lazy").setup({
   },
 
   install = {
-    colorscheme = { "rose-pine", "habamax" },
+    colorscheme = { "github-dark-colorblind", "flexoki-dark", "habamax" },
   },
 
   checker = {

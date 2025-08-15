@@ -49,13 +49,13 @@ return {
       -- Add highlighting for git changes
       vim.api.nvim_create_autocmd("ColorScheme", {
         callback = function()
-          -- Customize diff colors for better visibility
-          vim.api.nvim_set_hl(0, "MiniDiffSignAdd", { fg = "#50fa7b", bold = true })
-          vim.api.nvim_set_hl(0, "MiniDiffSignChange", { fg = "#f1fa8c", bold = true })
-          vim.api.nvim_set_hl(0, "MiniDiffSignDelete", { fg = "#ff5555", bold = true })
-          vim.api.nvim_set_hl(0, "MiniDiffOverAdd", { bg = "#1c3b1c" })
-          vim.api.nvim_set_hl(0, "MiniDiffOverChange", { bg = "#3b3b1c" })
-          vim.api.nvim_set_hl(0, "MiniDiffOverDelete", { bg = "#3b1c1c" })
+          -- Customize diff colors for Github Dark Colorblind theme
+          vim.api.nvim_set_hl(0, "MiniDiffSignAdd", { fg = "#58a6ff", bold = true }) -- green (blue for colorblind)
+          vim.api.nvim_set_hl(0, "MiniDiffSignChange", { fg = "#d29922", bold = true }) -- yellow
+          vim.api.nvim_set_hl(0, "MiniDiffSignDelete", { fg = "#ec8e2c", bold = true }) -- red (orange for colorblind)
+          vim.api.nvim_set_hl(0, "MiniDiffOverAdd", { bg = "#196c2e" }) -- diff add background
+          vim.api.nvim_set_hl(0, "MiniDiffOverChange", { bg = "#0969da" }) -- diff change background
+          vim.api.nvim_set_hl(0, "MiniDiffOverDelete", { bg = "#b62324" }) -- diff delete background
         end,
       })
 

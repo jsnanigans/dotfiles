@@ -131,5 +131,3 @@ set -U fish_greeting "🐟"
 # opencode
 fish_add_path /Users/brendanmullins/.opencode/bin
 fish_add_path $HOME/.local/bin
-
-set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin /Users/brendanmullins/.ghcup/bin $PATH # ghcup-env

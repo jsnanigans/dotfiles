@@ -1,0 +1,169 @@
+# Github Dark Colorblind Theme for Yazi
+
+[mgr]
+cwd = { fg = "#79c0ff" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#30363d", bg = "#30363d" }
+
+mode_normal = { fg = "#0d1117", bg = "#58a6ff", bold = true }
+mode_select = { fg = "#0d1117", bg = "#bc8cff", bold = true }
+mode_unset  = { fg = "#0d1117", bg = "#ec8e2c", bold = true }
+
+progress_label  = { fg = "#ffffff", bold = true }
+progress_normal = { fg = "#58a6ff", bg = "#30363d" }
+progress_error  = { fg = "#ec8e2c", bg = "#30363d" }
+
+permissions_t = { fg = "#58a6ff" }
+permissions_r = { fg = "#d29922" }
+permissions_w = { fg = "#ec8e2c" }
+permissions_x = { fg = "#79c0ff" }
+permissions_s = { fg = "#b1bac4" }
+
+[input]
+border   = { fg = "#58a6ff" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+[select]
+border   = { fg = "#58a6ff" }
+active   = { fg = "#bc8cff" }
+inactive = {}
+
+[tasks]
+border  = { fg = "#58a6ff" }
+title   = {}
+hovered = { underline = true }
+
+[which]
+mask            = { bg = "#0d1117" }
+cand            = { fg = "#39c5cf" }
+rest            = { fg = "#6e7681" }
+desc            = { fg = "#bc8cff" }
+separator       = "  "
+separator_style = { fg = "#30363d" }
+
+[help]
+on      = { fg = "#bc8cff" }
+exec    = { fg = "#39c5cf" }
+desc    = { fg = "#c9d1d9" }
+hovered = { bg = "#30363d", bold = true }
+footer  = { fg = "#c9d1d9", bg = "#0d1117" }
+
+[filetype]
+rules = [
+	# Images
+	{ mime = "image/*", fg = "#39c5cf" },
+
+	# Videos
+	{ mime = "video/*", fg = "#d29922" },
+	{ mime = "audio/*", fg = "#d29922" },
+
+	# Archives
+	{ mime = "application/zip",             fg = "#bc8cff" },
+	{ mime = "application/gzip",            fg = "#bc8cff" },
+	{ mime = "application/x-tar",           fg = "#bc8cff" },
+	{ mime = "application/x-bzip",          fg = "#bc8cff" },
+	{ mime = "application/x-bzip2",         fg = "#bc8cff" },
+	{ mime = "application/x-7z-compressed", fg = "#bc8cff" },
+	{ mime = "application/x-rar",           fg = "#bc8cff" },
+
+	# Fallback
+	{ name = "*", fg = "#c9d1d9" },
+	{ name = "*/", fg = "#58a6ff" }
+]
+
+[icon]
+rules = [
+	# Programming
+	{ name = "*.c",    text = "" },
+	{ name = "*.cpp",  text = "" },
+	{ name = "*.h",    text = "" },
+	{ name = "*.hpp",  text = "" },
+	{ name = "*.rs",   text = "" },
+	{ name = "*.go",   text = "" },
+	{ name = "*.py",   text = "" },
+	{ name = "*.js",   text = "" },
+	{ name = "*.ts",   text = "" },
+	{ name = "*.tsx",  text = "" },
+	{ name = "*.jsx",  text = "" },
+	{ name = "*.rb",   text = "" },
+	{ name = "*.php",  text = "" },
+	{ name = "*.java", text = "" },
+	{ name = "*.sh",   text = "" },
+	{ name = "*.fish", text = "" },
+	{ name = "*.bash", text = "" },
+	{ name = "*.zsh",  text = "" },
+	{ name = "*.ksh",  text = "" },
+	{ name = "*.csh",  text = "" },
+	{ name = "*.awk",  text = "" },
+	{ name = "*.ps1",  text = "" },
+	{ name = "*.lua",  text = "" },
+	{ name = "*.vim",  text = "" },
+	{ name = "*.diff", text = "" },
+	{ name = "*.html", text = "" },
+	{ name = "*.xml",  text = "" },
+	{ name = "*.css",  text = "" },
+	{ name = "*.scss", text = "" },
+	{ name = "*.json", text = "" },
+	{ name = "*.toml", text = "" },
+	{ name = "*.yaml", text = "" },
+	{ name = "*.yml",  text = "" },
+	{ name = "*.ini",  text = "" },
+	{ name = "*.conf", text = "" },
+
+	# Text
+	{ name = "*.txt", text = "" },
+	{ name = "*.md",  text = "" },
+
+	# Archives
+	{ name = "*.zip", text = "" },
+	{ name = "*.tar", text = "" },
+	{ name = "*.gz",  text = "" },
+	{ name = "*.7z",  text = "" },
+	{ name = "*.bz2", text = "" },
+	{ name = "*.xz",  text = "" },
+
+	# Images
+	{ name = "*.jpg",  text = "" },
+	{ name = "*.jpeg", text = "" },
+	{ name = "*.png",  text = "" },
+	{ name = "*.gif",  text = "" },
+	{ name = "*.webp", text = "" },
+	{ name = "*.avif", text = "" },
+	{ name = "*.bmp",  text = "" },
+	{ name = "*.ico",  text = "" },
+	{ name = "*.svg",  text = "" },
+
+	# Videos
+	{ name = "*.mp4",  text = "" },
+	{ name = "*.mkv",  text = "" },
+	{ name = "*.avi",  text = "" },
+	{ name = "*.mov",  text = "" },
+	{ name = "*.webm", text = "" },
+
+	# Audio
+	{ name = "*.mp3",  text = "" },
+	{ name = "*.flac", text = "" },
+	{ name = "*.wav",  text = "" },
+	{ name = "*.aac",  text = "" },
+	{ name = "*.ogg",  text = "" },
+	{ name = "*.m4a",  text = "" },
+	{ name = "*.opus", text = "" },
+
+	# Documents
+	{ name = "*.pdf", text = "" },
+	{ name = "*.doc", text = "" },
+	{ name = "*.docx", text = "" },
+	{ name = "*.xls", text = "" },
+	{ name = "*.xlsx", text = "" },
+	{ name = "*.ppt", text = "" },
+	{ name = "*.pptx", text = "" },
+
+	# Default
+	{ name = "*",  text = "" },
+	{ name = "*/", text = "" },
+]

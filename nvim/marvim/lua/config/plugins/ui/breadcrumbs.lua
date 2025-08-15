@@ -357,10 +357,8 @@ return {
           if
             package.loaded["dropbar"]
             and (
-              vim.g.colors_name == "rose-pine"
-              or vim.g.colors_name == "rose-pine-main"
-              or vim.g.colors_name == "rose-pine-moon"
-              or vim.g.colors_name == "rose-pine-dawn"
+              vim.g.colors_name == "flexoki-dark"
+              or vim.g.colors_name == "flexoki"
             )
           then
             vim.schedule(setup_dropbar_highlights)

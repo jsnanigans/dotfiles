@@ -19,8 +19,8 @@ return {
       lcov_file = "./coverage/lcov.info",
       commands = true,
       highlights = {
-        covered = { fg = "#C3E88D" },
-        uncovered = { fg = "#F07178" },
+        covered = { fg = "#58a6ff" }, -- Using green (blue for colorblind)
+        uncovered = { fg = "#ec8e2c" }, -- Using red (orange for colorblind)
       },
       signs = {
         covered = { hl = "CoverageCovered", text = "▎" },

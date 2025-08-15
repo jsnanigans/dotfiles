@@ -7,6 +7,37 @@ if ok_root then
   root_utils.setup()
 end
 
+-- Setup diagnostic signs
+local ok_icons, icons = pcall(require, "config.icons")
+if ok_icons then
+  icons.setup_diagnostic_signs()
+end
+
+-- Auto-detect and apply theme from .current-theme file
+augroup("AutoTheme", { clear = true })
+autocmd("VimEnter", {
+  group = "AutoTheme",
+  callback = function()
+    local theme_file = vim.fn.expand("~/dotfiles/theme/.current-theme")
+    if vim.fn.filereadable(theme_file) == 1 then
+      local lines = vim.fn.readfile(theme_file)
+      if lines and #lines > 0 then
+        local theme = lines[1]
+        if theme == "github-dark-colorblind" then
+          vim.cmd("colorscheme github-dark-colorblind")
+        elseif theme == "flexoki-dark" or theme == "flexoki" then
+          vim.cmd("colorscheme flexoki-dark")
+        elseif theme == "rose-pine" then
+          vim.cmd("colorscheme rose-pine")
+        end
+      end
+    else
+      -- Default to github-dark-colorblind
+      vim.cmd("colorscheme github-dark-colorblind")
+    end
+  end,
+})
+
 -- Highlight yanked text
 augroup("YankHighlight", { clear = true })
 autocmd("TextYankPost", {

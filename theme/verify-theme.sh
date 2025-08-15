@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Rose Pine Theme Verification Script
-# Checks that all tools are configured to use Rose Pine theme
+# Flexoki Dark Theme Verification Script
+# Checks that all tools are configured to use Flexoki Dark theme
 
 set -e
 
@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo "🌹 Rose Pine Theme Verification"
+echo "🎨 Flexoki Dark Theme Verification"
 echo "================================"
 echo ""
 
@@ -35,9 +35,9 @@ check_config() {
     if grep -q "$pattern" "$file"; then
         actual=$(grep "$pattern" "$file" | head -1)
         if [[ "$actual" == *"$expected"* ]]; then
-            echo -e "${GREEN}[OK]${NC} Using Rose Pine"
+            echo -e "${GREEN}[OK]${NC} Using Flexoki Dark"
         else
-            echo -e "${RED}[WRONG]${NC} Not using Rose Pine"
+            echo -e "${RED}[WRONG]${NC} Not using Flexoki Dark"
             echo "  Found: $actual"
             ALL_GOOD=false
         fi
@@ -55,39 +55,42 @@ echo "-------------------"
 check_config "Bat" \
     "$HOME/dotfiles/bat/bat.conf" \
     "^--theme=" \
-    "rose-pine"
+    "flexoki-dark"
 
-# Ghostty
-check_config "Ghostty" \
-    "$HOME/dotfiles/ghostty/config" \
-    "^theme = " \
-    "rose-pine"
+# Ghostty (checking for flexoki colors in palette)
+printf "Checking %-15s ... " "Ghostty"
+if grep -q 'palette = 0=#100f0f' "$HOME/dotfiles/ghostty/config" 2>/dev/null; then
+    echo -e "${GREEN}[OK]${NC} Using Flexoki Dark colors"
+else
+    echo -e "${RED}[WRONG]${NC} Not using Flexoki Dark"
+    ALL_GOOD=false
+fi
 
 # Tmux
 check_config "Tmux" \
     "$HOME/dotfiles/tmux/.tmux.conf" \
     "source-file.*theme" \
-    "rose-pine"
+    "flexoki-dark"
 
 # Zellij
 check_config "Zellij" \
     "$HOME/dotfiles/zellij/config.kdl" \
     "^theme " \
-    "rose-pine"
+    "flexoki-dark"
 
-# Lazygit (check for Rose Pine color in theme section)
+# Lazygit (check for Flexoki Dark color in theme section)
 printf "Checking %-15s ... " "Lazygit"
-if grep -q '"#c4a7e7"' "$HOME/dotfiles/lazygit/config.yml" 2>/dev/null; then
-    echo -e "${GREEN}[OK]${NC} Using Rose Pine colors"
+if grep -q '"#cecdc3"' "$HOME/dotfiles/lazygit/config.yml" 2>/dev/null; then
+    echo -e "${GREEN}[OK]${NC} Using Flexoki Dark colors"
 else
-    echo -e "${YELLOW}[CUSTOM]${NC} Using custom theme (Rose Pine colors configured)"
+    echo -e "${YELLOW}[CUSTOM]${NC} Using custom theme (Flexoki Dark colors configured)"
 fi
 
 # Neovim
 check_config "Neovim" \
     "$HOME/dotfiles/nvim/marvim/lua/config/lazy.lua" \
     "colorscheme.*=" \
-    "rose-pine"
+    "flexoki-dark"
 
 echo ""
 echo "Environment Variables:"
@@ -101,7 +104,7 @@ check_env() {
     printf "Checking %-20s ... " "$var"
     
     # Source the Fish config to get the variables
-    if fish -c "source $HOME/dotfiles/theme/rose-pine.fish 2>/dev/null && echo \$$var" | grep -q "$expected"; then
+    if fish -c "source $HOME/dotfiles/theme/flexoki-dark.fish 2>/dev/null && echo \$$var" | grep -q "$expected"; then
         echo -e "${GREEN}[OK]${NC} Set to '$expected'"
     else
         actual=$(fish -c "echo \$$var" 2>/dev/null || echo "not set")
@@ -110,8 +113,8 @@ check_env() {
     fi
 }
 
-check_env "BAT_THEME" "rose-pine"
-check_env "DELTA_FEATURES" "rose-pine"
+check_env "BAT_THEME" "flexoki-dark"
+check_env "DELTA_FEATURES" "flexoki-dark"
 
 echo ""
 echo "Theme Files:"
@@ -130,21 +133,21 @@ check_file() {
     fi
 }
 
-check_file "$HOME/dotfiles/theme/rose-pine.env"
-check_file "$HOME/dotfiles/theme/rose-pine.fish"
-check_file "$HOME/dotfiles/theme/tmux-rose-pine.conf"
+check_file "$HOME/dotfiles/theme/flexoki-dark.env"
+check_file "$HOME/dotfiles/theme/flexoki-dark.fish"
+check_file "$HOME/dotfiles/theme/tmux-flexoki-dark.conf"
 check_file "$HOME/dotfiles/theme/README.md"
 
 echo ""
 echo "================================"
 if [ "$ALL_GOOD" = true ]; then
-    echo -e "${GREEN}✅ All tools are using Rose Pine theme!${NC}"
+    echo -e "${GREEN}✅ All tools are using Flexoki Dark theme!${NC}"
     exit 0
 else
     echo -e "${YELLOW}⚠️  Some tools need configuration updates${NC}"
     echo ""
     echo "To fix:"
-    echo "1. Update tool configs to use 'rose-pine' theme"
+    echo "1. Update tool configs to use 'flexoki-dark' theme"
     echo "2. Source the theme files in your shell config"
     echo "3. Restart affected applications"
     exit 1

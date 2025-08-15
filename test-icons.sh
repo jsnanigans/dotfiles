@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "=== Testing Nerd Font Icons in Terminal ==="
+echo ""
+echo "If you see icons below, your terminal font is working:"
+echo ""
+echo "Error icon:      "
+echo "Warning icon:    "
+echo "Info icon:       "
+echo "Hint icon:       "
+echo "Folder:          "
+echo "File:            "
+echo "Git branch:      "
+echo ""
+echo "Box drawing characters:"
+echo "├──  └──  │"
+echo ""
+echo "If you see boxes or ? marks above, the font is not working."

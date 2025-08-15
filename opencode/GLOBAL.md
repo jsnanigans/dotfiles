@@ -1,3 +1,5 @@
+- NEVER WRITE ANY COMMENTS IN CODE!!!
+
 # Subagent Usage Guidelines
 
 ## IMPORTANT: Use Subagents Frequently and Proactively

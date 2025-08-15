@@ -17,7 +17,11 @@ return {
       "echasnovski/mini.icons",
     },
     opts = {
-      keymap = { preset = "default" },
+      keymap = {
+        preset = "default",
+        -- Ensure C-y accepts completion (already in default preset)
+        ['<C-y>'] = { 'select_and_accept' },
+      },
       appearance = {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = "mono",

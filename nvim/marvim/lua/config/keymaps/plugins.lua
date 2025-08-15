@@ -307,30 +307,22 @@ M.todo_comments_keys = {
 M.trouble_keys = {
   {
     "<leader>xx",
-    function()
-      require("trouble").toggle("document_diagnostics")
-    end,
+    "<cmd>Trouble diagnostics toggle<cr>",
     desc = "Document Diagnostics (Trouble)",
   },
   {
     "<leader>xX",
-    function()
-      require("trouble").toggle("workspace_diagnostics")
-    end,
-    desc = "Workspace Diagnostics (Trouble)",
+    "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+    desc = "Buffer Diagnostics (Trouble)",
   },
   {
     "<leader>xL",
-    function()
-      require("trouble").toggle("loclist")
-    end,
+    "<cmd>Trouble loclist toggle<cr>",
     desc = "Location List (Trouble)",
   },
   {
     "<leader>xQ",
-    function()
-      require("trouble").toggle("quickfix")
-    end,
+    "<cmd>Trouble qflist toggle<cr>",
     desc = "Quickfix List (Trouble)",
   },
   {

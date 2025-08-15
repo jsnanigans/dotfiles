@@ -59,11 +59,8 @@ end
 function M.setup_windows()
   local map = keymap_utils.create_safe_mapper("core_windows")
 
-  -- Move to window using the <ctrl> hjkl keys
-  map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-  map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-  map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-  map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+  -- Window navigation handled by vim-tmux-navigator plugin
+  -- The plugin will provide C-h/j/k/l navigation between nvim splits and tmux panes
 
   -- Resize window using <ctrl> arrow keys
   map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
@@ -133,10 +130,7 @@ function M.setup_terminal()
   local map = keymap_utils.create_safe_mapper("core_terminal")
 
   map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
-  map("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to Left Window" })
-  map("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to Lower Window" })
-  map("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to Upper Window" })
-  map("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to Right Window" })
+  -- Terminal navigation also handled by vim-tmux-navigator
 end
 
 -- ============================================================================
