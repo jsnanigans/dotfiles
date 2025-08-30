@@ -31,20 +31,67 @@ selection-foreground = #0d1117
 font-family = JetBrains Mono
 # font-feature = -liga
 font-size = 14
+font-feature = -calt  # Disable ligatures if preferred
+# adjust-cell-height = 10%  # Better line spacing
+
+# Window Appearance
+background-opacity = 0.95
+background-blur = 20
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = true
+window-decoration = true
 
 # ============================================================================
 # SHELL
 # ============================================================================
 shell-integration = fish
+shell-integration-features = cursor,sudo,title
 command = "/usr/bin/env /opt/homebrew/bin/fish -i"
 initial-command = "/usr/bin/env FIRST_LOGIN=1 /opt/homebrew/bin/fish -i"
+osc-color-report-format = 16-bit
+
+desktop-notifications = true
+
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+copy-on-select = clipboard
+
+# Performance
+window-vsync = true
+
+# Cursor Customization
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 0.8
+cursor-color = #61AFEF
+adjust-cursor-height = 35%
+cursor-click-to-move = true
+
+# Selection Colors
+selection-invert-fg-bg = true
+selection-background = #3E4452
+selection-foreground = #ABB2BF
+
 
 # ============================================================================
 # BEHAVIOR
 # ============================================================================
+focus-follows-mouse = true
+mouse-scroll-multiplier = 1.5
 mouse-hide-while-typing = true
 scrollback-limit = 1000000
 window-save-state = always
+
+# Window Management
+window-save-state = always
+window-inherit-working-directory = true
+window-inherit-font-size = true
+window-step-resize = true
+resize-overlay = after-first
+resize-overlay-position = center
 
 # ============================================================================
 # KEYBINDINGS - Tmux-style with ctrl+a prefix
@@ -66,3 +113,22 @@ keybind = ctrl+a>r=reload_config
 
 # Window management
 keybind = ctrl+a>w=new_window
+
+
+
+# macOS Specific
+macos-non-native-fullscreen = visible-menu
+macos-option-as-alt = true
+macos-auto-secure-input = true
+macos-secure-input-indication = true
+
+# Custom App Icon
+macos-icon = custom-style
+macos-icon-ghost-color = #89B4FA
+macos-icon-screen-color = #1E1E2E,#313244
+# macos-icon-frame = aluminum  # or beige, plastic, chrome
+
+# Window Behavior
+window-colorspace = display-p3
+macos-titlebar-style = tabs
+macos-window-shadow = true

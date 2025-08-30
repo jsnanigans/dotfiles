@@ -48,26 +48,28 @@ tmux_conf_copy_to_os_clipboard=true
 # ============================================================================
 # GENERAL SETTINGS
 # ============================================================================
-# History (override base config)
+# History
 set -g history-limit 100000
 
 # Mouse support
 set -g mouse on
 set -g @scroll-speed-num-lines-per-scroll 3
 
-# Vi mode (already set in base, but reinforcing)
+# Vi mode
 set -g status-keys vi
 set -g mode-keys vi
 
 # Default shell
 set -g default-shell /opt/homebrew/bin/fish
+# Removed default-command to preserve working directory when creating panes/windows
 
 # Status position
 set -g status-position top
 
-# Terminal optimizations (override base config)
-set -sg escape-time 0                    # Faster command sequences (override)
-set -g focus-events on                   # Enable focus events (already in base)
+# Terminal optimizations
+set -sg escape-time 0                    # Faster command sequences
+set -g focus-events on                   # Enable focus events
+set -g default-terminal "tmux-256color"  # Better color support
 set -ga terminal-overrides ',xterm-256color:Tc'
 set -ga terminal-overrides ',ghostty:Tc'
 set -as terminal-features ',ghostty:RGB'
@@ -75,15 +77,9 @@ set -as terminal-features ',ghostty:RGB'
 # Clipboard integration
 set -g set-clipboard on
 
-# Activity monitoring
-setw -g monitor-activity on
-set -g visual-activity off
-
-# Aggressive resize
-setw -g aggressive-resize on
-
-# Create new window in current directory
-bind c new-window -c "#{pane_current_path}"
+# Window behavior
+set-option -g allow-rename off          # Keep custom window names
+set -g renumber-windows on              # Renumber windows on close
 
 # -- tpm -----------------------------------------------------------------------
 
@@ -150,49 +146,8 @@ run-shell "tmux setenv -g DOTFILES $HOME/dotfiles"
 # ============================================================================
 # LOAD ORGANIZED CONFIG FILES
 # ============================================================================
-# Load vim-aware navigation (C-h/j/k/l)
-source-file $DOTFILES/tmux/vim-navigation.conf
-
 # Load custom keybindings
 source-file $DOTFILES/tmux/keybindings.conf
 
 # Load theme configuration
 source-file $DOTFILES/tmux/theme.conf
-
-
-
-### 🎨 Powerline-Style Configuration
-
-# Status bar customization
-set -g status on
-set -g status-interval 1
-set -g status-position bottom
-set -g status-justify left
-set -g status-style 'bg=colour235 fg=colour137'
-
-# Left side
-set -g status-left-length 50
-set -g status-left '#[fg=colour232,bg=colour154] #S #[fg=colour154,bg=colour238]#[fg=colour222,bg=colour238] #W #[fg=colour238,bg=colour235]'
-
-# Right side
-set -g status-right-length 100
-set -g status-right '#[fg=colour238]#[fg=colour251,bg=colour238] %H:%M:%S #[fg=colour244]#[fg=colour232,bg=colour244] %Y-%m-%d #[fg=colour154]#[fg=colour232,bg=colour154] #h '
-
-# Window status
-setw -g window-status-format '#[fg=colour246,bg=colour235] #I:#W#F '
-setw -g window-status-current-format '#[fg=colour235,bg=colour238]#[fg=colour81,bg=colour238] #I:#W#F #[fg=colour238,bg=colour235]'
-
-# Pane borders
-set -g pane-border-style 'fg=colour238'
-set -g pane-active-border-style 'fg=colour154'
-
-# Message style
-set -g message-style 'fg=colour232 bg=colour154'
-
-### 🚀 Productivity Boosters
-
-# Floating terminal
-# bind -n M-f display-popup -E -w 80% -h 80%
-
-# Quick notes
-bind h split-window -h "vim ~/notes.md"

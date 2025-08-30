@@ -1,7 +1,6 @@
 # -- general -------------------------------------------------------------------
 
 set -g default-terminal "tmux-256color" # Better color support
-
 setw -g xterm-keys on
 set -s escape-time 10                     # faster command sequences
 set -sg repeat-time 600                   # increase repeat timeout
@@ -13,7 +12,7 @@ bind C-b send-prefix
 set -q -g status-utf8 on                  # expect UTF-8 (tmux < 2.2)
 setw -q -g utf8 on
 
-# History limit will be overridden in .tmux.conf.local
+set -g history-limit 5000                 # boost history
 
 # edit configuration
 bind e new-window -n "~/.tmux.conf.local" sh -c '${EDITOR:-vim} ~/.tmux.conf.local && tmux source ~/.tmux.conf && tmux display "~/.tmux.conf sourced"'
@@ -107,5 +106,15 @@ bind P choose-buffer # choose which buffer to paste from
 
 source -q ~/.tmux.conf.local
 
-# All additional config files will be loaded from .tmux.conf.local
-# to avoid duplication and maintain single source of truth
+
+# ===========================================================================
+# LOAD ORGANIZED CONFIG FILES
+# ===========================================================================
+# Load vim-aware navigation (C-h/j/k/l)
+source-file -q /Users/brendanmullins/dotfiles/tmux/vim-navigation.conf
+
+# Load custom keybindings
+source-file -q /Users/brendanmullins/dotfiles/tmux/keybindings.conf
+
+# Load centralized Rose Pine theme configuration
+source-file -q /Users/brendanmullins/dotfiles/theme/tmux-rose-pine.conf
