@@ -6,7 +6,55 @@ return {
   {
     "folke/flash.nvim",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {},
+    opts = {
+      labels = "asdfghjklqwertyuiopzxcvbnm",
+      search = {
+        multi_window = true,
+        forward = true,
+        wrap = true,
+        mode = "exact",
+        incremental = false,
+      },
+      label = {
+        uppercase = false,
+        after = true,
+        before = false,
+        style = "overlay",
+        reuse = "lowercase",
+        distance = true,
+        min_pattern_length = 0,
+        rainbow = {
+          enabled = false,
+        },
+      },
+      highlight = {
+        backdrop = true,
+        matches = true,
+        priority = 5000,
+        groups = {
+          match = "FlashMatch",
+          current = "FlashCurrent",
+          backdrop = "FlashBackdrop",
+          label = "FlashLabel",
+        },
+      },
+      modes = {
+        search = {
+          enabled = false,
+        },
+        char = {
+          enabled = true,
+          keys = { "f", "F", "t", "T", ";", "," },
+          multi_line = true,
+          highlight = { backdrop = false },
+        },
+      },
+    },
+    config = function(_, opts)
+      require("flash").setup(opts)
+      
+      require("config.plugins.flash-highlights").setup()
+    end,
   },
 
   -- commenting with mini.comment
