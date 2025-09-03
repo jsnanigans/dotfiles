@@ -13,4 +13,14 @@ return {
       vim.g.copilot_tab_fallback = ""
     end,
   },
+  {
+    "NickvanDyke/opencode.nvim",
+    dependencies = {
+      { "folke/snacks.nvim", opts = { input = { enabled = true } } },
+    },
+    opts = {},
+    keys = function()
+      return require("config.keymaps").opencode_keys
+    end,
+  },
 }

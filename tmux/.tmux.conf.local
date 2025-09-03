@@ -147,6 +147,9 @@ set -g @tmux-which-key-config "$DOTFILES/tmux/tmux-which-key.conf"
 # Fix for $DOTFILES variable in loaded configs
 run-shell "tmux setenv -g DOTFILES $HOME/dotfiles"
 
+# Unbind keys that interfere with text navigation
+unbind -n M-f  # Disable floating terminal on Alt/Option+f
+
 # ============================================================================
 # LOAD ORGANIZED CONFIG FILES
 # ============================================================================

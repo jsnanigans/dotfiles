@@ -34,6 +34,119 @@ M.copilot_keys = {
   { "<C-c>", 'copilot#Accept("\\<CR>")', mode = "i", expr = true, replace_keycodes = false, desc = "Accept Copilot" },
 }
 
+-- Opencode AI Assistant
+M.opencode_keys = {
+  -- Core commands
+  {
+    "<leader>oa",
+    function()
+      require("opencode").ask()
+    end,
+    desc = "Ask opencode",
+  },
+  {
+    "<leader>oA",
+    function()
+      require("opencode").ask("@cursor: ")
+    end,
+    mode = "n",
+    desc = "Ask opencode about cursor",
+  },
+  {
+    "<leader>oA",
+    function()
+      require("opencode").ask("@selection: ")
+    end,
+    mode = "v",
+    desc = "Ask opencode about selection",
+  },
+  {
+    "<leader>ot",
+    function()
+      require("opencode").toggle()
+    end,
+    desc = "Toggle opencode terminal",
+  },
+  -- Session management
+  {
+    "<leader>on",
+    function()
+      require("opencode").command("session_new")
+    end,
+    desc = "New opencode session",
+  },
+  -- Message navigation
+  {
+    "<leader>oy",
+    function()
+      require("opencode").command("messages_copy")
+    end,
+    desc = "Copy last message",
+  },
+  {
+    "<S-PageUp>",
+    function()
+      require("opencode").command("messages_half_page_up")
+    end,
+    desc = "Scroll messages up",
+  },
+  {
+    "<S-PageDown>",
+    function()
+      require("opencode").command("messages_half_page_down")
+    end,
+    desc = "Scroll messages down",
+  },
+  -- Prompt selection
+  {
+    "<leader>op",
+    function()
+      require("opencode").select_prompt()
+    end,
+    mode = { "n", "v" },
+    desc = "Select opencode prompt",
+  },
+  -- Custom prompts
+  {
+    "<leader>oe",
+    function()
+      require("opencode").prompt("Explain @cursor and its context")
+    end,
+    desc = "Explain code at cursor",
+  },
+  {
+    "<leader>or",
+    function()
+      require("opencode").prompt("Review @selection for potential improvements and bugs")
+    end,
+    mode = "v",
+    desc = "Review selected code",
+  },
+  {
+    "<leader>od",
+    function()
+      require("opencode").prompt("Generate documentation for @selection")
+    end,
+    mode = "v",
+    desc = "Document selected code",
+  },
+  {
+    "<leader>of",
+    function()
+      require("opencode").prompt("Fix the issue: @diagnostic")
+    end,
+    desc = "Fix diagnostic at cursor",
+  },
+  {
+    "<leader>oi",
+    function()
+      require("opencode").prompt("Improve @selection: make it more efficient and readable")
+    end,
+    mode = "v",
+    desc = "Improve selected code",
+  },
+}
+
 -- Undotree
 M.undotree_keys = {
   { "<leader>u", "<cmd>UndotreeToggle<cr>", desc = "Toggle Undotree" },

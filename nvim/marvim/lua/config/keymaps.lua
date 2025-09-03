@@ -26,6 +26,7 @@ end
 M.persistence_keys = plugins.persistence_keys
 M.dadbod_keys = plugins.dadbod_keys
 M.copilot_keys = plugins.copilot_keys
+M.opencode_keys = plugins.opencode_keys
 M.undotree_keys = plugins.undotree_keys
 M.dap_keys = plugins.dap_keys
 M.overseer_keys = plugins.overseer_keys
