@@ -312,6 +312,11 @@ M.ui_highlights = {
   MoreMsg = { fg = M.colors.pine, bold = true },
   Question = { fg = M.colors.foam, bold = true },
   Title = { fg = M.colors.iris, bold = true },
+
+  -- Command line completion highlights
+  WildMenu = { fg = M.colors.text, bg = M.colors.highlight_high, bold = true },
+  StatusLine = { fg = M.colors.text, bg = M.colors.surface },
+  StatusLineNC = { fg = M.colors.subtle, bg = M.colors.surface },
 }
 
 -- ============================================================================

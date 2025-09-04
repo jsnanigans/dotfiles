@@ -101,6 +101,17 @@ end
 function M.format(opts)
   opts = opts or {}
   local buf = opts.buf or vim.api.nvim_get_current_buf()
+  
+  -- Check if this is a Python file that might trigger the LSP sync bug
+  local filetype = vim.bo[buf].filetype
+  if filetype == "python" then
+    -- Use the safer format workaround for Python files
+    local ok, workaround = pcall(require, "utils.format_workaround")
+    if ok then
+      workaround.safe_format(buf)
+      return
+    end
+  end
 
   if opts.force_conform then
     local ok, conform = pcall(require, "conform")
@@ -112,10 +123,12 @@ function M.format(opts)
 
   local have_conform, conform = pcall(require, "conform")
   if have_conform then
+    -- Add quiet flag to suppress LSP sync errors
     conform.format(vim.tbl_extend("force", {
       bufnr = buf,
       lsp_fallback = true,
       timeout_ms = 3000,
+      quiet = true,
     }, opts))
   else
     vim.lsp.buf.format(vim.tbl_extend("force", {

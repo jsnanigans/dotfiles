@@ -190,3 +190,9 @@ local ok_python_enhanced, python_enhanced = pcall(require, "config.autocmds.pyth
 if ok_python_enhanced then
   python_enhanced.setup()
 end
+
+-- LSP workarounds for known issues
+local ok_lsp_workarounds, lsp_workarounds = pcall(require, "config.autocmds.lsp_workarounds")
+if ok_lsp_workarounds then
+  lsp_workarounds.setup()
+end

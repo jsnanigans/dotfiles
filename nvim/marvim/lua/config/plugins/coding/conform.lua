@@ -38,7 +38,13 @@ return {
       },
       formatters = {
         injected = { options = { ignore_errors = true } },
+        -- Add buffer sync workaround for Python formatters
+        black = {
+          prepend_args = { "--fast" },
+        },
       },
+      -- Workaround for LSP sync issues
+      notify_on_error = false,
     },
   },
 }
