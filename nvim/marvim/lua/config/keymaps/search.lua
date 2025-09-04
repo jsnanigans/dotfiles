@@ -92,7 +92,7 @@ function M.setup_search_keymaps()
     snacks.picker.resume()
   end, { desc = "Resume" })
 
-  -- Git integration
+  -- Git integration (Basic pickers)
   map("n", "<leader>gc", function()
     snacks.picker.git_log()
   end, { desc = "Git Commits" })
@@ -100,6 +100,11 @@ function M.setup_search_keymaps()
   map("n", "<leader>gs", function()
     snacks.picker.git_status()
   end, { desc = "Git Status" })
+
+  -- Note: Enhanced git pickers are loaded by git.enhanced plugin:
+  -- <leader>gd - Git diff files (vs release)
+  -- <leader>gD - Git diff files (vs custom branch)
+  -- <leader>gh - Git hunks picker
 
   -- LSP symbol search (global)
   map("n", "<leader>sS", function()

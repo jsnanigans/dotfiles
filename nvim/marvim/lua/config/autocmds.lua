@@ -179,3 +179,14 @@ autocmd("BufReadPost", {
     end
   end,
 })
+
+-- Python/UV support
+local ok_python, python_autocmds = pcall(require, "config.autocmds.python")
+if ok_python then
+  python_autocmds.setup()
+end
+
+local ok_python_enhanced, python_enhanced = pcall(require, "config.autocmds.python-enhanced")
+if ok_python_enhanced then
+  python_enhanced.setup()
+end

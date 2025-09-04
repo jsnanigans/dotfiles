@@ -36,6 +36,9 @@ return {
 
       -- Set up enhanced git keymappings
       require("utils.git.enhanced-keys").setup()
+      
+      -- Set up our custom git keymaps and pickers
+      require("utils.git.keymaps").setup()
 
       -- Set up autocmd to update summary for statusline
       vim.api.nvim_create_autocmd("User", {

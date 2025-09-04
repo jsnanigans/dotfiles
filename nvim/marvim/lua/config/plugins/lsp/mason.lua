@@ -13,6 +13,7 @@ return {
         "json-lsp",
         "prettier",
         "ruff",
+        "ruff-lsp",
         "eslint_d",
         "codelldb",
         "js-debug-adapter",
