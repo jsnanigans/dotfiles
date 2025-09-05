@@ -223,8 +223,8 @@ M.basedpyright = function()
   }
 end
 
--- Ruff LSP configuration for Python linting and formatting
-M.ruff_lsp = function()
+-- Ruff configuration for Python linting and formatting
+M.ruff = function()
   return {
     init_options = {
       settings = {

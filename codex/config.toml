@@ -1,0 +1,10 @@
+[projects."/Users/brendanmullins/Projects"]
+trust_level = "trusted"
+
+[mcp_servers.web-search]
+command = "mcpm"
+args = ["--server=web-search", "--agent=codex"]
+
+[mcp_servers.atlassian]
+command = "mcpm"
+args = ["--server=mcp-atlassian", "--agent=codex"]
