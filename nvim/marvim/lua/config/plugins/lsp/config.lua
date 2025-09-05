@@ -116,7 +116,6 @@ return {
         jsonls = server_configs.get_server_config("jsonls"),
         clangd = server_configs.get_server_config("clangd"),
         basedpyright = server_configs.get_server_config("basedpyright"),
-        pyright = { enabled = false },
         ruff_lsp = server_configs.get_server_config("ruff_lsp"),
         dartls = server_configs.get_server_config("dartls"),
       }, opts.servers)

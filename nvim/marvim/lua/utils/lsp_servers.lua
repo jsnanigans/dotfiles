@@ -186,54 +186,7 @@ M.clangd = function()
   }
 end
 
--- Python server configuration
-M.pyright = function()
-  return {
-    settings = {
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = "workspace",
-          useLibraryCodeForTypes = true,
-          typeCheckingMode = "basic",
-          extraPaths = {},
-        },
-      },
-    },
-    before_init = function(_, config)
-      local Path = require("plenary.path")
-      local cwd = vim.fn.getcwd()
-      
-      local venv_path = Path:new(cwd, ".venv")
-      if venv_path:exists() and venv_path:is_dir() then
-        config.settings.python.pythonPath = tostring(Path:new(venv_path, "bin", "python"))
-        config.settings.python.venvPath = tostring(venv_path)
-      end
-      
-      local pyproject = Path:new(cwd, "pyproject.toml")
-      if pyproject:exists() then
-        local content = pyproject:read()
-        if content and content:match("tool%.uv") then
-          config.settings.python.analysis.extraPaths = { cwd }
-        end
-      end
-    end,
-    root_dir = function(fname)
-      local util = require("lspconfig.util")
-      return util.root_pattern(
-        "pyproject.toml",
-        "setup.py",
-        "setup.cfg",
-        "requirements.txt",
-        "Pipfile",
-        "pyrightconfig.json",
-        ".git"
-      )(fname)
-    end,
-  }
-end
-
--- Basedpyright server configuration (alternative to pyright with better uv support)
+-- Basedpyright server configuration (replaces pyright with better uv support)
 M.basedpyright = function()
   return {
     settings = {

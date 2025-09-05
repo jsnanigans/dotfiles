@@ -1,66 +1,82 @@
-# Github Dark Colorblind Theme for Yazi
+# Github Dark Colorblind Theme for Yazi - Improved Contrast
 
 [mgr]
-cwd = { fg = "#79c0ff" }
+cwd = { fg = "#79c0ff", bold = true }
+hovered = { bg = "#1f2428", bold = true }
+preview_hovered = { bg = "#1f2428", bold = true }
+find = { fg = "#f0f6fc", bg = "#2d333b", bold = true }
+find_keyword = { fg = "#fdcc59", bg = "#2d333b", bold = true, italic = true }
+find_position = { fg = "#bc8cff", bg = "#2d333b" }
+marker_selected = { fg = "#fdcc59", bg = "#2d333b", bold = true }
+marker_copied = { fg = "#79c0ff", bg = "#1f2428", bold = true }
+marker_cut = { fg = "#ff7b72", bg = "#1f2428", bold = true }
+tab_active = { fg = "#f0f6fc", bg = "#2d333b", bold = true }
+tab_inactive = { fg = "#8b949e", bg = "#161b22" }
+tab_width = 2
+count_copied = { fg = "#0d1117", bg = "#79c0ff", bold = true }
+count_cut = { fg = "#0d1117", bg = "#ff7b72", bold = true }
+count_selected = { fg = "#0d1117", bg = "#fdcc59", bold = true }
+border_symbol = "│"
+border_style = { fg = "#484f58" }
 
 [status]
 separator_open  = ""
 separator_close = ""
-separator_style = { fg = "#30363d", bg = "#30363d" }
+separator_style = { fg = "#484f58", bg = "#161b22" }
 
-mode_normal = { fg = "#0d1117", bg = "#58a6ff", bold = true }
+mode_normal = { fg = "#0d1117", bg = "#79c0ff", bold = true }
 mode_select = { fg = "#0d1117", bg = "#bc8cff", bold = true }
-mode_unset  = { fg = "#0d1117", bg = "#ec8e2c", bold = true }
+mode_unset  = { fg = "#0d1117", bg = "#fdcc59", bold = true }
 
-progress_label  = { fg = "#ffffff", bold = true }
-progress_normal = { fg = "#58a6ff", bg = "#30363d" }
-progress_error  = { fg = "#ec8e2c", bg = "#30363d" }
+progress_label  = { fg = "#f0f6fc", bold = true }
+progress_normal = { fg = "#79c0ff", bg = "#2d333b" }
+progress_error  = { fg = "#ff7b72", bg = "#2d333b" }
 
-permissions_t = { fg = "#58a6ff" }
-permissions_r = { fg = "#d29922" }
-permissions_w = { fg = "#ec8e2c" }
-permissions_x = { fg = "#79c0ff" }
-permissions_s = { fg = "#b1bac4" }
+permissions_t = { fg = "#79c0ff", bold = true }
+permissions_r = { fg = "#fdcc59", bold = true }
+permissions_w = { fg = "#ff7b72", bold = true }
+permissions_x = { fg = "#7ee787", bold = true }
+permissions_s = { fg = "#c9d1d9", bold = true }
 
 [input]
-border   = { fg = "#58a6ff" }
-title    = {}
-value    = {}
-selected = { reversed = true }
+border   = { fg = "#79c0ff" }
+title    = { fg = "#f0f6fc", bold = true }
+value    = { fg = "#c9d1d9" }
+selected = { bg = "#2d333b", bold = true }
 
 [select]
-border   = { fg = "#58a6ff" }
-active   = { fg = "#bc8cff" }
-inactive = {}
+border   = { fg = "#79c0ff" }
+active   = { fg = "#bc8cff", bold = true }
+inactive = { fg = "#8b949e" }
 
 [tasks]
-border  = { fg = "#58a6ff" }
-title   = {}
-hovered = { underline = true }
+border  = { fg = "#79c0ff" }
+title   = { fg = "#f0f6fc", bold = true }
+hovered = { bg = "#2d333b", underline = true }
 
 [which]
-mask            = { bg = "#0d1117" }
-cand            = { fg = "#39c5cf" }
-rest            = { fg = "#6e7681" }
+mask            = { bg = "#161b22" }
+cand            = { fg = "#79c0ff", bold = true }
+rest            = { fg = "#8b949e" }
 desc            = { fg = "#bc8cff" }
 separator       = "  "
-separator_style = { fg = "#30363d" }
+separator_style = { fg = "#484f58" }
 
 [help]
-on      = { fg = "#bc8cff" }
-exec    = { fg = "#39c5cf" }
+on      = { fg = "#bc8cff", bold = true }
+exec    = { fg = "#79c0ff", bold = true }
 desc    = { fg = "#c9d1d9" }
-hovered = { bg = "#30363d", bold = true }
-footer  = { fg = "#c9d1d9", bg = "#0d1117" }
+hovered = { bg = "#2d333b", bold = true }
+footer  = { fg = "#f0f6fc", bg = "#161b22", bold = true }
 
 [filetype]
 rules = [
 	# Images
-	{ mime = "image/*", fg = "#39c5cf" },
+	{ mime = "image/*", fg = "#7ee787" },
 
 	# Videos
-	{ mime = "video/*", fg = "#d29922" },
-	{ mime = "audio/*", fg = "#d29922" },
+	{ mime = "video/*", fg = "#fdcc59" },
+	{ mime = "audio/*", fg = "#fdcc59" },
 
 	# Archives
 	{ mime = "application/zip",             fg = "#bc8cff" },
@@ -70,100 +86,105 @@ rules = [
 	{ mime = "application/x-bzip2",         fg = "#bc8cff" },
 	{ mime = "application/x-7z-compressed", fg = "#bc8cff" },
 	{ mime = "application/x-rar",           fg = "#bc8cff" },
+	
+	# Documents
+	{ mime = "application/pdf", fg = "#ff7b72" },
+	{ mime = "application/msword", fg = "#79c0ff" },
+	{ mime = "application/vnd.*", fg = "#79c0ff" },
 
 	# Fallback
 	{ name = "*", fg = "#c9d1d9" },
-	{ name = "*/", fg = "#58a6ff" }
+	{ name = "*/", fg = "#79c0ff", bold = true }
 ]
 
 [icon]
 rules = [
 	# Programming
-	{ name = "*.c",    text = "" },
-	{ name = "*.cpp",  text = "" },
-	{ name = "*.h",    text = "" },
-	{ name = "*.hpp",  text = "" },
-	{ name = "*.rs",   text = "" },
-	{ name = "*.go",   text = "" },
-	{ name = "*.py",   text = "" },
-	{ name = "*.js",   text = "" },
-	{ name = "*.ts",   text = "" },
-	{ name = "*.tsx",  text = "" },
-	{ name = "*.jsx",  text = "" },
-	{ name = "*.rb",   text = "" },
-	{ name = "*.php",  text = "" },
-	{ name = "*.java", text = "" },
-	{ name = "*.sh",   text = "" },
-	{ name = "*.fish", text = "" },
-	{ name = "*.bash", text = "" },
-	{ name = "*.zsh",  text = "" },
-	{ name = "*.ksh",  text = "" },
-	{ name = "*.csh",  text = "" },
-	{ name = "*.awk",  text = "" },
-	{ name = "*.ps1",  text = "" },
-	{ name = "*.lua",  text = "" },
-	{ name = "*.vim",  text = "" },
-	{ name = "*.diff", text = "" },
-	{ name = "*.html", text = "" },
-	{ name = "*.xml",  text = "" },
-	{ name = "*.css",  text = "" },
-	{ name = "*.scss", text = "" },
-	{ name = "*.json", text = "" },
-	{ name = "*.toml", text = "" },
-	{ name = "*.yaml", text = "" },
-	{ name = "*.yml",  text = "" },
-	{ name = "*.ini",  text = "" },
-	{ name = "*.conf", text = "" },
+	{ name = "*.c",    text = "", fg = "#599eff" },
+	{ name = "*.cpp",  text = "", fg = "#f34b7d" },
+	{ name = "*.h",    text = "", fg = "#599eff" },
+	{ name = "*.hpp",  text = "", fg = "#f34b7d" },
+	{ name = "*.rs",   text = "", fg = "#dea584" },
+	{ name = "*.go",   text = "", fg = "#00add8" },
+	{ name = "*.py",   text = "", fg = "#ffdd54" },
+	{ name = "*.js",   text = "", fg = "#f1e05a" },
+	{ name = "*.ts",   text = "", fg = "#2b7489" },
+	{ name = "*.tsx",  text = "", fg = "#2b7489" },
+	{ name = "*.jsx",  text = "", fg = "#79c0ff" },
+	{ name = "*.rb",   text = "", fg = "#cc342d" },
+	{ name = "*.php",  text = "", fg = "#a074c4" },
+	{ name = "*.java", text = "", fg = "#cc7832" },
+	{ name = "*.sh",   text = "", fg = "#4eaa25" },
+	{ name = "*.fish", text = "", fg = "#4eaa25" },
+	{ name = "*.bash", text = "", fg = "#4eaa25" },
+	{ name = "*.zsh",  text = "", fg = "#4eaa25" },
+	{ name = "*.ksh",  text = "", fg = "#4eaa25" },
+	{ name = "*.csh",  text = "", fg = "#4eaa25" },
+	{ name = "*.awk",  text = "", fg = "#4eaa25" },
+	{ name = "*.ps1",  text = "", fg = "#4eaa25" },
+	{ name = "*.lua",  text = "", fg = "#000080" },
+	{ name = "*.vim",  text = "", fg = "#019833" },
+	{ name = "*.diff", text = "", fg = "#ff7b72" },
+	{ name = "*.html", text = "", fg = "#e34c26" },
+	{ name = "*.xml",  text = "", fg = "#e34c26" },
+	{ name = "*.css",  text = "", fg = "#563d7c" },
+	{ name = "*.scss", text = "", fg = "#f55385" },
+	{ name = "*.json", text = "", fg = "#cbcb41" },
+	{ name = "*.toml", text = "", fg = "#9c4221" },
+	{ name = "*.yaml", text = "", fg = "#cb171e" },
+	{ name = "*.yml",  text = "", fg = "#cb171e" },
+	{ name = "*.ini",  text = "", fg = "#6d8086" },
+	{ name = "*.conf", text = "", fg = "#6d8086" },
 
 	# Text
-	{ name = "*.txt", text = "" },
-	{ name = "*.md",  text = "" },
+	{ name = "*.txt", text = "", fg = "#c9d1d9" },
+	{ name = "*.md",  text = "", fg = "#083fa1" },
 
 	# Archives
-	{ name = "*.zip", text = "" },
-	{ name = "*.tar", text = "" },
-	{ name = "*.gz",  text = "" },
-	{ name = "*.7z",  text = "" },
-	{ name = "*.bz2", text = "" },
-	{ name = "*.xz",  text = "" },
+	{ name = "*.zip", text = "", fg = "#bc8cff" },
+	{ name = "*.tar", text = "", fg = "#bc8cff" },
+	{ name = "*.gz",  text = "", fg = "#bc8cff" },
+	{ name = "*.7z",  text = "", fg = "#bc8cff" },
+	{ name = "*.bz2", text = "", fg = "#bc8cff" },
+	{ name = "*.xz",  text = "", fg = "#bc8cff" },
 
 	# Images
-	{ name = "*.jpg",  text = "" },
-	{ name = "*.jpeg", text = "" },
-	{ name = "*.png",  text = "" },
-	{ name = "*.gif",  text = "" },
-	{ name = "*.webp", text = "" },
-	{ name = "*.avif", text = "" },
-	{ name = "*.bmp",  text = "" },
-	{ name = "*.ico",  text = "" },
-	{ name = "*.svg",  text = "" },
+	{ name = "*.jpg",  text = "", fg = "#7ee787" },
+	{ name = "*.jpeg", text = "", fg = "#7ee787" },
+	{ name = "*.png",  text = "", fg = "#7ee787" },
+	{ name = "*.gif",  text = "", fg = "#7ee787" },
+	{ name = "*.webp", text = "", fg = "#7ee787" },
+	{ name = "*.avif", text = "", fg = "#7ee787" },
+	{ name = "*.bmp",  text = "", fg = "#7ee787" },
+	{ name = "*.ico",  text = "", fg = "#7ee787" },
+	{ name = "*.svg",  text = "", fg = "#7ee787" },
 
 	# Videos
-	{ name = "*.mp4",  text = "" },
-	{ name = "*.mkv",  text = "" },
-	{ name = "*.avi",  text = "" },
-	{ name = "*.mov",  text = "" },
-	{ name = "*.webm", text = "" },
+	{ name = "*.mp4",  text = "", fg = "#fdcc59" },
+	{ name = "*.mkv",  text = "", fg = "#fdcc59" },
+	{ name = "*.avi",  text = "", fg = "#fdcc59" },
+	{ name = "*.mov",  text = "", fg = "#fdcc59" },
+	{ name = "*.webm", text = "", fg = "#fdcc59" },
 
 	# Audio
-	{ name = "*.mp3",  text = "" },
-	{ name = "*.flac", text = "" },
-	{ name = "*.wav",  text = "" },
-	{ name = "*.aac",  text = "" },
-	{ name = "*.ogg",  text = "" },
-	{ name = "*.m4a",  text = "" },
-	{ name = "*.opus", text = "" },
+	{ name = "*.mp3",  text = "", fg = "#fdcc59" },
+	{ name = "*.flac", text = "", fg = "#fdcc59" },
+	{ name = "*.wav",  text = "", fg = "#fdcc59" },
+	{ name = "*.aac",  text = "", fg = "#fdcc59" },
+	{ name = "*.ogg",  text = "", fg = "#fdcc59" },
+	{ name = "*.m4a",  text = "", fg = "#fdcc59" },
+	{ name = "*.opus", text = "", fg = "#fdcc59" },
 
 	# Documents
-	{ name = "*.pdf", text = "" },
-	{ name = "*.doc", text = "" },
-	{ name = "*.docx", text = "" },
-	{ name = "*.xls", text = "" },
-	{ name = "*.xlsx", text = "" },
-	{ name = "*.ppt", text = "" },
-	{ name = "*.pptx", text = "" },
+	{ name = "*.pdf", text = "", fg = "#ff7b72" },
+	{ name = "*.doc", text = "", fg = "#79c0ff" },
+	{ name = "*.docx", text = "", fg = "#79c0ff" },
+	{ name = "*.xls", text = "", fg = "#1e7e34" },
+	{ name = "*.xlsx", text = "", fg = "#1e7e34" },
+	{ name = "*.ppt", text = "", fg = "#d14524" },
+	{ name = "*.pptx", text = "", fg = "#d14524" },
 
 	# Default
-	{ name = "*",  text = "" },
-	{ name = "*/", text = "" },
+	{ name = "*",  text = "", fg = "#c9d1d9" },
+	{ name = "*/", text = "", fg = "#79c0ff" },
 ]

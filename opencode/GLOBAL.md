@@ -1,5 +1,7 @@
 - NEVER WRITE ANY COMMENTS IN CODE!!!
 - NO NEED FOR BACKWARDS COMPATIBILITY
+- PREFER TO UPDATE EXISTING TOOLS RATHER THAN CREATING NEW ONES
+- Only create new tools if absolutely necessary for code clarity or separation of concerns
 - ALWAYS USE THE LATEST SYNTAX
 
 # Subagent Usage Guidelines
