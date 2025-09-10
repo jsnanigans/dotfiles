@@ -75,6 +75,14 @@ A general-purpose agent for researching complex questions, searching for code, a
 
 ---
 
+### [Investigator](https://opencode.ai/docs/agents/#investigator)
+
+_Mode_: `primary`
+
+A deep investigation specialist for understanding why specific behaviors occur in systems and codebases. Traces execution flows, analyzes root causes, and provides comprehensive explanations without making modifications. Perfect for understanding complex workflows, debugging mysterious behaviors, and answering "why does this happen?" questions.
+
+---
+
 ### [Simple Task Runner](https://opencode.ai/docs/agents/#simple-task-runner)
 
 _Mode_: `subagent`
