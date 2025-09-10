@@ -9,6 +9,11 @@
     "~/.config/opencode/GLOBAL.md"
   ],
   "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["mcpm", "--server=playwright", "--agent=opencode"],
+      "enabled": true
+    },
     "web-search": {
       "type": "local",
       "command": ["mcpm", "--server=web-search", "--agent=opencode"],

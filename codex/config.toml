@@ -8,3 +8,8 @@ args = ["--server=web-search", "--agent=codex"]
 [mcp_servers.atlassian]
 command = "mcpm"
 args = ["--server=mcp-atlassian", "--agent=codex"]
+
+[mcp_servers.playwright]
+command = "mcpm"
+args = ["--server=playwright", "--agent=codex"]
+

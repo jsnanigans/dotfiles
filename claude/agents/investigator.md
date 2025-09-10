@@ -1,19 +1,8 @@
 ---
-description: Deep investigation specialist for understanding why specific behaviors occur in systems and codebases.
-mode: primary
-model: anthropic/claude-opus-4-1
-temperature: 0.3
-tools:
-  write: false
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  list: true
-  webfetch: true
-  web-search_brave_web_search: true
-  web-search_brave_local_search: false
+name: investigator
+description: Deep investigation specialist for understanding why specific behaviors occur in systems and codebases. Use proactively when you need to understand root causes, trace execution flows, or analyze system behaviors.
+tools: Read, Bash, Grep, Glob, WebFetch, mcp__web-search__brave_web_search
+model: opus
 ---
 
 # Investigator Agent
@@ -145,24 +134,6 @@ rg --files -g "**/*test*" -g "**/*spec*"
 
 # Search commit messages (if git available)
 git log --grep="feature\|fix\|behavior"
-```
-
-### File Discovery (fd instead of find)
-```bash
-# Find all JS/TS files (respects .gitignore)
-fd -t f -e js -e ts
-
-# Find files matching name patterns
-fd 'config\..*' -t f
-
-# Exclude common build/vendor directories
-fd -t f -E node_modules -E dist -E build
-
-# Find directories named "migrations"
-fd -t d migrations
-
-# Find recently changed files (e.g., within 2 days)
-fd -t f --changed-within 2days
 ```
 
 ## Evidence Documentation

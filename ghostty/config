@@ -30,7 +30,7 @@ selection-foreground = #0d1117
 # font-family = FiraCode Nerd Font Mono
 font-family = JetBrains Mono
 # font-feature = -liga
-font-size = 14
+font-size = 13
 font-feature = -calt  # Disable ligatures if preferred
 # adjust-cell-height = 10%  # Better line spacing
 
