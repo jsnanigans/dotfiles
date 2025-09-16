@@ -66,10 +66,30 @@ return {
           },
         },
       },
+      input = {
+        enabled = true,
+        win = {
+          relative = "cursor",
+          row = 1,
+          col = 0,
+          width = 60,
+          height = 1,
+          border = "rounded",
+        },
+      },
     },
     config = function(_, opts)
       local snacks = require("snacks")
       snacks.setup(opts)
+
+      -- Set up vim.ui integrations
+      vim.ui.select = function(items, opts_param, on_choice)
+        require("snacks").picker.select(items, opts_param, on_choice)
+      end
+
+      vim.ui.input = function(opts_param, on_confirm)
+        require("snacks").input(opts_param, on_confirm)
+      end
     end,
   },
 }
