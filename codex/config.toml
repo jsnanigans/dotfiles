@@ -1,4 +1,20 @@
+model = "gpt-5-codex"
 [projects."/Users/brendanmullins/Projects"]
+trust_level = "trusted"
+
+[projects."/Users/brendanmullins/Projects/next-sanity"]
+trust_level = "trusted"
+
+[projects."/Users/brendanmullins/Projects/eco-construct"]
+trust_level = "trusted"
+
+[projects."/Users/brendanmullins/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/brendanmullins/Projects/aitest/strem_process_anchor"]
+trust_level = "trusted"
+
+[projects."/Users/brendanmullins/Projects/mcpm"]
 trust_level = "trusted"
 
 [mcp_servers.web-search]
@@ -13,3 +29,6 @@ args = ["--server=mcp-atlassian", "--agent=codex"]
 command = "mcpm"
 args = ["--server=playwright", "--agent=codex"]
 
+[mcp_servers.magic]
+command = "mcpm"
+args = ["--server=@21st-dev/magic", "--agent=codex"]

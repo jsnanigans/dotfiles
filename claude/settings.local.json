@@ -4,6 +4,7 @@
     "allow": [
       "Bash(rg *)",
       "Bash(fd *)",
+      "Bash(jq *)",
       "Edit(./**/*.md)",
       "Read(./**/*.md)",
       "Write(./**/*.md)"

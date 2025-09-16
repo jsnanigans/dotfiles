@@ -9,9 +9,11 @@ alias vim nvim
 # ============================================================================
 # FILESYSTEM
 # ============================================================================
-alias l "ls -l"
-alias la "ls -la"
-alias ll "ls -lh"
+alias l "eza -l"
+alias la "eza -la"
+alias ll "eza -lh"
+alias ls "eza"
+alias cat "bat"
 alias md mkdir
 alias .. "cd .."
 alias ... "cd ../.."
