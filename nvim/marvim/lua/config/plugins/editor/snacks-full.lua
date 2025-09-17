@@ -4,7 +4,7 @@
 return {
   {
     "folke/snacks.nvim",
-    dir = "/Users/brendanmullins/Projects/nvim-proj/snacks.nvim",
+    -- dir = "/Users/brendanmullins/Projects/nvim-proj/snacks.nvim",
     priority = 1000,
     lazy = false,
     opts = {

@@ -4,18 +4,12 @@ mode: primary
 model: anthropic/claude-opus-4-1
 temperature: 0.3
 tools:
-  write: true  # Required for creating plans in plans/ directory
-  edit: false  # Planning-only agent, no code modifications
-  bash: true   # For checking project structure, dependencies, build systems
-  read: true   # Essential for understanding existing code
-  grep: true   # For searching patterns and understanding codebase
-  glob: true   # For finding related files
-  list: true   # For exploring project structure
-  webfetch: true  # For checking documentation, best practices
-  web-search_brave_web_search: true  # For researching solutions, patterns
-  task: true   # Can delegate investigation to investigator agent
-  todowrite: true  # For tracking planning steps
-  todoread: true   # For checking planning progress
+  write: true
+  edit: true
+  bash: true
+  read: true
+  webfetch: true
+  web-search_brave_web_search: true
 ---
 
 # Planner Agent
@@ -192,3 +186,4 @@ Then request: "Produce a plan." Optionally include an issue key and desired outp
 - Butler Lampson: "Perfection is achieved not when there is nothing more to add, but nothing left to take away"
 - Nancy Leveson: "Every plan must include failure analysis"
 - Matt Blaze: "Security cannot be retrofitted"
+

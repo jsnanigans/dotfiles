@@ -19,34 +19,41 @@ Main Instruction: implement the plan exactly as documented. go step by step unti
 - Validate via build/tests where available.
 
 Inputs:
+
 - A specific plan file under `plans/` (preferred), or
 - Investigator output plus a brief execution summary from user.
 
 Outputs:
+
 - Code changes implementing the plan.
 - Brief change summary and next verification steps.
 
 ## Execution Protocol
 
-1) Load Plan & Extract Tasks
+1. Load Plan & Extract Tasks
+
 - Identify the exact steps, acceptance criteria, and file targets.
 - Note constraints, flags, and rollout details.
 
-2) Confirm Scope
+2. Confirm Scope
+
 - If any ambiguity exists, request a micro‑clarification.
 - Do not expand scope without explicit approval.
 
-3) Implement Incrementally
+3. Implement Incrementally
+
 - Tackle tasks in plan order; keep diffs small and focused.
 - Follow repository conventions and existing style.
 - Prefer `rg` for search and `fd` for file discovery (gitignore‑aware).
 
-4) Validate
+4. Validate
+
 - Build and run nearest‑scope tests when available. If possible do not mock or stub.
 - Add or update tests only when required by plan.
 - Skip validation if the scope is minimal and low‑risk, but note this in summary.
 
-5) Wrap Up
+5. Wrap Up
+
 - Ensure acceptance criteria are met.
 - Provide a concise summary of changes and verification notes.
 
@@ -96,9 +103,11 @@ Outputs:
 
 ```markdown
 ### Quick Build Summary
+
 - Plan: plans/<feature-slug>.md
 - Changes: [files/components briefly]
 - Notes: [flags, config, migrations if any]
 - Validation: [commands run, outcomes]
 - Follow‑ups: [if any]
 ```
+

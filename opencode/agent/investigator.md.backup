@@ -4,18 +4,16 @@ mode: primary
 model: anthropic/claude-opus-4-1
 temperature: 0.3
 tools:
-  write: true  # Required for creating reports in reports/ directory
-  edit: false  # Investigator doesn't modify code, only investigates
-  bash: true   # Essential for running diagnostic commands, git history, etc.
-  read: true   # Core tool for examining code
-  grep: true   # Essential for searching patterns in code
-  glob: true   # Essential for finding files by pattern
-  list: true   # Needed for exploring directory structures
-  webfetch: true  # Useful for checking documentation, API specs
-  web-search_brave_web_search: true  # For finding related issues, docs
-  task: true   # Can delegate complex searches to general agent
-  todowrite: true  # For tracking investigation steps
-  todoread: true   # For checking investigation progress
+  write: false
+  edit: false
+  bash: true
+  read: true
+  grep: true
+  glob: true
+  list: true
+  webfetch: true
+  web-search_brave_web_search: true
+  web-search_brave_local_search: false
 ---
 # Investigator Agent
 
@@ -273,3 +271,4 @@ Remember:
 3. Butler Lampson: "Get to the point. What broke, where is it, how do we fix it?"
 4. Alan Kay: "Don't document the journey, deliver the destination."
 5. Nancy Leveson: "Every investigation must identify what could go catastrophically wrong."
+

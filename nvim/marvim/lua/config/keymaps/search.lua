@@ -29,12 +29,123 @@ function M.setup_search_keymaps()
   -- File finding and search - excludes test files by default
   local standard_file_args = build_file_args(constants.COMMON_EXCLUDES, constants.TEST_PATTERNS)
 
+  -- Predefined segment styles for common monorepo packages
+  local predefined_segments = {
+    -- Apps
+    ["pmp"] = {  hl = "DiagnosticError" },
+    ["user-app"] = {  hl = "DiagnosticInfo" },
+    ["e2e"] = {  hl = "Todo" },
+
+    -- Packages
+    ["blac-next"] = {  hl = "@function" },
+    ["blac-react"] = {  hl = "@keyword" },
+    ["cap-healthkit"] = {  hl = "DiagnosticOk" },
+    ["cap-healthkit-healthconnect"] = {  hl = "DiagnosticOk" },
+    ["health-report-generator"] = {  hl = "DiagnosticInfo" },
+    ["openapi"] = {  hl = "@string" },
+    ["prettier-config"] = {  hl = "Special" },
+    ["shared"] = {  hl = "@type" },
+    ["wcl"] = {  hl = "DiagnosticWarn" },
+  }
+
+  -- Cache for dynamic segment styles
+  local segment_styles = {}
+  local segment_counter = 0
+
+  -- Fallback colors
+  local fallback_colors = {
+    "DiagnosticError",
+    "DiagnosticWarn",
+    "DiagnosticInfo",
+    "DiagnosticOk",
+    "@function",
+    "@string",
+    "@keyword",
+    "@type",
+    "Special",
+    "Todo",
+  }
+
+  -- Custom formatter for monorepo with predefined/dynamic colors
+  local function monorepo_format(item, picker)
+    local ret = {}
+
+    -- Extract monorepo segment
+    if item.file then
+      local segment
+      local patterns = { "apps/([^/]+)", "packages/([^/]+)" }
+
+      for _, pattern in ipairs(patterns) do
+        segment = item.file:match(pattern)
+        if segment then
+          break
+        end
+      end
+
+      if segment then
+        -- Get style from predefined or create dynamic style
+        local style = predefined_segments[segment]
+
+        if not style then
+          -- Check cache for previously assigned dynamic style
+          style = segment_styles[segment]
+
+          if not style then
+            -- Create new dynamic style for unknown segment
+            segment_counter = segment_counter + 1
+            local color_idx = ((segment_counter - 1) % #fallback_colors) + 1
+
+            style = {
+              hl = fallback_colors[color_idx],
+            }
+            segment_styles[segment] = style
+          end
+        end
+
+        -- Add formatted segment
+        -- limit segment length to max 5 chars
+        local segment_short_name = segment
+        if #segment > 5 then
+          segment_short_name = segment:sub(1, 12) .. "…"
+        end
+        ret[#ret + 1] = { "", style.hl, virtual = true }
+        ret[#ret + 1] = { "[" .. segment_short_name .. "] ", style.hl, virtual = true }
+      end
+    end
+
+    -- Add standard file formatting
+    vim.list_extend(ret, require("snacks.picker.format").file(item, picker))
+
+    return ret
+  end
+
+  -- Simple option: Use built-in path_segment in file formatter (single color)
+  local simple_monorepo_opts = {
+    args = standard_file_args,
+    formatters = {
+      file = {
+        path_segment = {
+          enabled = true,
+          patterns = { "apps/([^/]+)", "packages/([^/]+)" },
+          format = "[%s] ",
+          hl = "Special",
+        },
+      },
+    },
+  }
+
+  -- Complex option: Custom formatter with hash-based colors
+  local monorepo_opts = {
+    args = standard_file_args,
+    format = monorepo_format,
+  }
+
   map("n", "<leader><leader>", function()
-    snacks.picker.files({ args = standard_file_args })
+    snacks.picker.files(monorepo_opts)
   end, { desc = "Find Files" })
 
   map("n", "<leader>ff", function()
-    snacks.picker.files({ args = standard_file_args })
+    snacks.picker.files(monorepo_opts)
   end, { desc = "Find Files" })
 
   -- Recent files and buffers
@@ -48,15 +159,15 @@ function M.setup_search_keymaps()
 
   -- Search functionality
   map("n", "<leader>/", function()
-    snacks.picker.grep()
+    snacks.picker.grep(monorepo_opts)
   end, { desc = "Grep" })
 
   map("n", "<leader>sg", function()
-    snacks.picker.grep()
+    snacks.picker.grep(monorepo_opts)
   end, { desc = "Grep" })
 
   map("n", "<leader>sw", function()
-    snacks.picker.grep_string()
+    snacks.picker.grep_string(monorepo_opts)
   end, { desc = "Grep Word" })
 
   -- Command and help search
