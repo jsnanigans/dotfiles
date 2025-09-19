@@ -1,3 +1,8 @@
+-- Which-key plugin configuration
+-- Migrated to use MARVIM framework for better error handling and consistency
+
+local M = require("marvim.plugin_helper")
+
 return {
   {
     "folke/which-key.nvim",
@@ -35,8 +40,10 @@ return {
       },
     },
     config = function(_, opts)
-      local wk = require("which-key")
-      wk.setup(opts)
+      local wk = M.safe_require("which-key")
+      if wk and wk.setup then
+        wk.setup(opts)
+      end
     end,
   },
 }

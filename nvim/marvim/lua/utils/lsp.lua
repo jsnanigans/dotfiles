@@ -1,3 +1,8 @@
+-- LSP Utility Module
+-- Migrated to use MARVIM framework for better error handling and consistency
+-- This module will be gradually deprecated as functionality moves to the framework
+
+local marvim = require("marvim.plugin_helper")
 local M = {}
 
 -- ============================================================================
@@ -70,8 +75,8 @@ function M.on_attach(callback)
 end
 
 function M.setup()
-  local group = vim.api.nvim_create_augroup("LspAttach", { clear = true })
-  vim.api.nvim_create_autocmd("LspAttach", {
+  local group = marvim.augroup("LspAttach", { clear = true })
+  marvim.autocmd("LspAttach", {
     group = group,
     callback = function(args)
       -- Validate args structure
@@ -87,7 +92,11 @@ function M.setup()
         return
       end
 
+      -- Emit framework event for LSP attachment
+      marvim.emit_event("lsp:attach", client, buffer)
+
       for _, callback in ipairs(on_attach_callbacks) do
+        -- Note: pcall for callback safety, not module loading
         pcall(callback, client, buffer)
       end
     end,
@@ -106,23 +115,23 @@ function M.format(opts)
   local filetype = vim.bo[buf].filetype
   if filetype == "python" then
     -- Use the safer format workaround for Python files
-    local ok, workaround = pcall(require, "utils.format_workaround")
-    if ok then
+    local workaround = marvim.safe_require("utils.format_workaround")
+    if workaround and workaround.safe_format then
       workaround.safe_format(buf)
       return
     end
   end
 
   if opts.force_conform then
-    local ok, conform = pcall(require, "conform")
-    if ok then
+    local conform = marvim.safe_require("conform")
+    if conform and conform.format then
       conform.format(opts)
     end
     return
   end
 
-  local have_conform, conform = pcall(require, "conform")
-  if have_conform then
+  local conform = marvim.safe_require("conform")
+  if conform and conform.format then
     -- Add quiet flag to suppress LSP sync errors
     conform.format(vim.tbl_extend("force", {
       bufnr = buf,
@@ -167,6 +176,7 @@ function M.rename_file()
     if client.name == "vtsls" then
       -- Check if client supports exec_cmd method
       if client.exec_cmd then
+        -- Note: pcall for method safety, not module loading
         pcall(client.exec_cmd, client, params)
       end
       break

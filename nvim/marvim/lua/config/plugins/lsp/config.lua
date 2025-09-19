@@ -1,3 +1,10 @@
+-- LSP configuration using MARVIM framework
+local marvim = require("marvim")
+local module = marvim.module()
+local autocmd = marvim.autocmd()
+local event = marvim.event()
+local plugin = marvim.plugin()
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -66,6 +73,9 @@ return {
       },
     },
     config = function(_, opts)
+      -- Emit pre-setup event
+      event.emit("LspPreSetup")
+
       -- Configure LSP handlers with borders
       vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
         config = config or {}
@@ -94,16 +104,33 @@ return {
         },
       })
 
-      local Util = require("utils.lsp")
+      -- Use framework's safe_require for utilities
+      local Util = module.safe_require("utils.lsp")
+      if not Util then
+        vim.notify("Failed to load LSP utilities", vim.log.levels.ERROR)
+        return
+      end
+
       Util.setup()
       Util.on_attach(function(client, buffer)
-        local ok, keymaps = pcall(require, "config.keymaps")
-        if ok and keymaps.setup_lsp_keybindings then
+        -- Emit LspAttach event via framework
+        event.emit("LspAttach", { client = client, buffer = buffer })
+
+        -- Setup keybindings using framework's safe_require
+        local keymaps = module.safe_require("config.keymaps")
+        if keymaps and keymaps.setup_lsp_keybindings then
           keymaps.setup_lsp_keybindings(client, buffer)
         end
       end)
-      local lsp_cache = require("utils.lsp_cache")
-      local server_configs = require("utils.lsp_servers")
+
+      -- Use framework's safe_require for LSP modules
+      local lsp_cache = module.safe_require("utils.lsp_cache")
+      local server_configs = module.safe_require("utils.lsp_servers")
+
+      if not lsp_cache or not server_configs then
+        vim.notify("Failed to load LSP modules", vim.log.levels.ERROR)
+        return
+      end
 
       -- Use cached capabilities for performance
       local capabilities = vim.tbl_deep_extend("force", lsp_cache.get_capabilities(), opts.capabilities or {})
@@ -119,6 +146,7 @@ return {
         ruff = server_configs.get_server_config("ruff"),
         dartls = server_configs.get_server_config("dartls"),
       }, opts.servers)
+
       local function setup(server)
         if server == "ts_ls" then
           return
@@ -135,13 +163,21 @@ return {
             return
           end
         end
-        require("lspconfig")[server].setup(server_opts)
+
+        -- Use framework's safe_require for lspconfig
+        local lspconfig = module.safe_require("lspconfig")
+        if lspconfig then
+          lspconfig[server].setup(server_opts)
+        end
       end
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+
+      -- Use framework's safe_require for mason
+      local mlsp = module.safe_require("mason-lspconfig")
       local all_mslp_servers = {}
-      if have_mason then
+      if mlsp then
         all_mslp_servers = mlsp.get_available_servers()
       end
+
       local ensure_installed = {}
       for server, server_opts in pairs(servers) do
         if server_opts then
@@ -157,13 +193,16 @@ return {
         end
         ::continue::
       end
-      if have_mason then
+
+      if mlsp then
         mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
       end
+
       vim.diagnostic.config(vim.deepcopy(Util.get_config("diagnostics")))
-      -- Defer heavy features until buffer is actually used
-      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-        group = vim.api.nvim_create_augroup("lsp_deferred_features", { clear = true }),
+
+      -- Defer heavy features until buffer is actually used (using framework's autocmd)
+      autocmd.create({ "CursorHold", "CursorHoldI" }, {
+        group = autocmd.group("lsp_deferred_features", { clear = true }),
         once = true,
         callback = function()
           local inlay_hint = Util.get_config("inlay_hints")
@@ -181,8 +220,13 @@ return {
               if client:supports_method("textDocument/codeLens") then
                 vim.defer_fn(function()
                   if vim.api.nvim_buf_is_valid(buffer) then
-                    local codelens_augroup = vim.api.nvim_create_augroup("lsp_codelens_" .. buffer, { clear = true })
-                    pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
+                    local codelens_augroup = autocmd.group("lsp_codelens_" .. buffer, { clear = true })
+
+                    -- Safe call to refresh codelens
+                    local ok, err = pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
+                    if not ok then
+                      vim.notify("Failed to refresh codelens: " .. tostring(err), vim.log.levels.WARN)
+                    end
 
                     -- Debounced codelens refresh
                     local refresh_timer = nil
@@ -192,37 +236,31 @@ return {
                       end
                       refresh_timer = vim.fn.timer_start(500, function()
                         if vim.g.codelens_enabled ~= false and vim.api.nvim_buf_is_valid(buffer) then
-                          pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
+                          local ok2, err2 = pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
+                          if not ok2 then
+                            vim.notify("Failed to refresh codelens: " .. tostring(err2), vim.log.levels.WARN)
+                          end
                         end
                       end)
                     end
 
-                    vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
-                      buffer = buffer,
+                    -- Use framework's autocmd for codelens refresh
+                    autocmd.create({ "TextChanged", "InsertLeave" }, {
                       group = codelens_augroup,
+                      buffer = buffer,
                       callback = debounced_refresh,
                     })
 
-                    -- Less frequent refresh for text changes
-                    vim.api.nvim_create_autocmd({ "TextChanged" }, {
-                      buffer = buffer,
+                    autocmd.create({ "CursorHold", "CursorHoldI" }, {
                       group = codelens_augroup,
-                      callback = function()
-                        if refresh_timer then
-                          vim.fn.timer_stop(refresh_timer)
-                        end
-                        refresh_timer = vim.fn.timer_start(2000, function() -- 2 second delay for text changes
-                          if vim.g.codelens_enabled ~= false and vim.api.nvim_buf_is_valid(buffer) then
-                            pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
-                          end
-                        end)
-                      end,
-                    })
-
-                    vim.api.nvim_create_autocmd("BufDelete", {
                       buffer = buffer,
                       callback = function()
-                        pcall(vim.api.nvim_del_augroup_by_name, "lsp_codelens_" .. buffer)
+                        if vim.g.codelens_enabled ~= false and vim.api.nvim_buf_is_valid(buffer) then
+                          local ok3, err3 = pcall(vim.lsp.codelens.refresh, { bufnr = buffer })
+                          if not ok3 then
+                            vim.notify("Failed to refresh codelens: " .. tostring(err3), vim.log.levels.WARN)
+                          end
+                        end
                       end,
                     })
                   end
@@ -230,7 +268,38 @@ return {
               end
             end)
           end
+
+          local document_highlight = Util.get_config("document_highlight")
+          if document_highlight.enabled then
+            Util.on_attach(function(client, buffer)
+              if client:supports_method("textDocument/documentHighlight") then
+                local highlight_augroup = autocmd.group("lsp_document_highlight_" .. buffer, { clear = true })
+
+                autocmd.create({ "CursorHold", "CursorHoldI" }, {
+                  group = highlight_augroup,
+                  buffer = buffer,
+                  callback = vim.lsp.buf.document_highlight,
+                })
+
+                autocmd.create({ "CursorMoved", "CursorMovedI" }, {
+                  group = highlight_augroup,
+                  buffer = buffer,
+                  callback = vim.lsp.buf.clear_references,
+                })
+              end
+            end)
+          end
         end,
+      })
+
+      -- Emit post-setup event
+      event.emit("LspPostSetup")
+
+      -- Register with plugin manager
+      plugin.register({
+        name = "nvim-lspconfig",
+        type = "lsp",
+        config = opts,
       })
     end,
   },

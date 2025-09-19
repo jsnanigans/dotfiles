@@ -1,5 +1,8 @@
 -- UI enhancement plugins
 -- Plugins with low cognitive complexity are consolidated here, complex ones get separate files
+-- Migrated to use MARVIM framework for better error handling and consistency
+
+local M = require("marvim.plugin_helper")
 
 return {
   -- Flexoki theme
@@ -14,8 +17,8 @@ return {
 
       -- Apply custom theme utilities
       vim.schedule(function()
-        local ok, theme = pcall(require, "utils.theme")
-        if ok then
+        local theme = M.safe_require("utils.theme")
+        if theme and theme.setup then
           theme.setup()
         end
       end)

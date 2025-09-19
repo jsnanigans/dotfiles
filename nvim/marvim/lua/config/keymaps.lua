@@ -1,17 +1,24 @@
-local M = {}
+-- Keymap configuration using MARVIM framework
+local marvim = require("marvim")
+local module = marvim.module()
+local utils = marvim.utils()
+local event = marvim.event()
+local toggle = marvim.toggle()
 
--- Import modular keymap modules
-local keymap_utils = require("utils.keymaps")
-local core = require("config.keymaps.core")
-local lsp = require("config.keymaps.lsp")
-local plugins = require("config.keymaps.plugins")
-local search = require("config.keymaps.search")
-local root = require("config.keymaps.root")
+-- Create keymaps module
+local M = module.create("config.keymaps")
 
--- Utility functions
-local function is_available(module)
-  local ok, mod = pcall(require, module)
-  return ok and mod ~= nil
+-- Import modular keymap modules using safe_require
+local keymap_utils = module.safe_require("utils.keymaps")
+local core = module.safe_require("config.keymaps.core")
+local lsp = module.safe_require("config.keymaps.lsp")
+local plugins = module.safe_require("config.keymaps.plugins")
+local search = module.safe_require("config.keymaps.search")
+local root = module.safe_require("config.keymaps.root")
+
+-- Utility functions using framework
+local function is_available(mod_name)
+  return module.safe_require(mod_name) ~= nil
 end
 
 local function plugin_loaded(plugin_name)
@@ -22,42 +29,45 @@ end
 -- PLUGIN KEY TABLES - Re-export from plugins module
 -- ============================================================================
 
--- Re-export all plugin key tables
-M.persistence_keys = plugins.persistence_keys
-M.dadbod_keys = plugins.dadbod_keys
-M.copilot_keys = plugins.copilot_keys
-M.opencode_keys = plugins.opencode_keys
-M.undotree_keys = plugins.undotree_keys
-M.dap_keys = plugins.dap_keys
-M.overseer_keys = plugins.overseer_keys
-M.ultest_keys = plugins.ultest_keys
-M.coverage_keys = plugins.coverage_keys
-M.neotest_keys = plugins.neotest_keys
-M.todo_comments_keys = plugins.todo_comments_keys
-M.trouble_keys = plugins.trouble_keys
-M.conform_keys = plugins.conform_keys
-M.luasnip_keys = plugins.luasnip_keys
-M.treesitter_keys = plugins.treesitter_keys
-
-M.oil_keys = plugins.oil_keys
-M.dropbar_keys = plugins.dropbar_keys
-M.notify_keys = plugins.notify_keys
-M.noice_keys = plugins.noice_keys
-M.smart_splits_keys = plugins.smart_splits_keys
+-- Re-export all plugin key tables (only if plugins module loaded)
+if plugins then
+  M.persistence_keys = plugins.persistence_keys
+  M.dadbod_keys = plugins.dadbod_keys
+  M.copilot_keys = plugins.copilot_keys
+  M.opencode_keys = plugins.opencode_keys
+  M.undotree_keys = plugins.undotree_keys
+  M.dap_keys = plugins.dap_keys
+  M.overseer_keys = plugins.overseer_keys
+  M.ultest_keys = plugins.ultest_keys
+  M.coverage_keys = plugins.coverage_keys
+  M.neotest_keys = plugins.neotest_keys
+  M.todo_comments_keys = plugins.todo_comments_keys
+  M.trouble_keys = plugins.trouble_keys
+  M.conform_keys = plugins.conform_keys
+  M.luasnip_keys = plugins.luasnip_keys
+  M.treesitter_keys = plugins.treesitter_keys
+  M.oil_keys = plugins.oil_keys
+  M.dropbar_keys = plugins.dropbar_keys
+  M.notify_keys = plugins.notify_keys
+  M.noice_keys = plugins.noice_keys
+  M.smart_splits_keys = plugins.smart_splits_keys
+end
 
 -- ============================================================================
 -- LSP AND GITSIGNS SETUP FUNCTIONS - Re-export from lsp module
 -- ============================================================================
 
-M.setup_lsp_keybindings = lsp.setup_lsp_keybindings
-M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings -- Kept for compatibility, now uses mini.diff
+if lsp then
+  M.setup_lsp_keybindings = lsp.setup_lsp_keybindings
+  M.setup_gitsigns_keybindings = lsp.setup_gitsigns_keybindings -- Kept for compatibility, now uses mini.diff
+end
 
 -- ============================================================================
 -- PLUGIN KEYMAPS (Non-lazy plugins only)
 -- ============================================================================
 
 function M.setup_plugin_keymaps()
-  local map = vim.keymap.set
+  local map = utils.keymap
 
   -- Plugin keymaps are now handled via key tables in plugin configs
   -- Only non-lazy keymaps are set up here
@@ -69,9 +79,6 @@ function M.setup_plugin_keymaps()
 
   -- LazyGit - MIGRATED TO SNACKS.LAZYGIT
   -- Keymaps now handled in snacks-full.lua config
-  -- if vim.fn.exists(":LazyGit") == 2 then
-  --   map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
-  -- end
 
   -- Git Blame
   if vim.fn.exists(":GitBlameToggle") == 2 then
@@ -95,9 +102,8 @@ function M.setup_plugin_keymaps()
   end
 
   -- Mini.visits for file navigation (replacing Harpoon)
-  if is_available("mini.visits") then
-    local MiniVisits = require("mini.visits")
-
+  local MiniVisits = module.safe_require("mini.visits")
+  if MiniVisits then
     -- Add current file to pinned list (like harpoon add)
     map("n", "<leader>H", function()
       MiniVisits.add_label("pinned", vim.fn.expand("%:p"))
@@ -128,46 +134,48 @@ function M.setup_plugin_keymaps()
   end
 
   -- Flash
-  if is_available("flash") then
+  local flash = module.safe_require("flash")
+  if flash then
     map({ "n", "x", "o" }, "s", function()
-      require("flash").jump()
+      flash.jump()
     end, { desc = "Flash" })
     map({ "n", "x", "o" }, "S", function()
-      require("flash").treesitter()
+      flash.treesitter()
     end, { desc = "Flash Treesitter" })
     map("o", "r", function()
-      require("flash").remote()
+      flash.remote()
     end, { desc = "Remote Flash" })
     map({ "o", "x" }, "R", function()
-      require("flash").treesitter_search()
+      flash.treesitter_search()
     end, { desc = "Treesitter Search" })
     map("c", "<c-s>", function()
-      require("flash").toggle()
+      flash.toggle()
     end, { desc = "Toggle Flash Search" })
   end
 
   -- Mini.surround
-  if is_available("mini.surround") then
+  local surround = module.safe_require("mini.surround")
+  if surround then
     map({ "n", "v" }, "gsa", function()
-      require("mini.surround").add()
+      surround.add()
     end, { desc = "Add Surrounding" })
     map("n", "gsd", function()
-      require("mini.surround").delete()
+      surround.delete()
     end, { desc = "Delete Surrounding" })
     map("n", "gsf", function()
-      require("mini.surround").find()
+      surround.find()
     end, { desc = "Find Right Surrounding" })
     map("n", "gsF", function()
-      require("mini.surround").find_left()
+      surround.find_left()
     end, { desc = "Find Left Surrounding" })
     map("n", "gsh", function()
-      require("mini.surround").highlight()
+      surround.highlight()
     end, { desc = "Highlight Surrounding" })
     map("n", "gsr", function()
-      require("mini.surround").replace()
+      surround.replace()
     end, { desc = "Replace Surrounding" })
     map("n", "gsn", function()
-      require("mini.surround").update_n_lines()
+      surround.update_n_lines()
     end, { desc = "Update `MiniSurround.config.n_lines`" })
   end
 end
@@ -176,32 +184,73 @@ end
 -- SETUP FUNCTION
 -- ============================================================================
 
--- Add diagnostic command
+-- Add diagnostic command using framework's autocmd
 vim.api.nvim_create_user_command("KeymapDiagnostics", function()
-  keymap_utils.print_diagnostics()
+  if keymap_utils then
+    keymap_utils.print_diagnostics()
+  else
+    vim.notify("Keymap utils not available", vim.log.levels.ERROR)
+  end
 end, { desc = "Show keymap diagnostics and conflicts" })
 
 function M.setup()
+  -- Emit pre-setup event
+  event.emit("KeymapsPreSetup")
+
   -- Setup core keymaps
-  core.setup_editor()
-  core.setup_windows()
-  core.setup_buffers()
-  core.setup_tabs()
-  core.setup_terminal()
-  core.setup_files()
-  core.setup_diagnostics()
-  core.setup_dev()
+  if core then
+    core.setup_editor()
+    core.setup_windows()
+    core.setup_buffers()
+    core.setup_tabs()
+    core.setup_terminal()
+    core.setup_files()
+    core.setup_diagnostics()
+    core.setup_dev()
+  end
 
   -- Setup root operations
-  root.setup_root_operations()
+  if root then
+    root.setup_root_operations()
+  end
 
   -- Setup plugin keymaps (deferred to avoid conflicts)
-  keymap_utils.setup_deferred(function()
+  if keymap_utils then
+    keymap_utils.setup_deferred(function()
+      M.setup_plugin_keymaps()
+      -- Setup search keymaps after plugins load
+      if search then
+        search.setup_search_keymaps()
+      end
+    end, 100, "plugin_and_search_keymaps")
+  else
+    -- Fallback: setup immediately if utils not available
     M.setup_plugin_keymaps()
-    -- Setup search keymaps after plugins load
-    search.setup_search_keymaps()
-  end, 100, "plugin_and_search_keymaps")
+    if search then
+      search.setup_search_keymaps()
+    end
+  end
+
+  -- Emit post-setup event
+  event.emit("KeymapsPostSetup")
+
+  -- Listen for toggle events to update feature-dependent keymaps
+  event.on("ToggleChanged", function(data)
+    local feature = data.feature
+    local enabled = data.enabled
+
+    -- Example: Update keymap descriptions based on toggle state
+    if feature == "diagnostics" then
+      local desc_suffix = enabled and "" or " (disabled)"
+      utils.keymap("n", "<leader>cd", function()
+        toggle.toggle("diagnostics")
+      end, { desc = "Toggle Diagnostics" .. desc_suffix })
+    end
+  end)
 end
 
+-- Initialize
 M.setup()
+
+-- Export module
 return M

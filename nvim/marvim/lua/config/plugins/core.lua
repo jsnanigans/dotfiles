@@ -1,4 +1,7 @@
 -- Core plugins that are essential for the configuration
+-- Migrated to use MARVIM framework for better error handling and consistency
+
+local M = require("marvim.plugin_helper")
 
 return {
   -- Essential dependencies
@@ -11,7 +14,8 @@ return {
     "folke/persistence.nvim",
     event = "BufReadPre",
     keys = function()
-      return require("config.keymaps").persistence_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.persistence_keys or {}
     end,
     opts = {},
   },
@@ -22,11 +26,17 @@ return {
     lazy = true,
     init = function()
       vim.ui.select = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
+        local lazy = M.safe_require("lazy")
+        if lazy then
+          lazy.load({ plugins = { "dressing.nvim" } })
+        end
         return vim.ui.select(...)
       end
       vim.ui.input = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
+        local lazy = M.safe_require("lazy")
+        if lazy then
+          lazy.load({ plugins = { "dressing.nvim" } })
+        end
         return vim.ui.input(...)
       end
     end,

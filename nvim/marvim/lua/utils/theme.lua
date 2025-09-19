@@ -1,3 +1,8 @@
+-- Theme Utility Module
+-- Migrated to use MARVIM framework for better error handling and consistency
+-- This module will be gradually moved to the framework's theming system
+
+local marvim = require("marvim.plugin_helper")
 local M = {}
 
 -- ============================================================================
@@ -328,7 +333,7 @@ function M.setup()
     M.set_highlights(M.ui_highlights)
   end)
 
-  vim.api.nvim_create_autocmd("ColorScheme", {
+  marvim.autocmd("ColorScheme", {
     callback = function()
       if
         vim.g.colors_name == "github-dark-colorblind"

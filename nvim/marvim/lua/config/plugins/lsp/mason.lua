@@ -1,3 +1,9 @@
+-- Mason LSP installer configuration using MARVIM framework
+local marvim = require("marvim")
+local module = marvim.module()
+local event = marvim.event()
+local plugin = marvim.plugin()
+
 return {
   {
     "mason-org/mason.nvim",
@@ -20,31 +26,66 @@ return {
       },
     },
     config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      mr:on("package:install:success", function()
-        require("lazy.core.handler.event").trigger({
-          event = "FileType",
-          buf = vim.api.nvim_get_current_buf(),
-        })
+      -- Use framework's safe_require for mason
+      local mason = module.safe_require("mason")
+      if not mason then
+        vim.notify("Failed to load mason.nvim", vim.log.levels.ERROR)
+        return
+      end
+
+      mason.setup(opts)
+
+      -- Use framework's safe_require for mason-registry
+      local mr = module.safe_require("mason-registry")
+      if not mr then
+        vim.notify("Failed to load mason-registry", vim.log.levels.ERROR)
+        return
+      end
+
+      -- Hook into package installation success
+      mr:on("package:install:success", function(pkg)
+        -- Emit framework event for package installation
+        event.emit("MasonPackageInstalled", { package = pkg })
+
+        -- Trigger FileType event to reload LSP for current buffer
+        local lazy_event = module.safe_require("lazy.core.handler.event")
+        if lazy_event then
+          lazy_event.trigger({
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          })
+        end
       end)
 
       -- Defer package installation to avoid blocking startup
       vim.defer_fn(function()
         local function ensure_installed()
           for _, tool in ipairs(opts.ensure_installed) do
-            local p = mr.get_package(tool)
-            if not p:is_installed() then
+            local ok, p = pcall(mr.get_package, mr, tool)
+            if ok and p and not p:is_installed() then
+              -- Emit event before installation
+              event.emit("MasonPackageInstalling", { tool = tool })
               p:install()
             end
           end
         end
+
         if mr.refresh then
           mr.refresh(ensure_installed)
         else
           ensure_installed()
         end
       end, 100)
+
+      -- Register with plugin manager
+      plugin.register({
+        name = "mason.nvim",
+        type = "lsp-installer",
+        config = opts,
+      })
+
+      -- Emit setup complete event
+      event.emit("MasonSetupComplete")
     end,
   },
 }

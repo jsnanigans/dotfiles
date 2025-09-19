@@ -28,6 +28,15 @@ require("marvim").setup({
   },
 })
 
+-- Setup migration warnings (Phase 4 - can be disabled after full migration)
+-- Set vim.g.marvim_no_migration_warnings = true to disable
+vim.defer_fn(function()
+  local ok, warnings = pcall(require, "marvim.migration_warnings")
+  if ok and warnings.setup then
+    warnings.setup()
+  end
+end, 500)
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then

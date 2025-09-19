@@ -1,5 +1,8 @@
 -- Coding enhancement plugins
 -- Plugins with low cognitive complexity are consolidated here, complex ones get separate files
+-- Migrated to use MARVIM framework for better error handling and consistency
+
+local M = require("marvim.plugin_helper")
 
 return {
   -- Diagnostics with Trouble v3 configuration
@@ -9,8 +12,10 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     init = function()
       -- Ensure diagnostic signs are set up before Trouble loads
-      local icons = require("config.icons")
-      icons.setup_diagnostic_signs()
+      local icons = M.safe_require("config.icons")
+      if icons and icons.setup_diagnostic_signs then
+        icons.setup_diagnostic_signs()
+      end
     end,
     opts = {
       auto_close = false,
@@ -104,11 +109,15 @@ return {
         },
         folder_closed = " ",
         folder_open = " ",
-        kinds = require("config.icons").kinds,
+        kinds = (function()
+          local icons = M.safe_require("config.icons")
+          return icons and icons.kinds or {}
+        end)(),
       },
     },
     keys = function()
-      return require("config.keymaps").trouble_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.trouble_keys or {}
     end,
   },
 
@@ -119,7 +128,8 @@ return {
     event = { "BufReadPost", "BufNewFile", "BufWritePre" },
     config = true,
     keys = function()
-      return require("config.keymaps").todo_comments_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.todo_comments_keys or {}
     end,
   },
 
@@ -136,7 +146,10 @@ return {
       {
         "rafamadriz/friendly-snippets",
         config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
+          local loader = M.safe_require("luasnip.loaders.from_vscode")
+          if loader and loader.lazy_load then
+            loader.lazy_load()
+          end
         end,
       },
     },
@@ -145,7 +158,8 @@ return {
       delete_check_events = "TextChanged",
     },
     keys = function()
-      return require("config.keymaps").luasnip_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.luasnip_keys or {}
     end,
   },
 

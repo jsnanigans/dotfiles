@@ -17,6 +17,8 @@ local modules = {
   event = nil,
   plugin = nil,
   cache = nil,
+  -- Phase 3 migration layer
+  migrate = nil,
 }
 
 -- Module loader with caching
@@ -43,6 +45,8 @@ M.toggle = function() return load_module("toggle") end
 M.event = function() return load_module("event") end
 M.plugin = function() return load_module("plugin") end
 M.cache = function() return load_module("cache") end
+-- Phase 3 migration layer
+M.migrate = function() return load_module("migrate") end
 
 -- Framework initialization
 function M.setup(opts)
@@ -88,6 +92,16 @@ function M.setup(opts)
   local plugin = M.plugin()
   if plugin and opts.commands ~= false then
     plugin.setup_commands()
+  end
+
+  -- Initialize migration layer
+  local migrate = M.migrate()
+  if migrate then
+    migrate.setup()
+    -- Install shims if requested
+    if opts.migration and opts.migration.shims then
+      migrate.install_shims()
+    end
   end
 
   -- Set up performance optimizations

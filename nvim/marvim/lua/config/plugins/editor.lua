@@ -1,5 +1,8 @@
 -- Editor enhancement plugins
 -- Plugins with low cognitive complexity are consolidated here, complex ones get separate files
+-- Migrated to use MARVIM framework for better error handling and consistency
+
+local M = require("marvim.plugin_helper")
 
 return {
   -- Fast navigation with flash
@@ -51,9 +54,15 @@ return {
       },
     },
     config = function(_, opts)
-      require("flash").setup(opts)
-      
-      require("config.plugins.flash-highlights").setup()
+      local flash = M.safe_require("flash")
+      if flash then
+        flash.setup(opts)
+      end
+
+      local highlights = M.safe_require("config.plugins.flash-highlights")
+      if highlights and highlights.setup then
+        highlights.setup()
+      end
     end,
   },
 
@@ -65,7 +74,11 @@ return {
     opts = {
       options = {
         custom_commentstring = function()
-          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+          local ts_context = M.safe_require("ts_context_commentstring.internal")
+          if ts_context and ts_context.calculate_commentstring then
+            return ts_context.calculate_commentstring() or vim.bo.commentstring
+          end
+          return vim.bo.commentstring
         end,
       },
     },
@@ -89,14 +102,19 @@ return {
       },
     },
     config = function(_, opts)
-      require("mini.visits").setup(opts)
+      local MiniVisits = M.safe_require("mini.visits")
+      if not MiniVisits then return end
+
+      MiniVisits.setup(opts)
+
       -- Create labels for quick access (similar to harpoon)
-      local MiniVisits = require("mini.visits")
-      vim.api.nvim_create_autocmd("User", {
+      M.autocmd("User", {
         pattern = "MiniVisitsModule",
         callback = function()
           -- Create a label for pinned files (like harpoon)
-          MiniVisits.add_label("pinned", { sort = MiniVisits.gen_sort.default() })
+          if MiniVisits.add_label then
+            MiniVisits.add_label("pinned", { sort = MiniVisits.gen_sort.default() })
+          end
         end,
       })
     end,
@@ -132,16 +150,20 @@ return {
       },
     },
     config = function(_, opts)
-      require("mini.pairs").setup(opts)
+      local pairs = M.safe_require("mini.pairs")
+      if not pairs then return end
+
+      pairs.setup(opts)
+
       -- Integration with completion (if using blink.cmp or nvim-cmp)
-      local ok_cmp, cmp = pcall(require, "blink.cmp")
-      if ok_cmp then
+      local ok_cmp, cmp = M.try_require("blink.cmp")
+      if ok_cmp and cmp then
         -- For blink.cmp
         vim.keymap.set("i", "<CR>", function()
-          if cmp.is_visible() then
+          if cmp.is_visible and cmp.is_visible() then
             return cmp.accept()
           else
-            return require("mini.pairs").cr()
+            return pairs.cr()
           end
         end, { expr = true })
       end
@@ -174,7 +196,8 @@ return {
       disable_multiplexer_nav_when_zoomed = true,
     },
     keys = function()
-      return require("config.keymaps").smart_splits_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.smart_splits_keys or {}
     end,
   },
 
@@ -194,7 +217,8 @@ return {
       default_file_explorer = true,
     },
     keys = function()
-      return require("config.keymaps").oil_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.oil_keys or {}
     end,
   },
 
@@ -203,7 +227,8 @@ return {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
     keys = function()
-      return require("config.keymaps").undotree_keys
+      local keymaps = M.safe_require("config.keymaps")
+      return keymaps and keymaps.undotree_keys or {}
     end,
     opts = {
       WindowLayout = 2,

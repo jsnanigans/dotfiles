@@ -69,6 +69,7 @@ return {
                   if not vim.api.nvim_buf_is_valid(buf) then
                     return false
                   end
+                  -- Note: This pcall is for API safety, not module loading - keeping as is
                   local ok, byte_size = pcall(vim.api.nvim_buf_get_offset, buf, vim.api.nvim_buf_line_count(buf))
                   if not ok then
                     return false
