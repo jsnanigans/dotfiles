@@ -26,8 +26,26 @@ function M.setup_search_keymaps()
 
   local map = keymap_utils.create_safe_mapper("search")
 
-  -- File finding and search - excludes test files by default
+  -- File finding - excludes test files by default
   local standard_file_args = build_file_args(constants.COMMON_EXCLUDES, constants.TEST_PATTERNS)
+
+  -- Grep searching - standard grep arguments
+  local standard_grep_args = {
+    "--column",
+    "--line-number",
+    "--no-heading",
+    "--color=never",
+    "--smart-case",
+    "--hidden",
+    "--glob=!.git",
+    "--glob=!node_modules",
+    "--glob=!dist",
+    "--glob=!build",
+    "--glob=!.next",
+    "--glob=!coverage",
+    "--glob=!__pycache__",
+    "--glob=!.pytest_cache",
+  }
 
   -- Predefined segment styles for common monorepo packages
   local predefined_segments = {
@@ -134,18 +152,24 @@ function M.setup_search_keymaps()
     },
   }
 
-  -- Complex option: Custom formatter with hash-based colors
-  local monorepo_opts = {
+  -- File finding options with custom formatter
+  local monorepo_file_opts = {
     args = standard_file_args,
     format = monorepo_format,
   }
 
+  -- Grep search options with custom formatter
+  local monorepo_grep_opts = {
+    args = standard_grep_args,
+    format = monorepo_format,
+  }
+
   map("n", "<leader><leader>", function()
-    snacks.picker.files(monorepo_opts)
+    snacks.picker.files(monorepo_file_opts)
   end, { desc = "Find Files" })
 
   map("n", "<leader>ff", function()
-    snacks.picker.files(monorepo_opts)
+    snacks.picker.files(monorepo_file_opts)
   end, { desc = "Find Files" })
 
   -- Recent files and buffers
@@ -159,15 +183,15 @@ function M.setup_search_keymaps()
 
   -- Search functionality
   map("n", "<leader>/", function()
-    snacks.picker.grep(monorepo_opts)
+    snacks.picker.grep(monorepo_grep_opts)
   end, { desc = "Grep" })
 
   map("n", "<leader>sg", function()
-    snacks.picker.grep(monorepo_opts)
+    snacks.picker.grep(monorepo_grep_opts)
   end, { desc = "Grep" })
 
   map("n", "<leader>sw", function()
-    snacks.picker.grep_string(monorepo_opts)
+    snacks.picker.grep_string(monorepo_grep_opts)
   end, { desc = "Grep Word" })
 
   -- Command and help search
