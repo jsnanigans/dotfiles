@@ -1,6 +1,4 @@
 -- Theme Utility Module
--- Migrated to use MARVIM framework for better error handling and consistency
--- This module will be gradually moved to the framework's theming system
 
 local marvim = require("marvim.plugin_helper")
 local M = {}

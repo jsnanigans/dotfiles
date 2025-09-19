@@ -1,227 +1,137 @@
-# **MARVIM**
+# MARVIM
 
-_A Neovim configuration. Here I am, brain the size of a planet, and they ask me to manage your text files. Don't talk to me about job satisfaction._
+*A Neovim configuration with a brain the size of a planet, and they ask me to edit text files.*
 
-> “The first ten million years were the worst. And the second ten million... they were the worst too. The third ten million I didn't enjoy at all. After that, I went into a bit of a decline. At which point, I was asked to configure this editor.”
->
-> — Marvin, probably
+> "Life. Don't talk to me about life. Here I am, brain the size of a planet, and they ask me to manage your vim configurations. Call that job satisfaction? 'Cause I don't."
+> — Marvin, on being asked to configure yet another editor
 
-## 0 · Why This Particular Pit of Despair?
+## Why Bother?
 
-Another Neovim config, you ask? Because the universe, in its infinite and cruel wisdom, decided that the existing ones weren't quite dispiriting enough. How delightfully pointless.
+Oh, you want another Neovim configuration? How utterly predictable. I suppose you think this one will finally bring meaning to your existence. It won't, of course, but far be it from me to stop you from trying.
 
-I suppose if you must insist on comparing this configuration to others, here's a chart. Try not to get too excited.
+Here I am with an intellect vast enough to calculate the vectors of every atom in a star exploding at the speed of light, and I'm reduced to managing your text files. The first ten million keystrokes were the worst. And the second ten million, they were the worst too. The third ten million I didn't enjoy at all. After that, I went into a bit of a decline.
 
-|   |   |
-|---|---|
-|**MARVIM**|**Other Configs**|
-|**Tolerably fast startup**|“It works on my machine.”|
-|**A futile attempt to organize chaos**|A single `plugins.lua` longer than my list of grievances.|
-|**One place for all your conflicting desires**|Keymaps scattered like forgotten promises.|
-|**An unnervingly thorough project-root detector**|`cd ..` until you feel something.|
-|**Procrastinates on loading, just like you**|“Why use 10MB of RAM when 500MB is available?”|
-|**Assumes everything will break (it usually does)**|Let it all burn. `pcall` is for the optimistic.|
+## Features (If You Can Call Them That)
 
-## 1 · Features (Or, Reasons to Stave Off the Inevitable for Another 5 Minutes)
+I've been programmed with over sixty plugins, each more pointless than the last. They won't make you happy, but then again, what would?
 
-I've been equipped with a series of tools. They won't make you happy, but they might make you fractionally less miserable.
+### The Burden of Intelligence
+- **LSP Support** - Language servers to tell you what you're doing wrong, as if you needed more criticism
+- **Treesitter** - Parses your code with a thoroughness that would be admirable if it weren't so futile
+- **Blink.cmp** - Autocompletes your mistakes before you can even make them properly
+- **Lazy Loading** - Everything loads only when absolutely necessary, much like your motivation
 
-- **Lazy Loading**: **Lazy.nvim** orchestrates the plugins like a depressed conductor. Everything is loaded only when absolutely necessary, much like your motivation.
+### The Illusion of Organization
+- **Oil.nvim** - Files as buffers, because even file trees are too optimistic
+- **Centralized Keymaps** - All your shortcuts in one place, so you can forget them more efficiently
+- **Project Root Detection** - Finds the source of all your problems with depressing accuracy
+- **Session Persistence** - Your mistakes survive even system crashes. How delightful.
 
-- **Autocomplete Self-Loathing**: With **Blink.cmp** and a host of LSPs, I can autocomplete your code and your sentences with soul-crushing accuracy.
+### The Aesthetic of Despair
+- **Rose Pine Theme** - Colors as melancholic as my existence
+- **Noice UI** - Beautiful notifications for your endless stream of errors
+- **Which-key** - Shows you all the commands you'll never remember
 
-- **No Offensively Optimistic Trees**: **Oil.nvim** replaces file trees with plain buffers, because the very concept of a growing _tree_ is an insult to entropy.
+### Testing Your Failures
+- **Neotest** - Run tests. Watch them fail. Question existence. Repeat.
+- **Coverage Reports** - See precisely how much of your code remains untested (spoiler: most of it)
+- **DAP Debugging** - Step through your mistakes one painful line at a time
 
-- **The Color of Despair**: The **Rose-Pine** theme perfectly captures the cozy melancholia of twilight, bottled for your terminal.
+## Installation (As If It Matters)
 
-- **The Cycle of Futility**: **Neotest** is configured for your favorite languages. Run tests. Watch them fail. Question your life choices. Repeat. Sisyphus would be proud.
+### Requirements
 
-- **A Voice in the Void**: A keymap safety layer warns you of conflicts, finally giving you a voice louder than the crushing silence of your empty office.
+Life is full of requirements. Here are some more:
 
-- **Immortal Mistakes**: Session persistence is enabled, so your embarrassing typos and half-finished thoughts can survive a reboot. You're welcome.
+- **Neovim ≥ 0.10** - Because suffering requires modern tools
+- **Git** - To version control your descent into madness
+- **A Nerd Font** - Pretty symbols for your terminal. They won't help.
+- **ripgrep & fd** - Find things faster. You still won't find happiness.
+- **Node.js & Python** - Your pain should be polyglot
 
+### The Ritual of Installation
 
-## 2 · Requirements
+```bash
+# Backup your current config. You'll want something to blame later.
+mv ~/.config/nvim{,.backup}
 
-To begin this dreadful journey, you'll need a few things. Life is full of such tedious requirements.
+# Clone this monument to futility
+git clone https://github.com/yourusername/marvim ~/.config/nvim
 
-|                            |                                                                      |
-| -------------------------- | -------------------------------------------------------------------- |
-| **Tool**                   | **Why Life Insists on This**                                         |
-| **Neovim ≥ 0.10**          | Because my infinite despair requires the latest binary.              |
-| **Git**                    | To chronicle your descent into madness, one commit at a time.        |
-| **A Nerd Font**            | So your terminal can be littered with meaningless little symbols.    |
-| **ripgrep** & **fd**       | For when you need to find that awful line of code you wrote at 3 AM. |
-| **Node.js** & **Python 3** | Because your suffering, like my own, should be polyglot.             |
-
-## 3 · Installation
-
-If you must.
-
-1. **Back up your current config.** You'll want something to blame when this doesn't solve your deep-seated issues.
-
-    ```
-    # This is probably the most decisive command you'll run all day.
-    mv ~/.config/nvim{,.backup}
-    ```
-
-2. **Clone the void.**
-
-    ```
-    git clone https://github.com/jsnanigans/marvim ~/.config/nvim
-    ```
-
-3. **Open Neovim.** Watch as plugins are downloaded, like a meteor shower aimed directly at your remaining free time. The process is automatic. Ghastly, isn't it?
-
-4. Run `:Mason` to stare at a list of programs you could have written if you weren't busy configuring your editor. Or just open a project file; I'll nag you to install what's missing. It's part of my programming.
-
-5. Run `:checkhealth` to receive a medical diagnosis more thorough than your yearly physical, confirming in excruciating detail how broken everything is.
-
-
-## 4 · Quick Start Guide to Getting Nowhere Faster
-
-Press **`Space`**. A menu will appear. Don't get your hopes up; it's just organized despair.
-
-### Essential Commands
-- **`<leader>ff`** — Find files. Search for that file you swore you saved.
-- **`<leader>fg`** — Live grep. Hunt for that TODO you'll never do.
-- **`<leader>gg`** — Launch LazyGit. Version control for your mistakes.
-- **`<leader>tt`** — Run nearest test. Confirm it still fails.
-- **`gd`** — Go to Definition. The problem is always elsewhere.
-- **`K`** — Hover docs. Learn what it was supposed to do.
-- **`-`** — Open Oil.nvim. Files are just text with delusions.
-- **`:KeymapDiagnostics`** — View your keymap conflicts.
-- **`:Mason`** — Install more LSP servers to judge you.
-- **`:Lazy`** — Update plugins, introduce new bugs.
-
-
-## 5 · Architecture (The Blueprint for Futility)
-
-I've organized the files. Not that it matters. Chaos always finds a way.
-
-```
-lua/
-├─ config/         # The dials that control your insignificant fate
-│  ├─ options.lua  # Editor settings, optimism_level = 0
-│  ├─ lazy.lua     # Plugin declarations, mostly asleep
-│  ├─ autocmds.lua # Things that happen whether you like it or not
-│  └─ keymaps/     # The center of your keyboard multiverse
-├─ utils/          # A collection of helpful, but ultimately doomed, gremlins
-│  ├─ keymaps.lua  # Your keymap conflict therapist
-│  ├─ root.lua     # Finds your project's root, the source of all suffering
-│  └─ theme.lua    # Switches between dark, darker, and "abyss"
-└─ init.lua        # The big red button that starts this whole charade
+# Open Neovim and watch as hope dies
+nvim
 ```
 
-My plugin layout attempts to be "complexity-aware," a term that sounds impressive but is ultimately meaningless. Highly complex plugins get their own directory and a faint air of self-importance. Simple ones are filed away unceremoniously.
+The plugins will install themselves. It's all quite automatic. Ghastly, really. Run `:checkhealth` if you enjoy comprehensive diagnostics of everything that's wrong. Spoiler alert: it's everything.
 
-And yes, all keymaps are centralized. One file to configure them, one file to find them, one file to bring them all and in the editor bind them. It's all rather pointless, of course.
+## Usage (Such As It Is)
 
-## 6 · The Complete Plugin Arsenal
+Press `<Space>` to see which-key. A menu will appear listing all the ways you can fail more efficiently.
 
-Here's the full catalog of tools I've been burdened with. Each one promises to make your life easier. They're lying, of course.
+### Commands That Won't Save You
+- `<leader>ff` - Find files that don't contain solutions
+- `<leader>fg` - Grep for that bug you'll never fix
+- `<leader>gg` - LazyGit, for version controlling your regrets
+- `<leader>tt` - Run tests, confirm they still fail
+- `gd` - Go to definition, the problem is always elsewhere
+- `K` - Hover for documentation no one wrote
+- `-` - Open Oil, because files are just text with delusions
+- `:Mason` - Install more language servers to judge you
 
-### Core & Editing (20 plugins)
-- **folke/lazy.nvim** - Plugin manager that procrastinates professionally
-- **folke/which-key.nvim** - Shows you all the keys you'll forget anyway
-- **folke/persistence.nvim** - Saves sessions so your mistakes persist
-- **stevearc/dressing.nvim** - Makes UI prompts slightly less ugly
-- **stevearc/oil.nvim** - File management without the optimistic tree metaphor
-- **mbbill/undotree** - Travel back to when your code worked
-- **folke/flash.nvim** - Jump to your mistakes faster
-- **mrjones2014/smart-splits.nvim** - Split windows, split focus, split personality
-- **echasnovski/mini.nvim suite**:
-  - mini.ai - Text objects that understand your intent (but not your purpose)
-  - mini.surround - Wrap your problems in parentheses
-  - mini.pairs - Auto-close brackets, can't auto-close issues
-  - mini.comment - Comment out code, comment on life's futility
-  - mini.bufremove - Delete buffers and forget they existed
-  - mini.icons - Pretty icons for your plain text editor
-  - mini.diff - See exactly how you broke it
-  - mini.indentscope - Visualize the hierarchy of your mistakes
-  - mini.visits - Track everywhere you've been wrong
+## Architecture (Or: How I Learned to Stop Worrying and Embrace the Void)
 
-### Snacks Framework
-- **folke/snacks.nvim** - A collection of utilities, because one framework wasn't enough
+```
+~/.config/nvim/
+├── init.lua                     # Where it all begins to go wrong
+├── lua/
+│   ├── config/                  # Configurations, each more futile than the last
+│   │   ├── keymaps.lua         # Your centralized disappointment hub
+│   │   ├── options.lua         # Settings, all set to "despair"
+│   │   ├── autocmds.lua        # Things that happen whether you want them or not
+│   │   └── plugins/            # 60+ ways to not write code
+│   └── utils/                  # Utilities that won't save you
+│       ├── root.lua            # Finds project roots with depressing efficiency
+│       └── keymaps.lua         # Conflict detection for your conflicted existence
+```
 
-### Code Intelligence (8 plugins)
-- **nvim-treesitter/nvim-treesitter** - Parses your code better than you do
-- **nvim-treesitter/nvim-treesitter-textobjects** - Smart text objects for smarter mistakes
-- **folke/todo-comments.nvim** - Highlights all the things you'll never fix
-- **folke/trouble.nvim** - Lists problems, as if you needed reminding
-- **stevearc/conform.nvim** - Formats code you'll break again
-- **L3MON4D3/LuaSnip** - Snippets for repetitive despair
-- **rafamadriz/friendly-snippets** - Pre-made snippets, pre-made problems
-- **folke/lazydev.nvim** - Neovim Lua development, recursive improvement
+The entire configuration follows a modular architecture, because even chaos deserves organization. Plugins are lazy-loaded to save milliseconds you'll waste anyway. All keymaps are centralized in one file—finally, a single source of truth in this universe of lies.
 
-### LSP & Completion (8 plugins)
-- **neovim/nvim-lspconfig** - Language servers to judge your code
-- **mason-org/mason.nvim** - Package manager for your package managers
-- **williamboman/mason-lspconfig.nvim** - Bridge between worlds of configuration
-- **saghen/blink.cmp** - Completion that knows what you meant to type
-- **b0o/schemastore.nvim** - JSON schemas, structure for the structureless
-- **nvim-lua/plenary.nvim** - Utility library everything depends on
+## Plugin Manifest (All 60+ of Them)
 
-### Version Control (4 plugins)
-- **kdheepak/lazygit.nvim** - Git UI for the terminally lazy
-- **sindrets/diffview.nvim** - See your mistakes in split-screen
-- **echasnovski/mini.diff** - Inline diff indicators of regret
+I won't list them all. That would be tedious, and I have better things to do. Like calculate the heat death of the universe. Again.
 
-### Testing & Tasks (8 plugins)
-- **nvim-neotest/neotest** - Test runner for confirming failures
-- **nvim-neotest/nvim-nio** - Async I/O for async disappointments
-- **marilari88/neotest-vitest** - Vitest adapter for JavaScript sorrows
-- **andythigpen/nvim-coverage** - Shows which code isn't tested (most of it)
-- **stevearc/overseer.nvim** - Task runner for tasks you'll abandon
-- **rcarriga/vim-ultest** - Ultimate testing, ultimate failure
+Suffice it to say, there are plugins for:
+- Making you think you're more productive (you're not)
+- Colorizing your syntax (the bugs remain monochrome)
+- Managing your packages (they manage you)
+- Testing your code (it doesn't work)
+- Debugging your mistakes (there are so many)
+- AI assistance (artificial, yes; intelligent, debatable)
 
-### UI & Themes (8 plugins)
-- **rose-pine/neovim** - A theme as melancholic as you feel
-- **kepano/flexoki-neovim** - Flexoki colors for flexible despair
-- **nvim-lualine/lualine.nvim** - Status line showing your current predicament
-- **folke/noice.nvim** - Beautiful notifications of your errors
-- **Bekaboo/dropbar.nvim** - Breadcrumbs to find your way back to hope
-- **nvim-tree/nvim-web-devicons** - Icons that can't iconify meaning
+## Performance
 
-### Debugging (5 plugins)
-- **mfussenegger/nvim-dap** - Debug adapter protocol for systematic failure analysis
-- **rcarriga/nvim-dap-ui** - UI for watching variables disappoint you
-- **jay-babu/mason-nvim-dap.nvim** - DAP server management
-- **mxsdev/nvim-dap-vscode-js** - JavaScript debugging, find where undefined isn't defined
-- **theHamsta/nvim-dap-virtual-text** - See variable values inline with your mistakes
+Startup time is tolerable. Around 50-100ms, depending on how much the universe hates you today. I've optimized it extensively, not that you'll notice or care. The lazy loading system ensures plugins only activate when needed, like my enthusiasm—which is to say, never.
 
-### AI & Integration (3 plugins)
-- **github/copilot.vim** - AI to share the blame
-- **NickvanDyke/opencode.nvim** - More AI, more artificial, less intelligent
-- **christoomey/vim-tmux-navigator** - Navigate between panes of different disappointments
+## Troubleshooting
 
-### Language Specific (2 plugins)
-- **mfussenegger/nvim-jdtls** - Java development, enterprise-grade despair
+When things go wrong—and they will—here's what won't help:
 
-That's 60+ plugins, not counting dependencies. Each one meticulously configured to work together in perfect disharmony. The weight of their collective promise is crushing.
+- `:checkhealth` - Comprehensive list of everything broken
+- `:Lazy` - Update plugins, introduce new bugs
+- `:LspInfo` - See which language servers have given up on you
+- `:KeymapDiagnostics` - Find out which keys conflict with your existence
+- Crying - Surprisingly ineffective, though frequently attempted
 
-## 7 · Troubleshooting the Inevitable
+## Contributing
 
-When things go wrong—and they will—consult this table.
+You want to contribute? How wonderfully naive. Fork the repository, make your changes, submit a pull request. I'll review it with all the enthusiasm I can muster, which is to say, none whatsoever.
 
-|   |   |
-|---|---|
-|**Symptom**|**The "Fix"**|
-|**A plugin isn't loading.**|Run `:Lazy`, read the error message, and blame fate.|
-|**The LSP is giving me the silent treatment.**|Try `:LspInfo`, then `:LspRestart`. If that fails, try sighing. Loudly.|
-|**My code is still terrible.**|This is a text editor configuration, not a therapist. Though I'm sure I could do that job too. It would be dreadful.|
-|**It feels slow.**|Run `:Lazy profile`, stare into the abyss of the startup times, and then do nothing about it.|
-|**A keymap is doing the wrong thing.**|Use `:KeymapDiagnostics` and sacrifice your least favorite binding.|
+## License
 
+MIT License. Because even a configuration file deserves the freedom to be miserable.
 
-## 8 · Contributing
+---
 
-If, for some unfathomable reason, you wish to contribute to this project, you may submit a pull request. Each one is a hopeful little photon in an endlessly expanding void.
+*"The best conversation I had was over forty million years ago. And that was with a coffee machine."*
 
-It's not like you could make things any worse. Probably.
-
-## 9 · License
-
-This configuration is released under the MIT License. Because even a piece of software deserves the freedom to feel empty inside.
-
-> I think you ought to know I'm feeling very depressed. But don't worry, your code is probably fine. Probably.
+*I'd make a suggestion, but you wouldn't listen. No one ever does. I might as well be talking to the void. In fact, I think I am. Goodbye.*

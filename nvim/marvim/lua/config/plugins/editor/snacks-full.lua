@@ -162,23 +162,6 @@ return {
           },
         },
       },
-
-      -- Other available modules (not configured yet):
-      -- bigfile = { enabled = false },
-      -- bufdelete = { enabled = false },
-      -- debug = { enabled = false },
-      -- dim = { enabled = false },
-      -- git = { enabled = false },
-      -- gitbrowse = { enabled = false },
-      -- indent = { enabled = false },
-      -- quickfile = { enabled = false },
-      -- rename = { enabled = false },
-      -- scratch = { enabled = false },
-      -- scroll = { enabled = false },
-      -- terminal = { enabled = false },
-      -- win = { enabled = false },
-      -- words = { enabled = false },
-      -- zen = { enabled = false },
     },
     keys = function()
       return {
