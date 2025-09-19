@@ -80,6 +80,10 @@ function M.create(event, opts)
     error("Either callback or command is required for autocmd")
   end
 
+  -- Normalize event to handle both single events and arrays
+  local events = type(event) == "table" and event or { event }
+  local event_str = type(event) == "table" and table.concat(event, ",") or event
+
   -- Set default group if not specified
   local group_name = opts.group or DEFAULT_GROUP
   local group = groups[group_name]
@@ -96,7 +100,7 @@ function M.create(event, opts)
     command = opts.command,
     once = opts.once or false,
     nested = opts.nested or false,
-    desc = opts.desc or string.format("Autocmd for %s", event),
+    desc = opts.desc or string.format("Autocmd for %s", event_str),
   }
 
   -- Handle buffer-local autocmds
@@ -113,20 +117,20 @@ function M.create(event, opts)
       if not ok then
         stats.errors = stats.errors + 1
         vim.notify(
-          string.format("Autocmd error in %s: %s", event, err),
+          string.format("Autocmd error in %s: %s", event_str, err),
           vim.log.levels.ERROR
         )
       end
     end
   end
 
-  -- Create the autocmd
+  -- Create the autocmd (pass the original event which can be string or table)
   local id = vim.api.nvim_create_autocmd(event, autocmd_opts)
 
   -- Store for management
   autocmds[id] = {
     id = id,
-    event = event,
+    event = event_str,
     group = group_name,
     pattern = opts.pattern,
     buffer = opts.buffer,
@@ -384,6 +388,11 @@ function M.list()
     return a.created_at < b.created_at
   end)
   return list
+end
+
+-- List all autocmd groups
+function M.list_groups()
+  return vim.tbl_keys(groups)
 end
 
 return M

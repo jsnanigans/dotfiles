@@ -27,7 +27,7 @@ return {
     },
     config = function(_, opts)
       -- Use framework's safe_require for mason
-      local mason = module.safe_require("mason")
+      local mason = module.load("mason")
       if not mason then
         vim.notify("Failed to load mason.nvim", vim.log.levels.ERROR)
         return
@@ -36,7 +36,7 @@ return {
       mason.setup(opts)
 
       -- Use framework's safe_require for mason-registry
-      local mr = module.safe_require("mason-registry")
+      local mr = module.load("mason-registry")
       if not mr then
         vim.notify("Failed to load mason-registry", vim.log.levels.ERROR)
         return
@@ -48,7 +48,7 @@ return {
         event.emit("MasonPackageInstalled", { package = pkg })
 
         -- Trigger FileType event to reload LSP for current buffer
-        local lazy_event = module.safe_require("lazy.core.handler.event")
+        local lazy_event = module.load("lazy.core.handler.event")
         if lazy_event then
           lazy_event.trigger({
             event = "FileType",
@@ -76,13 +76,6 @@ return {
           ensure_installed()
         end
       end, 100)
-
-      -- Register with plugin manager
-      plugin.register({
-        name = "mason.nvim",
-        type = "lsp-installer",
-        config = opts,
-      })
 
       -- Emit setup complete event
       event.emit("MasonSetupComplete")

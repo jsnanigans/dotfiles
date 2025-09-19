@@ -19,6 +19,9 @@ local modules = {
   cache = nil,
   -- Phase 3 migration layer
   migrate = nil,
+  -- Phase 5 polish & documentation
+  health = nil,
+  profiler = nil,
 }
 
 -- Module loader with caching
@@ -47,6 +50,9 @@ M.plugin = function() return load_module("plugin") end
 M.cache = function() return load_module("cache") end
 -- Phase 3 migration layer
 M.migrate = function() return load_module("migrate") end
+-- Phase 5 polish & documentation
+M.health = function() return load_module("health") end
+M.profiler = function() return load_module("profiler") end
 
 -- Framework initialization
 function M.setup(opts)
@@ -109,11 +115,62 @@ function M.setup(opts)
     M.optimize()
   end
 
+  -- Register Phase 5 commands
+  if opts.commands ~= false then
+    M.register_commands()
+  end
+
   -- Mark framework as initialized
   M.initialized = true
 
+  -- Track startup time for profiler
+  vim.g.marvim_init_time = vim.loop.hrtime() / 1000000
+
   -- Emit initialization event
   vim.api.nvim_exec_autocmds("User", { pattern = "MarvimInitialized" })
+end
+
+-- Register framework commands
+function M.register_commands()
+  -- Health check command
+  vim.api.nvim_create_user_command("MarvimHealth", function()
+    local health = M.health()
+    if health then
+      health.show()
+    else
+      vim.notify("Health module not available", vim.log.levels.ERROR)
+    end
+  end, { desc = "Show MARVIM framework health check" })
+
+  -- Profile command
+  vim.api.nvim_create_user_command("MarvimProfile", function()
+    local profiler = M.profiler()
+    if profiler then
+      profiler.show()
+    else
+      vim.notify("Profiler module not available", vim.log.levels.ERROR)
+    end
+  end, { desc = "Show MARVIM performance profile" })
+
+  -- Profiler control commands
+  vim.api.nvim_create_user_command("MarvimProfileStart", function()
+    local profiler = M.profiler()
+    if profiler then
+      profiler.start()
+    end
+  end, { desc = "Start MARVIM profiler" })
+
+  vim.api.nvim_create_user_command("MarvimProfileStop", function()
+    local profiler = M.profiler()
+    if profiler then
+      profiler.stop()
+    end
+  end, { desc = "Stop MARVIM profiler" })
+
+  -- Debug command for framework internals
+  vim.api.nvim_create_user_command("MarvimDebug", function()
+    vim.print(M.debug())
+  end, { desc = "Show MARVIM framework debug info" })
 end
 
 -- Performance optimizations

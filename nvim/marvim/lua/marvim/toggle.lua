@@ -150,8 +150,20 @@ function M.is_enabled(name)
   return states[name] == true
 end
 
--- Get all registered toggles
+-- Get toggle state (alias for is_enabled, for health check compatibility)
+function M.state(name)
+  return M.is_enabled(name)
+end
+
+-- Get all registered toggles (returns just names for health check)
 function M.list()
+  local names = vim.tbl_keys(toggles)
+  table.sort(names)
+  return names
+end
+
+-- Get detailed list of all toggles with status
+function M.list_detailed()
   local list = {}
   for name, def in pairs(toggles) do
     table.insert(list, {

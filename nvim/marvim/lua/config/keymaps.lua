@@ -6,19 +6,19 @@ local event = marvim.event()
 local toggle = marvim.toggle()
 
 -- Create keymaps module
-local M = module.create("config.keymaps")
+local M = {}
 
--- Import modular keymap modules using safe_require
-local keymap_utils = module.safe_require("utils.keymaps")
-local core = module.safe_require("config.keymaps.core")
-local lsp = module.safe_require("config.keymaps.lsp")
-local plugins = module.safe_require("config.keymaps.plugins")
-local search = module.safe_require("config.keymaps.search")
-local root = module.safe_require("config.keymaps.root")
+-- Import modular keymap modules using safe loading
+local keymap_utils = module.load("utils.keymaps")
+local core = module.load("config.keymaps.core")
+local lsp = module.load("config.keymaps.lsp")
+local plugins = module.load("config.keymaps.plugins")
+local search = module.load("config.keymaps.search")
+local root = module.load("config.keymaps.root")
 
 -- Utility functions using framework
 local function is_available(mod_name)
-  return module.safe_require(mod_name) ~= nil
+  return module.load(mod_name) ~= nil
 end
 
 local function plugin_loaded(plugin_name)
@@ -67,7 +67,7 @@ end
 -- ============================================================================
 
 function M.setup_plugin_keymaps()
-  local map = utils.keymap
+  local map = vim.keymap.set
 
   -- Plugin keymaps are now handled via key tables in plugin configs
   -- Only non-lazy keymaps are set up here
@@ -102,7 +102,7 @@ function M.setup_plugin_keymaps()
   end
 
   -- Mini.visits for file navigation (replacing Harpoon)
-  local MiniVisits = module.safe_require("mini.visits")
+  local MiniVisits = module.load("mini.visits")
   if MiniVisits then
     -- Add current file to pinned list (like harpoon add)
     map("n", "<leader>H", function()
@@ -134,7 +134,7 @@ function M.setup_plugin_keymaps()
   end
 
   -- Flash
-  local flash = module.safe_require("flash")
+  local flash = module.load("flash")
   if flash then
     map({ "n", "x", "o" }, "s", function()
       flash.jump()
@@ -154,7 +154,7 @@ function M.setup_plugin_keymaps()
   end
 
   -- Mini.surround
-  local surround = module.safe_require("mini.surround")
+  local surround = module.load("mini.surround")
   if surround then
     map({ "n", "v" }, "gsa", function()
       surround.add()

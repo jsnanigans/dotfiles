@@ -445,6 +445,11 @@ function M.setup_common()
   M.create("compute", M.presets.compute)
 end
 
+-- Get statistics (alias for get_stats for consistency)
+function M.stats(cache_name)
+  return M.get_stats(cache_name)
+end
+
 -- Debug information
 function M.debug()
   local info = {

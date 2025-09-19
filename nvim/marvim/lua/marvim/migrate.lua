@@ -442,6 +442,29 @@ function M.wizard()
   )
 end
 
+---Get list of deprecation warnings
+---@return table List of warning messages
+function M.get_warnings()
+  local warnings = {}
+  for key, _ in pairs(M.deprecated) do
+    table.insert(warnings, key)
+  end
+  return warnings
+end
+
+---Get list of deprecated patterns found
+---@return table List of deprecated patterns
+function M.get_deprecated()
+  local deprecated = {}
+  for key, _ in pairs(M.deprecated) do
+    local old, new = key:match("(.+)->(.+)")
+    if old then
+      table.insert(deprecated, old)
+    end
+  end
+  return deprecated
+end
+
 -- Setup commands
 function M.setup()
   vim.api.nvim_create_user_command("MarvimMigrate", function(opts)

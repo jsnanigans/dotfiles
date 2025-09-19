@@ -5,7 +5,7 @@ local plugin = marvim.plugin()
 local event = marvim.event()
 
 -- Create lazy config module
-local M = module.create("config.lazy")
+local M = {}
 
 -- Define lazy.nvim spec with framework integration
 local function get_spec()
@@ -25,8 +25,8 @@ end
 
 -- Setup function
 function M.setup()
-  -- Use framework's safe_require for lazy.nvim
-  local lazy = module.safe_require("lazy")
+  -- Use framework's module loader for lazy.nvim
+  local lazy = module.load("lazy")
   if not lazy then
     vim.notify("Failed to load lazy.nvim", vim.log.levels.ERROR)
     return
@@ -104,13 +104,6 @@ function M.setup()
     config = function()
       -- Emit event when lazy finishes loading
       event.emit("LazyComplete")
-
-      -- Register lazy.nvim with plugin manager
-      plugin.register({
-        name = "lazy.nvim",
-        manager = lazy,
-        type = "manager",
-      })
     end,
   })
 
@@ -118,13 +111,7 @@ function M.setup()
   event.emit("LazyPostSetup")
 end
 
--- Initialize if not already done via framework
-if not marvim.is_initialized() then
-  -- Direct call for backward compatibility
-  M.setup()
-else
-  -- Register setup for deferred execution
-  module.register(M)
-end
+-- Initialize setup
+M.setup()
 
 return M

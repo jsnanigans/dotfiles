@@ -54,8 +54,22 @@ function M.try_require(module_name, opts)
   return ok, result
 end
 
--- Create autocmd with framework
+-- Get autocmd module or create autocmd directly
 function M.autocmd(event, opts)
+  -- If called without arguments, return the autocmd module
+  if event == nil and opts == nil then
+    local framework = get_marvim()
+    if framework and framework.autocmd then
+      return framework.autocmd()
+    end
+    -- Return a fallback module interface
+    return {
+      create = vim.api.nvim_create_autocmd,
+      create_group = vim.api.nvim_create_augroup,
+    }
+  end
+
+  -- If called with arguments, create an autocmd directly
   local framework = get_marvim()
   if framework and framework.autocmd then
     local autocmd_system = framework.autocmd()
@@ -136,10 +150,7 @@ M.module = {
   try_require = M.try_require,
 }
 
-M.autocmd = {
-  create = M.autocmd,
-  group = M.augroup,
-}
+-- Don't override the autocmd function with a table
 
 M.event = {
   emit = M.emit_event,

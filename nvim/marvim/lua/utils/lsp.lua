@@ -75,9 +75,12 @@ function M.on_attach(callback)
 end
 
 function M.setup()
-  local group = marvim.augroup("LspAttach", { clear = true })
-  marvim.autocmd("LspAttach", {
-    group = group,
+  local autocmd = marvim.autocmd()
+  -- Create the group first
+  autocmd.create_group("LspAttach", { clear = true })
+  -- Then create the autocmd with event as first param
+  autocmd.create("LspAttach", {
+    group = "LspAttach",
     callback = function(args)
       -- Validate args structure
       if not args or not args.data or not args.data.client_id then
