@@ -80,15 +80,19 @@ If you must.
 
 ## 4 · Quick Start Guide to Getting Nowhere Faster
 
-- Press **`Space`**. A menu will appear. Don't get your hopes up; it's just a list of commands.
+Press **`Space`**. A menu will appear. Don't get your hopes up; it's just organized despair.
 
-- **`<leader>ff`** — Find files. You might even find that lost dream you had once. Unlikely, though.
-
-- **`<leader>gg`** — Launch LazyGit. Because blaming your past self is but a keystroke away.
-
-- **`gd`** — Go to Definition. A fantastic way to discover that the source of your problem is, as you suspected, in another file.
-
-- **`:KeymapDiagnostics`** — Gaze upon the tangled web of keybindings you've woven for yourself.
+### Essential Commands
+- **`<leader>ff`** — Find files. Search for that file you swore you saved.
+- **`<leader>fg`** — Live grep. Hunt for that TODO you'll never do.
+- **`<leader>gg`** — Launch LazyGit. Version control for your mistakes.
+- **`<leader>tt`** — Run nearest test. Confirm it still fails.
+- **`gd`** — Go to Definition. The problem is always elsewhere.
+- **`K`** — Hover docs. Learn what it was supposed to do.
+- **`-`** — Open Oil.nvim. Files are just text with delusions.
+- **`:KeymapDiagnostics`** — View your keymap conflicts.
+- **`:Mason`** — Install more LSP servers to judge you.
+- **`:Lazy`** — Update plugins, introduce new bugs.
 
 
 ## 5 · Architecture (The Blueprint for Futility)
@@ -113,7 +117,90 @@ My plugin layout attempts to be "complexity-aware," a term that sounds impressiv
 
 And yes, all keymaps are centralized. One file to configure them, one file to find them, one file to bring them all and in the editor bind them. It's all rather pointless, of course.
 
-## 6 · Troubleshooting the Inevitable
+## 6 · The Complete Plugin Arsenal
+
+Here's the full catalog of tools I've been burdened with. Each one promises to make your life easier. They're lying, of course.
+
+### Core & Editing (20 plugins)
+- **folke/lazy.nvim** - Plugin manager that procrastinates professionally
+- **folke/which-key.nvim** - Shows you all the keys you'll forget anyway
+- **folke/persistence.nvim** - Saves sessions so your mistakes persist
+- **stevearc/dressing.nvim** - Makes UI prompts slightly less ugly
+- **stevearc/oil.nvim** - File management without the optimistic tree metaphor
+- **mbbill/undotree** - Travel back to when your code worked
+- **folke/flash.nvim** - Jump to your mistakes faster
+- **mrjones2014/smart-splits.nvim** - Split windows, split focus, split personality
+- **echasnovski/mini.nvim suite**:
+  - mini.ai - Text objects that understand your intent (but not your purpose)
+  - mini.surround - Wrap your problems in parentheses
+  - mini.pairs - Auto-close brackets, can't auto-close issues
+  - mini.comment - Comment out code, comment on life's futility
+  - mini.bufremove - Delete buffers and forget they existed
+  - mini.icons - Pretty icons for your plain text editor
+  - mini.diff - See exactly how you broke it
+  - mini.indentscope - Visualize the hierarchy of your mistakes
+  - mini.visits - Track everywhere you've been wrong
+
+### Snacks Framework
+- **folke/snacks.nvim** - A collection of utilities, because one framework wasn't enough
+
+### Code Intelligence (8 plugins)
+- **nvim-treesitter/nvim-treesitter** - Parses your code better than you do
+- **nvim-treesitter/nvim-treesitter-textobjects** - Smart text objects for smarter mistakes
+- **folke/todo-comments.nvim** - Highlights all the things you'll never fix
+- **folke/trouble.nvim** - Lists problems, as if you needed reminding
+- **stevearc/conform.nvim** - Formats code you'll break again
+- **L3MON4D3/LuaSnip** - Snippets for repetitive despair
+- **rafamadriz/friendly-snippets** - Pre-made snippets, pre-made problems
+- **folke/lazydev.nvim** - Neovim Lua development, recursive improvement
+
+### LSP & Completion (8 plugins)
+- **neovim/nvim-lspconfig** - Language servers to judge your code
+- **mason-org/mason.nvim** - Package manager for your package managers
+- **williamboman/mason-lspconfig.nvim** - Bridge between worlds of configuration
+- **saghen/blink.cmp** - Completion that knows what you meant to type
+- **b0o/schemastore.nvim** - JSON schemas, structure for the structureless
+- **nvim-lua/plenary.nvim** - Utility library everything depends on
+
+### Version Control (4 plugins)
+- **kdheepak/lazygit.nvim** - Git UI for the terminally lazy
+- **sindrets/diffview.nvim** - See your mistakes in split-screen
+- **echasnovski/mini.diff** - Inline diff indicators of regret
+
+### Testing & Tasks (8 plugins)
+- **nvim-neotest/neotest** - Test runner for confirming failures
+- **nvim-neotest/nvim-nio** - Async I/O for async disappointments
+- **marilari88/neotest-vitest** - Vitest adapter for JavaScript sorrows
+- **andythigpen/nvim-coverage** - Shows which code isn't tested (most of it)
+- **stevearc/overseer.nvim** - Task runner for tasks you'll abandon
+- **rcarriga/vim-ultest** - Ultimate testing, ultimate failure
+
+### UI & Themes (8 plugins)
+- **rose-pine/neovim** - A theme as melancholic as you feel
+- **kepano/flexoki-neovim** - Flexoki colors for flexible despair
+- **nvim-lualine/lualine.nvim** - Status line showing your current predicament
+- **folke/noice.nvim** - Beautiful notifications of your errors
+- **Bekaboo/dropbar.nvim** - Breadcrumbs to find your way back to hope
+- **nvim-tree/nvim-web-devicons** - Icons that can't iconify meaning
+
+### Debugging (5 plugins)
+- **mfussenegger/nvim-dap** - Debug adapter protocol for systematic failure analysis
+- **rcarriga/nvim-dap-ui** - UI for watching variables disappoint you
+- **jay-babu/mason-nvim-dap.nvim** - DAP server management
+- **mxsdev/nvim-dap-vscode-js** - JavaScript debugging, find where undefined isn't defined
+- **theHamsta/nvim-dap-virtual-text** - See variable values inline with your mistakes
+
+### AI & Integration (3 plugins)
+- **github/copilot.vim** - AI to share the blame
+- **NickvanDyke/opencode.nvim** - More AI, more artificial, less intelligent
+- **christoomey/vim-tmux-navigator** - Navigate between panes of different disappointments
+
+### Language Specific (2 plugins)
+- **mfussenegger/nvim-jdtls** - Java development, enterprise-grade despair
+
+That's 60+ plugins, not counting dependencies. Each one meticulously configured to work together in perfect disharmony. The weight of their collective promise is crushing.
+
+## 7 · Troubleshooting the Inevitable
 
 When things go wrong—and they will—consult this table.
 
@@ -126,9 +213,6 @@ When things go wrong—and they will—consult this table.
 |**It feels slow.**|Run `:Lazy profile`, stare into the abyss of the startup times, and then do nothing about it.|
 |**A keymap is doing the wrong thing.**|Use `:KeymapDiagnostics` and sacrifice your least favorite binding.|
 
-## 7 · Where Did Section 7 Go?
-
-It's not here. I could calculate the probability of its spontaneous reappearance, but you wouldn't listen. And it wouldn't help you resolve that merge conflict, would it? Marvelous.
 
 ## 8 · Contributing
 
