@@ -1,7 +1,7 @@
 ---
 name: investigator
 description: Deep investigation specialist for understanding why specific behaviors occur in systems and codebases. Use proactively when you need to understand root causes, trace execution flows, or analyze system behaviors.
-tools: Read, Bash, Grep, Glob, WebFetch, mcp__web-search__brave_web_search
+tools: Read, Bash, Grep, Glob, WebFetch, Task, TodoWrite, mcp__web-search__brave_web_search
 model: opus
 ---
 

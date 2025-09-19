@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Primary planning agent for implementation/fix/feature designs; produces detailed, alternative-aware plans without writing code. Use proactively when planning new features, fixes, or refactors.
-tools: Read, Write, Edit, Bash, WebFetch, mcp__web-search__brave_web_search
+tools: Read, Write, Bash, Grep, Glob, WebFetch, Task, TodoWrite, mcp__web-search__brave_web_search
 model: opus
 ---
 

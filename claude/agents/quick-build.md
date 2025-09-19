@@ -1,7 +1,7 @@
 ---
 name: quick-build
 description: Primary "Quick Build" agent for fast, precise implementation of planned changes from Planner/Investigator outputs. Use proactively when implementing existing plans or when fast execution is needed.
-tools: Read, Write, Edit, Bash, Grep, Glob
+tools: Read, Write, Edit, MultiEdit, NotebookEdit, Bash, Grep, Glob, TodoWrite
 model: opus
 ---
 
